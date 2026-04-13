@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jung Seungmin — Multi-disciplinary Designer & Art Director</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F5F2ED;--black:#0E0E0D;--gold:#C8A96E;--muted:#7A7870;--surface:#E8E5DF;
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--black);font-family:var(--sans);font-weight:400;cursor:none;overflow-x:hidden}
+
+/* ── CURSOR ── */
+#cur-dot,#cur-ring{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);opacity:0}
+#cur-dot{width:8px;height:8px;background:#fff;mix-blend-mode:difference;transition:opacity .3s,width .15s,height .15s,background .2s}
+#cur-ring{width:32px;height:32px;border:1.5px solid rgba(255,255,255,.7);background:transparent;mix-blend-mode:difference;transition:width .35s cubic-bezier(.25,.46,.45,.94),height .35s,opacity .3s}
+body.cur-hover #cur-dot{width:5px;height:5px;background:var(--gold)}
+body.cur-hover #cur-ring{width:46px;height:46px}
+body.cur-click #cur-dot{width:12px;height:12px}
+body.cur-click #cur-ring{width:20px;height:20px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 3rem;transition:background .4s,backdrop-filter .4s}
+nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
+.nav-logo{font-family:var(--serif);font-size:1.05rem;font-weight:700;letter-spacing:.04em;color:var(--black);text-decoration:none}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--black);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-home-white .nav-logo,.nav-home-white .nav-links a{color:#fff}
+.nav-home-white .nav-links a:hover{color:var(--gold)}
+
+/* ── PAGE SYSTEM ── */
+.pg{display:none;min-height:100vh}
+.pg.active{display:block}
+#overlay{position:fixed;inset:0;background:var(--black);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.sec-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:block}
+
+/* ── HOME ── */
+#pg-home{background:var(--black);height:100vh;overflow:hidden}
+.hero{position:relative;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;background:var(--black)}
+.hero-bg{position:absolute;inset:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.45;animation:orbFloat 8s ease-in-out infinite}
+.orb1{width:600px;height:600px;background:#C8A96E;top:-100px;left:-150px;animation-delay:0s}
+.orb2{width:500px;height:500px;background:#6B5B8A;top:30%;right:-100px;animation-delay:-3s}
+.orb3{width:400px;height:400px;background:#4A7C6F;bottom:-80px;left:30%;animation-delay:-5s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-30px) scale(1.06)}}
+.grain{position:absolute;inset:0;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(14,14,13,.85) 100%)}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.hero-content{position:relative;z-index:3;padding:0 3rem 3.5rem;display:flex;justify-content:space-between;align-items:flex-end}
+.hero-eyebrow{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:1rem;display:block}
+.hero-title{font-family:var(--serif);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:400;line-height:1;color:#fff}
+.hero-title em{color:var(--gold);font-style:italic}
+.hero-right{text-align:right;max-width:300px;padding-bottom:.5rem}
+.hero-desc{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:1.5rem;font-weight:300}
+.scroll-hint{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:.5rem;justify-content:flex-end}
+.scroll-hint::before{content:'';display:block;width:24px;height:1px;background:rgba(255,255,255,.25)}
+
+/* ── PLACEHOLDERS ── */
+.tb1{background:linear-gradient(135deg,#1a3a35,#0d2420)}
+.tb2{background:linear-gradient(135deg,#1e3a4a,#3d1e15)}
+.tb3{background:linear-gradient(135deg,#2d1e35,#1a1a18)}
+.tb4{background:linear-gradient(135deg,#1a2d1a,#2d3510)}
+.tb5{background:linear-gradient(135deg,#2a1a35,#1a1060)}
+.pl-novo{width:100%;height:100%;background:linear-gradient(135deg,#0f3d3a 0%,#1a2a2a 40%,#3d2010 100%);position:relative;overflow:hidden}
+.pl-novo::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(200,169,110,.2) 0%,transparent 60%)}
+.pl-bloom{width:100%;height:100%;background:#1a1218;display:flex;align-items:center;justify-content:center}
+.pl-bloom::before{content:'';width:40%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#c87090,#8a2040)}
+
+/* ── CONTACT ── */
+.contact-section{background:var(--black);padding:7rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem}
+.contact-title{font-family:var(--serif);font-size:clamp(2rem,3.5vw,2.8rem);color:#fff;font-weight:400;line-height:1.25;margin-bottom:3rem;grid-column:1/-1}
+.contact-title em{font-style:italic;color:var(--gold)}
+.contact-links{display:flex;flex-direction:column;gap:0}
+.contact-link-row{display:flex;align-items:center;gap:1rem;padding:1.2rem 0;border-bottom:1px solid #1f1f1d;text-decoration:none;transition:color .2s}
+.contact-link-row:hover .contact-link-val{color:var(--gold)}
+.contact-link-icon{width:36px;height:36px;border:1px solid #2a2a28;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--muted);flex-shrink:0;transition:border-color .2s,color .2s;font-family:var(--sans)}
+.contact-link-row:hover .contact-link-icon{border-color:var(--gold);color:var(--gold)}
+.contact-link-meta{display:flex;flex-direction:column;gap:.2rem}
+.contact-link-label{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.contact-link-val{font-size:.82rem;color:#fff;font-weight:300;transition:color .2s}
+.contact-form{display:flex;flex-direction:column;gap:1.2rem}
+.form-field{display:flex;flex-direction:column;gap:.4rem}
+.form-field label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.form-field input,.form-field textarea{background:transparent;border:none;border-bottom:1px solid #333;color:#fff;font-family:var(--sans);font-size:.88rem;padding:.7rem 0;outline:none;transition:border-color .2s;font-weight:300}
+.form-field input:focus,.form-field textarea:focus{border-color:var(--gold)}
+.form-field textarea{resize:none;min-height:100px}
+.form-submit{align-self:flex-start;margin-top:.5rem;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.25);padding:.9rem 2.5rem;cursor:none;transition:border-color .3s,color .3s}
+.form-submit:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── WORK PAGE ── */
+.work-page-header{padding:7rem 0 2rem 3rem}
+.work-page-label{
+  font-family:var(--sans);font-size:.68rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+}
+.work-grid{display:flex;flex-direction:column;gap:0}
+/* Cards: edge-to-edge, no side margin */
+.work-card{position:relative;overflow:hidden;aspect-ratio:21/7;cursor:none;display:block}
+/* image zoom on hover — smooth, subtle */
+.work-card:hover .wc-img{transform:scale(1.05)}
+.work-card:hover .wc-placeholder{transform:scale(1.05)}
+.wc-img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.25,.46,.45,.94);display:block}
+.wc-placeholder{width:100%;height:100%;transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
+/* persistent bottom info — always visible */
+.wc-info{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:2rem 3rem;
+  background:linear-gradient(to top,rgba(14,14,13,.82) 0%,rgba(14,14,13,.3) 55%,transparent 100%);
+  pointer-events:none;
+}
+.wc-arrow{
+  position:absolute;top:2rem;right:2rem;
+  width:42px;height:42px;border:1px solid rgba(255,255,255,.35);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1rem;
+  opacity:0;transition:opacity .35s;
+}
+.work-card:hover .wc-arrow{opacity:1}
+.card-cat{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem}
+
+/* ── PROJECT DETAIL ── */
+.project-hero{position:relative;height:70vh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;background:var(--black)}
+.project-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.project-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,14,13,.9) 0%,transparent 50%)}
+.project-hero-content{position:relative;z-index:2;padding:0 3rem 3rem;display:flex;justify-content:space-between;align-items:flex-end}
+.project-hero-title{font-family:var(--serif);font-size:clamp(3rem,5vw,4.5rem);color:#fff;font-weight:400}
+.project-meta{text-align:right}
+.meta-item{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.4rem}
+.meta-val{font-size:.82rem;color:#fff;font-weight:300}
+.back-btn{position:absolute;top:7rem;left:3rem;z-index:10;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);text-decoration:none;display:flex;align-items:center;gap:.5rem;transition:color .2s}
+.back-btn:hover{color:var(--gold)}
+.back-btn::before{content:'←';font-size:.9rem}
+/* project body: only scope on left, desc on right — no duplicate below */
+.project-body{display:grid;grid-template-columns:1fr 2fr;gap:5rem;padding:5rem 3rem}
+.scope-list{list-style:none}
+.scope-list li{font-size:.75rem;letter-spacing:.08em;color:var(--muted);padding:.6rem 0;border-bottom:1px solid var(--surface)}
+.project-desc{font-size:1.05rem;line-height:1.8;color:var(--black);font-weight:300;margin-bottom:2rem}
+.tag-pills{display:flex;flex-wrap:wrap;gap:.6rem}
+.tag-pill{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--surface);color:var(--muted);padding:.4rem 1rem}
+.gallery{padding:0 3rem 5rem;display:flex;flex-direction:column;gap:4rem}
+.gallery-diagram{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;align-items:center}
+.diag-node{border:1px solid var(--surface);padding:2rem;text-align:center}
+.diag-node-title{font-family:var(--serif);font-size:1.1rem;font-weight:400;margin-bottom:.6rem}
+.diag-node-sub{font-size:.72rem;color:var(--muted);line-height:1.6}
+.diag-line{stroke-dasharray:200;stroke-dashoffset:200;transition:stroke-dashoffset 1.2s ease}
+.diag-line.drawn{stroke-dashoffset:0}
+.text-block{display:grid;grid-template-columns:3rem 1fr;gap:2rem;max-width:800px}
+.text-block-bar{width:1px;background:var(--gold);margin-top:.2rem}
+.text-block-label{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:block}
+.text-block-body{font-size:1rem;line-height:1.85;color:var(--black);font-weight:300}
+.gallery-images{display:grid;gap:1.2rem}
+.gallery-images.one{grid-template-columns:1fr}
+.gallery-images.two{grid-template-columns:1fr 1fr}
+.gallery-images.asym{grid-template-columns:1.4fr 1fr}
+.gallery-img{overflow:hidden;background:var(--surface)}
+.gallery-img img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-img.ar-wide{aspect-ratio:16/9}
+.gallery-img.ar-port{aspect-ratio:4/5}
+.gallery-img.ar-sq{aspect-ratio:1}
+.next-project{display:flex;align-items:center;justify-content:space-between;padding:3rem;background:var(--black);cursor:none;text-decoration:none;transition:background .3s;border-top:1px solid #1a1a18}
+.next-project:hover{background:#0a0a09}
+.np-label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.np-title{font-family:var(--serif);font-size:2rem;color:#fff;font-weight:400;margin-top:.4rem}
+.np-arrow{font-size:2rem;color:var(--gold)}
+
+/* ══════════════════════════════════════════
+   ABOUT — text reveal animation
+═══════════════════════════════════════════ */
+#pg-about{background:var(--black);color:#fff}
+
+.about-text-section{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:7rem 5vw 5rem;
+}
+
+.about-label-top{
+  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2.5rem;display:block;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.about-label-top.in{opacity:1;transform:translateY(0)}
+
+/* main text block */
+.about-body-text{
+  font-family:var(--sans);
+  font-size:clamp(1.55rem,3.2vw,3rem);
+  font-weight:300;
+  line-height:1.45;
+  color:rgba(255,255,255,.4);
+  max-width:100%;
+}
+
+/* every word is a span */
+.about-body-text .aw{
+  display:inline;
+  color:rgba(255,255,255,.4);
+  transition:color .5s ease;
+}
+
+/* bold keyword — starts muted, animates to white + gold underline */
+.about-body-text .aw-bold{
+  font-weight:700;
+  color:rgba(255,255,255,.4);
+  /* pseudo-underline via background-image — allows left→right draw animation */
+  background-image:linear-gradient(var(--gold),var(--gold));
+  background-repeat:no-repeat;
+  background-size:0% 1.5px;
+  background-position:0 100%;
+  padding-bottom:3px;
+  transition:color .5s ease, background-size .5s ease;
+}
+/* revealed state */
+.about-body-text .aw-bold.revealed{
+  color:#fff;
+  background-size:100% 1.5px;
+}
+
+/* FOOTER */
+.footer{padding:2rem 3rem;display:flex;justify-content:space-between;border-top:1px solid var(--surface)}
+.footer-dark{border-top:1px solid #2a2a28}
+.footer span{font-size:.7rem;color:var(--muted);letter-spacing:.06em}
+
+a,button,[data-hover]{cursor:none}
+
+/* ══════════════════════════════
+   MOBILE
+══════════════════════════════ */
+@media(max-width:768px){
+  nav{padding:1.2rem 1.5rem}
+  .hero-content{padding:0 1.5rem 2.5rem;flex-direction:column;gap:1.5rem;align-items:flex-start}
+  .hero-right{text-align:left;max-width:100%}
+  .hero-title{font-size:clamp(2.8rem,10vw,4.5rem)}
+
+  /* WORK mobile: square aspect ratio */
+  .work-page-header{padding:5.5rem 0 1.5rem 1.5rem}
+  .work-card{aspect-ratio:1/1}
+  .wc-overlay{padding:1.5rem}
+
+  /* PROJECT DETAIL mobile */
+  .project-body{grid-template-columns:1fr;gap:2.5rem;padding:3rem 1.5rem}
+  .project-hero-content{flex-direction:column;gap:1rem;padding:0 1.5rem 2rem;align-items:flex-start}
+  .project-meta{text-align:left}
+  .back-btn{top:5rem;left:1.5rem}
+  .gallery{padding:0 1.5rem 3rem}
+  .gallery-diagram{grid-template-columns:1fr;gap:1rem}
+  .gallery-images.two,.gallery-images.asym{grid-template-columns:1fr}
+  .gallery-img.ar-port{aspect-ratio:4/5}
+  .next-project{padding:2rem 1.5rem}
+  .np-title{font-size:1.4rem}
+
+  /* ABOUT mobile */
+  .about-text-section{padding:5rem 1.5rem 3rem}
+  .about-body-text{font-size:clamp(1.1rem,5.5vw,1.5rem);line-height:1.5}
+  .about-social{flex-direction:column;gap:1.5rem;padding:2rem 1.5rem;align-items:flex-start}
+  .about-social-links{flex-direction:column;gap:1rem}
+  .about-expertise{padding:3rem 1.5rem}
+  .about-contact{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
+  .contact-section{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
+  .contact-title{font-size:clamp(1.6rem,6vw,2.2rem)}
+  .footer{padding:1.5rem}
+}
+</style>
+</head>
+<body>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<div id="overlay"></div>
+
+<nav id="nav" class="nav-home-white">
+  <a class="nav-logo" href="#" onclick="go('pg-home');return false">JS</a>
+  <div class="nav-links">
+    <a href="#" onclick="go('pg-work');return false">Work</a>
+    <a href="#" onclick="go('pg-about');return false">About</a>
+  </div>
+</nav>
+
+<!-- ═══════ HOME ═══════ -->
+<div id="pg-home" class="pg active">
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+      <div class="grain"></div>
+    </div>
+    <!-- video: <video class="hero-video" autoplay muted loop playsinline src="your-video.mp4"></video> -->
+    <div class="hero-grad"></div>
+    <div class="hero-content">
+      <div>
+        <span class="hero-eyebrow">Creative &amp; Art Director</span>
+        <h1 class="hero-title">Jung<br><em>Seungmin</em></h1>
+      </div>
+      <div class="hero-right">
+        <p class="hero-desc">Multi-disciplinary designer crafting brand identities, spatial experiences, and digital interfaces for creative studios and international brands.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════ WORK ═══════ -->
+<div id="pg-work" class="pg">
+  <div class="work-page-header">
+    <span class="work-page-label">Work</span>
+  </div>
+  <div class="work-grid" id="work-grid"></div>
+  <footer class="footer"><span>© 2025 Jung Seungmin</span><span>Multi-disciplinary Designer &amp; Art Director</span></footer>
+</div>
+
+<!-- ═══════ PROJECT ═══════ -->
+<div id="pg-project" class="pg">
+  <a class="back-btn" href="#" onclick="go('pg-work');return false">Back to Work</a>
+  <div id="proj-content"></div>
+</div>
+
+<!-- ═══════ ABOUT ═══════ -->
+<div id="pg-about" class="pg">
+
+  <div class="about-text-section" id="about-text-section">
+    <span class="about-label-top" id="about-label-top">About</span>
+    <p class="about-body-text" id="about-body-text"></p>
+  </div>
+
+  <!-- Contact -->
+  <section class="contact-section" style="background:var(--black);border-top:1px solid #2a2a28">
+    <h2 class="contact-title">Let's create something <em>together.</em></h2>
+    <div class="contact-links">
+      <span class="sec-label">Get in touch</span>
+      <a class="contact-link-row" href="mailto:hi@jungseungmin.com">
+        <div class="contact-link-icon">✉</div>
+        <div class="contact-link-meta"><span class="contact-link-label">Email</span><span class="contact-link-val">hi@jungseungmin.com</span></div>
+      </a>
+      <a class="contact-link-row" href="https://linkedin.com/in/jungseungmin" target="_blank">
+        <div class="contact-link-icon">in</div>
+        <div class="contact-link-meta"><span class="contact-link-label">LinkedIn</span><span class="contact-link-val">linkedin.com/in/jungseungmin</span></div>
+      </a>
+      <a class="contact-link-row" href="https://instagram.com/jungseungmin" target="_blank">
+        <div class="contact-link-icon">IG</div>
+        <div class="contact-link-meta"><span class="contact-link-label">Instagram</span><span class="contact-link-val">@jungseungmin</span></div>
+      </a>
+    </div>
+    <form class="contact-form" onsubmit="return false">
+      <div class="form-field"><label>Name</label><input type="text" placeholder="Your name"></div>
+      <div class="form-field"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+      <div class="form-field"><label>Message</label><textarea placeholder="Tell me about your project…"></textarea></div>
+      <button class="form-submit" type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <footer class="footer footer-dark" style="background:var(--black)"><span>© 2025 Jung Seungmin</span><span>Seoul — Available Worldwide</span></footer>
+</div>
+
+<script>
+/* ══ PROJECT DATA ══ */
+const projects=[
+  {title:'CAKE Seoul',cat:'Spatial Design',client:'CAKE Seoul',
+   desc:'A comprehensive spatial identity system for CAKE Seoul — a cultural hub and creative community space in the heart of the city.',
+   scope:['Spatial Strategy','Brand Translation','Interior Identity','Signage & Wayfinding','Community Programming'],
+   tags:['Spatial Design','Brand Identity','Signage','Interior'],
+   detail:'portfolio_imgs/img04.jpg',thumb:'portfolio_imgs/img00.jpg',
+   layout:[
+     {type:'diagram'},
+     {type:'text',label:'Concept',body:'The design logic begins with a single conviction: that a space should communicate without explanation.'},
+     {type:'images',layout:'one',images:[{src:'portfolio_imgs/img02.jpg',ar:'ar-wide'}]},
+     {type:'text',label:'Space',body:'Every surface decision was made in dialogue with the brand\'s commitment to craft. Raw concrete, aged steel, and natural timber create a material palette that ages gracefully.'},
+     {type:'images',layout:'two',images:[{src:'portfolio_imgs/img03.jpg',ar:'ar-port'},{src:'portfolio_imgs/img04.jpg',ar:'ar-port'}]},
+     {type:'images',layout:'asym',images:[{src:'portfolio_imgs/img05.jpg',ar:'ar-wide'},{src:'portfolio_imgs/img06.jpg',ar:'ar-wide'}]},
+     {type:'text',label:'Community',body:'The signage system extends the brand\'s visual language into the street, creating moments of recognition and curiosity.'},
+     {type:'images',layout:'one',images:[{src:'portfolio_imgs/img07.jpg',ar:'ar-port'}]},
+   ],nextIdx:1},
+  {title:'Novo App',cat:'UI/UX Design',client:'Novo Financial',
+   desc:'A digital banking experience designed for the creative economy. Clean, fast, and deeply functional without sacrificing personality.',
+   scope:['Product Strategy','UX Research','Interface Design','Design System','Prototype Testing'],
+   tags:['UI/UX','Product Design','Design System','Fintech'],
+   detail:null,thumb:null,bgClass:'pl-novo',
+   layout:[
+     {type:'text',label:'Approach',body:'Banking products for creatives must be trustworthy and serious, yet speak the language of people who care deeply about aesthetics.'},
+     {type:'text',label:'System',body:'The design system was built mobile-first, with a component library that scales across iOS, Android, and web.'},
+   ],nextIdx:2},
+  {title:'Bloom Magazine',cat:'Editorial Design',client:'Bloom Publishing',
+   desc:'Editorial identity and ongoing art direction for Bloom, a biannual publication exploring fashion, culture, and contemporary art.',
+   scope:['Publication Design','Art Direction','Typography System','Cover Design','Ongoing Direction'],
+   tags:['Editorial','Typography','Publication','Art Direction'],
+   detail:null,thumb:null,bgClass:'pl-bloom',
+   layout:[{type:'text',label:'Editorial',body:'Each issue of Bloom is conceived as a singular object — a physical artifact with its own visual logic.'}],nextIdx:3},
+  {title:'Forêt Beauty',cat:'Packaging Design',client:'Forêt',
+   desc:'Packaging identity for a botanical skincare brand rooted in slow beauty and forest philosophy.',
+   scope:['Brand Identity','Packaging Design','Material Sourcing','Print Production'],
+   tags:['Packaging','Brand Identity','Print'],
+   detail:null,thumb:null,bgClass:'tb4',
+   layout:[{type:'text',label:'Craft',body:'Forêt\'s packaging communicates through restraint: unbleached paper, letterpress type, ink matched to the colour of lichen on stone.'}],nextIdx:4},
+  {title:'Orbit Festival',cat:'Motion & Identity',client:'Orbit Festival',
+   desc:'Full visual identity and motion system for an annual electronic music and art festival.',
+   scope:['Brand Identity','Motion Design','Environmental Graphics','Digital Campaign','Merchandise'],
+   tags:['Motion','Brand Identity','Festival','Campaign'],
+   detail:null,thumb:null,bgClass:'tb5',
+   layout:[{type:'text',label:'Motion',body:'Orbit\'s identity is built to move. The logomark is a generative system — each iteration unique, constrained by the same orbital logic.'}],nextIdx:0}
+];
+
+/* ══ CURSOR ══ */
+(function(){
+  const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+  let mx=0,my=0,rx=0,ry=0,shown=false;
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    dot.style.left=mx+'px';dot.style.top=my+'px';
+    if(!shown){dot.style.opacity='1';ring.style.opacity='1';shown=true}
+  });
+  document.addEventListener('mousedown',()=>document.body.classList.add('cur-click'));
+  document.addEventListener('mouseup',()=>document.body.classList.remove('cur-click'));
+  (function tick(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
+})();
+
+/* ══ NAV SCROLL ══ */
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('nav');
+  if(document.getElementById('pg-home').classList.contains('active')&&window.scrollY<80){
+    nav.classList.remove('scrolled');nav.classList.add('nav-home-white');
+  } else {nav.classList.add('scrolled');nav.classList.remove('nav-home-white')}
+});
+
+/* ══ PAGE TRANSITION ══ */
+function go(id){
+  const ov=document.getElementById('overlay');
+  ov.style.opacity='1';ov.style.pointerEvents='all';
+  setTimeout(()=>{
+    document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+    const nav=document.getElementById('nav');
+    if(id==='pg-home'){nav.classList.add('nav-home-white');nav.classList.remove('scrolled')}
+    else{nav.classList.remove('nav-home-white');nav.classList.add('scrolled')}
+    if(id==='pg-work')buildWorkGrid();
+    if(id==='pg-about'){
+      const el=document.getElementById('about-body-text');
+      const lbl=document.getElementById('about-label-top');
+      if(el){el.dataset.built='';el.dataset.revealed='';el.innerHTML='';}
+      if(lbl){lbl.classList.remove('in');}
+      buildAboutText();
+      setTimeout(runAboutReveal,50);
+    }
+    ov.style.opacity='0';ov.style.pointerEvents='none';
+    setTimeout(bindHover,50);
+  },300);
+}
+function openProject(idx){
+  const ov=document.getElementById('overlay');
+  ov.style.opacity='1';ov.style.pointerEvents='all';
+  setTimeout(()=>{
+    document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+    document.getElementById('pg-project').classList.add('active');
+    buildProject(idx);window.scrollTo(0,0);
+    document.getElementById('nav').classList.remove('nav-home-white');
+    document.getElementById('nav').classList.add('scrolled');
+    ov.style.opacity='0';ov.style.pointerEvents='none';
+    setTimeout(()=>{bindHover();initDiagramAnim()},100);
+  },300);
+}
+
+/* ══ WORK GRID ══ */
+function buildWorkGrid(){
+  const grid=document.getElementById('work-grid');
+  grid.innerHTML='';
+  projects.forEach((p,i)=>{
+    const card=document.createElement('div');
+    card.className='work-card';card.onclick=()=>openProject(i);
+    const inner=p.thumb
+      ?`<img class="wc-img" src="${p.thumb}" alt="${p.title}" onerror="this.style.display='none';this.parentElement.classList.add('${p.bgClass||'tb1'}')">`
+      :`<div class="wc-placeholder ${p.bgClass||'tb1'}"></div>`;
+    card.innerHTML=inner+`
+      <div class="wc-arrow">↗</div>
+      <div class="wc-info">
+        <div class="card-cat">${p.cat}</div>
+        <div style="font-family:var(--serif);font-size:clamp(1.2rem,2.5vw,1.8rem);color:#fff;font-weight:400;margin-top:.3rem">${p.title}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+/* ══ PROJECT DETAIL ══ */
+function buildProject(idx){
+  const p=projects[idx],next=projects[p.nextIdx];
+  const heroBg=p.detail?`<img src="${p.detail}" alt="${p.title}" onerror="this.style.display='none'">`:`<div class="${p.bgClass||'tb1'}" style="position:absolute;inset:0"></div>`;
+  let gHTML='';
+  (p.layout||[]).forEach(b=>{
+    if(b.type==='diagram'){
+      // diagram removed per request
+    } else if(b.type==='text'){
+      gHTML+=`<div class="text-block"><div class="text-block-bar"></div><div><span class="text-block-label">${b.label}</span><p class="text-block-body">${b.body}</p></div></div>`;
+    } else if(b.type==='images'){
+      gHTML+=`<div class="gallery-images ${b.layout||'one'}">${b.images.map(im=>`<div class="gallery-img ${im.ar||'ar-wide'}">${im.src?`<img src="${im.src}" alt="" onerror="this.parentElement.style.background='var(--surface)'">`:''}  </div>`).join('')}</div>`;
+    }
+  });
+  /* project-body: scope left, desc right only — no tags below */
+  document.getElementById('proj-content').innerHTML=`
+    <section class="project-hero">${heroBg}<div class="project-hero-grad"></div>
+      <div class="project-hero-content">
+        <h1 class="project-hero-title">${p.title}</h1>
+        <div class="project-meta"><div class="meta-item">Category</div><div class="meta-val" style="margin-bottom:1rem">${p.cat}</div><div class="meta-item">Client</div><div class="meta-val">${p.client}</div></div>
+      </div>
+    </section>
+    <section class="project-body">
+      <div><span class="sec-label">Scope of Work</span><ul class="scope-list">${p.scope.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+      <div><p class="project-desc">${p.desc}</p></div>
+    </section>
+    <div class="gallery">${gHTML}</div>
+    <a class="next-project" href="#" onclick="openProject(${p.nextIdx});return false">
+      <div><div class="np-label">Next Project</div><div class="np-title">${next.title}</div></div>
+      <span class="np-arrow">→</span>
+    </a>`;
+}
+
+/* ══ DIAGRAM ANIM ══ */
+function initDiagramAnim(){
+  const lines=document.querySelectorAll('.diag-line');
+  if(!lines.length)return;
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){lines.forEach((l,i)=>setTimeout(()=>l.classList.add('drawn'),i*400));obs.disconnect()}});
+  },{threshold:.3});
+  const wrap=document.getElementById('diag-wrap');
+  if(wrap)obs.observe(wrap);
+}
+
+
+/* ══ ABOUT TEXT REVEAL ══ */
+const ABOUT_WORDS=[
+  {w:'I',b:false},{w:'am',b:false},{w:'a',b:false},
+  {w:'multi-disciplinary',b:true},{w:'Designer',b:true},
+  {w:'and',b:false},{w:'Art',b:true},{w:'Director',b:true},
+  {w:'with',b:false},{w:'15+',b:true},{w:'years',b:true},
+  {w:'of',b:false},{w:'experience',b:false},{w:'working',b:false},
+  {w:'with',b:false},{w:'creative',b:true},{w:'studios',b:true},
+  {w:'and',b:false},{w:'international',b:true},{w:'brands.',b:true},
+  {w:'My',b:false},{w:'work',b:false},{w:'spans',b:false},
+  {w:'across',b:false},{w:'various',b:false},{w:'fields',b:false},
+  {w:'of',b:false},{w:'Art',b:false},{w:'and',b:false},
+  {w:'Design,',b:false},{w:'including',b:false},
+  {w:'Creative',b:true},{w:'Direction,',b:true},
+  {w:'Brand',b:true},{w:'Strategy,',b:true},
+  {w:'Visual',b:true},{w:'Identity,',b:true},
+  {w:'and',b:false},{w:'Spatial',b:true},{w:'Design.',b:true}
+];
+
+function buildAboutText(){
+  const el=document.getElementById('about-body-text');
+  if(!el||el.dataset.built)return;
+  el.dataset.built='1';
+  el.innerHTML=ABOUT_WORDS.map(m=>
+    `<span class="aw${m.b?' aw-bold':''}">${m.w} </span>`
+  ).join('');
+}
+
+function runAboutReveal(){
+  const lbl=document.getElementById('about-label-top');
+  if(lbl) setTimeout(()=>lbl.classList.add('in'),80);
+  const el=document.getElementById('about-body-text');
+  if(!el||el.dataset.revealed)return;
+  el.dataset.revealed='1';
+  const bolds=[...el.querySelectorAll('.aw-bold')];
+  bolds.forEach((sp,i)=>{
+    setTimeout(()=>sp.classList.add('revealed'), 300+i*75);
+  });
+}
+
+/* ══ HOVER BIND ══ */
+function bindHover(){
+  document.querySelectorAll('a,button,.work-card,.next-project').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('cur-hover'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-hover'));
+  });
+}
+bindHover();
+</script>
+</body>
+</html>
