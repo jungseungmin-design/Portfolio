@@ -358,50 +358,52 @@ a,button,[data-hover]{cursor:none}
 </div>
 
 <script>
-/* ══ PROJECT DATA ══ */
-const projects=[
-  {title:'CAKE Seoul',cat:'Spatial Design',client:'CAKE Seoul',
-   desc:'A comprehensive spatial identity system for CAKE Seoul — a cultural hub and creative community space in the heart of the city.',
+/* ══ PROJECT DATA — Notion API ══ */
+let projects = [];
+
+async function loadProjects() {
+  try {
+    const res = await fetch('/api/projects');
+    if (!res.ok) throw new Error('API error');
+    projects = await res.json();
+    // If on work page, rebuild grid with fresh data
+    if (document.getElementById('pg-work').classList.contains('active')) {
+      buildWorkGrid();
+    }
+  } catch(e) {
+    console.warn('Notion API unavailable, using fallback data');
+    projects = FALLBACK_PROJECTS;
+  }
+}
+
+/* ══ FALLBACK DATA (used if API unavailable) ══ */
+const FALLBACK_PROJECTS=[
+  {title:'CAKE Seoul',category:'Spatial Design',client:'CAKE Seoul',
+   description:'A comprehensive spatial identity system for CAKE Seoul — a cultural hub and creative community space in the heart of the city.',
    scope:['Spatial Strategy','Brand Translation','Interior Identity','Signage & Wayfinding','Community Programming'],
    tags:['Spatial Design','Brand Identity','Signage','Interior'],
-   detail:'portfolio_imgs/img04.jpg',thumb:'portfolio_imgs/img00.jpg',
-   layout:[
-     {type:'diagram'},
-     {type:'text',label:'Concept',body:'The design logic begins with a single conviction: that a space should communicate without explanation.'},
-     {type:'images',layout:'one',images:[{src:'portfolio_imgs/img02.jpg',ar:'ar-wide'}]},
-     {type:'text',label:'Space',body:'Every surface decision was made in dialogue with the brand\'s commitment to craft. Raw concrete, aged steel, and natural timber create a material palette that ages gracefully.'},
-     {type:'images',layout:'two',images:[{src:'portfolio_imgs/img03.jpg',ar:'ar-port'},{src:'portfolio_imgs/img04.jpg',ar:'ar-port'}]},
-     {type:'images',layout:'asym',images:[{src:'portfolio_imgs/img05.jpg',ar:'ar-wide'},{src:'portfolio_imgs/img06.jpg',ar:'ar-wide'}]},
-     {type:'text',label:'Community',body:'The signage system extends the brand\'s visual language into the street, creating moments of recognition and curiosity.'},
-     {type:'images',layout:'one',images:[{src:'portfolio_imgs/img07.jpg',ar:'ar-port'}]},
-   ],nextIdx:1},
-  {title:'Novo App',cat:'UI/UX Design',client:'Novo Financial',
-   desc:'A digital banking experience designed for the creative economy. Clean, fast, and deeply functional without sacrificing personality.',
+   cover:'portfolio_imgs/img04.jpg',thumbnail:'portfolio_imgs/img00.jpg',
+   order:1},
+  {title:'Novo App',category:'UI/UX Design',client:'Novo Financial',
+   description:'A digital banking experience designed for the creative economy.',
    scope:['Product Strategy','UX Research','Interface Design','Design System','Prototype Testing'],
    tags:['UI/UX','Product Design','Design System','Fintech'],
-   detail:null,thumb:null,bgClass:'pl-novo',
-   layout:[
-     {type:'text',label:'Approach',body:'Banking products for creatives must be trustworthy and serious, yet speak the language of people who care deeply about aesthetics.'},
-     {type:'text',label:'System',body:'The design system was built mobile-first, with a component library that scales across iOS, Android, and web.'},
-   ],nextIdx:2},
-  {title:'Bloom Magazine',cat:'Editorial Design',client:'Bloom Publishing',
-   desc:'Editorial identity and ongoing art direction for Bloom, a biannual publication exploring fashion, culture, and contemporary art.',
-   scope:['Publication Design','Art Direction','Typography System','Cover Design','Ongoing Direction'],
+   cover:null,thumbnail:null,bgClass:'pl-novo',order:2},
+  {title:'Bloom Magazine',category:'Editorial Design',client:'Bloom Publishing',
+   description:'Editorial identity and ongoing art direction for Bloom, a biannual publication.',
+   scope:['Publication Design','Art Direction','Typography System','Cover Design'],
    tags:['Editorial','Typography','Publication','Art Direction'],
-   detail:null,thumb:null,bgClass:'pl-bloom',
-   layout:[{type:'text',label:'Editorial',body:'Each issue of Bloom is conceived as a singular object — a physical artifact with its own visual logic.'}],nextIdx:3},
-  {title:'Forêt Beauty',cat:'Packaging Design',client:'Forêt',
-   desc:'Packaging identity for a botanical skincare brand rooted in slow beauty and forest philosophy.',
+   cover:null,thumbnail:null,bgClass:'pl-bloom',order:3},
+  {title:'Forêt Beauty',category:'Packaging Design',client:'Forêt',
+   description:'Packaging identity for a botanical skincare brand rooted in slow beauty.',
    scope:['Brand Identity','Packaging Design','Material Sourcing','Print Production'],
    tags:['Packaging','Brand Identity','Print'],
-   detail:null,thumb:null,bgClass:'tb4',
-   layout:[{type:'text',label:'Craft',body:'Forêt\'s packaging communicates through restraint: unbleached paper, letterpress type, ink matched to the colour of lichen on stone.'}],nextIdx:4},
-  {title:'Orbit Festival',cat:'Motion & Identity',client:'Orbit Festival',
-   desc:'Full visual identity and motion system for an annual electronic music and art festival.',
-   scope:['Brand Identity','Motion Design','Environmental Graphics','Digital Campaign','Merchandise'],
+   cover:null,thumbnail:null,bgClass:'tb4',order:4},
+  {title:'Orbit Festival',category:'Motion & Identity',client:'Orbit Festival',
+   description:'Full visual identity and motion system for an annual electronic music festival.',
+   scope:['Brand Identity','Motion Design','Environmental Graphics','Digital Campaign'],
    tags:['Motion','Brand Identity','Festival','Campaign'],
-   detail:null,thumb:null,bgClass:'tb5',
-   layout:[{type:'text',label:'Motion',body:'Orbit\'s identity is built to move. The logomark is a generative system — each iteration unique, constrained by the same orbital logic.'}],nextIdx:0}
+   cover:null,thumbnail:null,bgClass:'tb5',order:5}
 ];
 
 /* ══ CURSOR ══ */
@@ -468,16 +470,19 @@ function openProject(idx){
 function buildWorkGrid(){
   const grid=document.getElementById('work-grid');
   grid.innerHTML='';
-  projects.forEach((p,i)=>{
+  const list=projects.length?projects:FALLBACK_PROJECTS;
+  list.forEach((p,i)=>{
     const card=document.createElement('div');
     card.className='work-card';card.onclick=()=>openProject(i);
-    const inner=p.thumb
-      ?`<img class="wc-img" src="${p.thumb}" alt="${p.title}" onerror="this.style.display='none';this.parentElement.classList.add('${p.bgClass||'tb1'}')">`
-      :`<div class="wc-placeholder ${p.bgClass||'tb1'}"></div>`;
+    const thumb=p.thumbnail||p.thumb||null;
+    const bg=p.bgClass||'tb1';
+    const inner=thumb
+      ?`<img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none';this.parentElement.classList.add('${bg}')">`
+      :`<div class="wc-placeholder ${bg}"></div>`;
     card.innerHTML=inner+`
       <div class="wc-arrow">↗</div>
       <div class="wc-info">
-        <div class="card-cat">${p.cat}</div>
+        <div class="card-cat">${p.category||p.cat||''}</div>
         <div style="font-family:var(--serif);font-size:clamp(1.2rem,2.5vw,1.8rem);color:#fff;font-weight:400;margin-top:.3rem">${p.title}</div>
       </div>`;
     grid.appendChild(card);
@@ -486,32 +491,27 @@ function buildWorkGrid(){
 
 /* ══ PROJECT DETAIL ══ */
 function buildProject(idx){
-  const p=projects[idx],next=projects[p.nextIdx];
-  const heroBg=p.detail?`<img src="${p.detail}" alt="${p.title}" onerror="this.style.display='none'">`:`<div class="${p.bgClass||'tb1'}" style="position:absolute;inset:0"></div>`;
-  let gHTML='';
-  (p.layout||[]).forEach(b=>{
-    if(b.type==='diagram'){
-      // diagram removed per request
-    } else if(b.type==='text'){
-      gHTML+=`<div class="text-block"><div class="text-block-bar"></div><div><span class="text-block-label">${b.label}</span><p class="text-block-body">${b.body}</p></div></div>`;
-    } else if(b.type==='images'){
-      gHTML+=`<div class="gallery-images ${b.layout||'one'}">${b.images.map(im=>`<div class="gallery-img ${im.ar||'ar-wide'}">${im.src?`<img src="${im.src}" alt="" onerror="this.parentElement.style.background='var(--surface)'">`:''}  </div>`).join('')}</div>`;
-    }
-  });
-  /* project-body: scope left, desc right only — no tags below */
+  const list=projects.length?projects:FALLBACK_PROJECTS;
+  const p=list[idx];
+  const next=list[(idx+1)%list.length];
+  const cover=p.cover||p.detail||null;
+  const bg=p.bgClass||'tb1';
+  const heroBg=cover?`<img src="${cover}" alt="${p.title}" onerror="this.style.display='none'">`:`<div class="${bg}" style="position:absolute;inset:0"></div>`;
+  const desc=p.description||p.desc||'';
+  const cat=p.category||p.cat||'';
+  const scopeList=(p.scope||[]).map(s=>`<li>${s}</li>`).join('');
   document.getElementById('proj-content').innerHTML=`
     <section class="project-hero">${heroBg}<div class="project-hero-grad"></div>
       <div class="project-hero-content">
         <h1 class="project-hero-title">${p.title}</h1>
-        <div class="project-meta"><div class="meta-item">Category</div><div class="meta-val" style="margin-bottom:1rem">${p.cat}</div><div class="meta-item">Client</div><div class="meta-val">${p.client}</div></div>
+        <div class="project-meta"><div class="meta-item">Category</div><div class="meta-val" style="margin-bottom:1rem">${cat}</div><div class="meta-item">Client</div><div class="meta-val">${p.client||''}</div></div>
       </div>
     </section>
     <section class="project-body">
-      <div><span class="sec-label">Scope of Work</span><ul class="scope-list">${p.scope.map(s=>`<li>${s}</li>`).join('')}</ul></div>
-      <div><p class="project-desc">${p.desc}</p></div>
+      <div><span class="sec-label">Scope of Work</span><ul class="scope-list">${scopeList}</ul></div>
+      <div><p class="project-desc">${desc}</p></div>
     </section>
-    <div class="gallery">${gHTML}</div>
-    <a class="next-project" href="#" onclick="openProject(${p.nextIdx});return false">
+    <a class="next-project" href="#" onclick="openProject(${(idx+1)%list.length});return false">
       <div><div class="np-label">Next Project</div><div class="np-title">${next.title}</div></div>
       <span class="np-arrow">→</span>
     </a>`;
@@ -577,6 +577,7 @@ function bindHover(){
   });
 }
 bindHover();
+loadProjects();
 </script>
 </body>
 </html>
