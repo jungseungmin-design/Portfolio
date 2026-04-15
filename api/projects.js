@@ -1,10 +1,10 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
- 
+
   const NOTION_TOKEN = process.env.NOTION_TOKEN;
   const DATABASE_ID = process.env.NOTION_DATABASE_ID;
- 
+
   try {
     const response = await fetch(`https://api.notion.com/v1/databases/${DATABASE_ID}/query`, {
       method: 'POST',
@@ -21,9 +21,9 @@ export default async function handler(req, res) {
         sorts: [{ property: 'Order', direction: 'ascending' }]
       })
     });
- 
+
     const data = await response.json();
- 
+
     const projects = data.results.map(page => {
       const p = page.properties;
       return {
@@ -39,10 +39,9 @@ export default async function handler(req, res) {
         order: p.Order?.number || 0,
       };
     });
- 
+
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch projects' });
   }
 }
- 
