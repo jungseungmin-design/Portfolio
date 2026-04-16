@@ -39,6 +39,7 @@ export default async function handler(req, res) {
         client: p.Client?.rich_text?.[0]?.plain_text || '',
         thumbnail: p.Thumbnail?.url || null,
         thumbnailMobile: p.Thumbnail_Mobile?.url || null,
+        videoThumb: p.Video_Thumb?.url || null,
         cover: p.Cover?.url || null,
         tags: (p.Tags?.rich_text?.[0]?.plain_text || '').split(',').map(t => t.trim()).filter(Boolean),
         scope: (p.Scope?.rich_text?.[0]?.plain_text || '').split(',').map(s => s.trim()).filter(Boolean),
