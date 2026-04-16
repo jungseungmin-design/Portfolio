@@ -38,6 +38,12 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* ── PAGE SYSTEM ── */
 .pg{display:none;min-height:100vh}
 .pg.active{display:block}
+/* 비활성 페이지 완전 격리 */
+#pg-work:not(.active),#pg-project:not(.active){
+  display:none !important;
+  visibility:hidden;
+  pointer-events:none;
+}
 #overlay{position:fixed;inset:0;background:var(--black);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
 .sec-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:block}
 
@@ -125,23 +131,20 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .work-masonry{
   flex:1;
   columns:2;
-  column-gap:3px;
-  padding:0;
+  column-gap:8px;
+  padding:8px;
 }
 .work-card{
   break-inside:avoid;
   position:relative;overflow:hidden;
   cursor:none;display:block;
-  margin-bottom:3px;
+  margin-bottom:8px;
+  border-radius:12px;
 }
-/* alternate aspect ratios for visual rhythm */
-.work-card:nth-child(3n+1){aspect-ratio:4/3}
-.work-card:nth-child(3n+2){aspect-ratio:3/4}
-.work-card:nth-child(3n+3){aspect-ratio:1/1}
-
-.wc-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
-.wc-video{width:100%;height:100%;object-fit:cover;display:block}
-.wc-placeholder{width:100%;height:100%;min-height:300px;transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
+/* remove fixed aspect ratios — controlled by Notion Ratio field */
+.wc-img{width:100%;display:block;transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
+.wc-video{width:100%;display:block}
+.wc-placeholder{width:100%;min-height:300px;transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
 .work-card:hover .wc-img{transform:scale(1.04)}
 .work-card:hover .wc-placeholder{transform:scale(1.04)}
 
@@ -169,8 +172,8 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 @media(max-width:900px){
   .work-layout{flex-direction:column}
   .work-sidebar{width:100%;height:auto;position:relative;padding:6rem 1.5rem 2rem;border-right:none;border-bottom:1px solid #1a1a18}
-  .work-masonry{columns:1}
-  .work-card:nth-child(n){aspect-ratio:4/3}
+  .work-masonry{columns:1;padding:8px}
+  .work-card{border-radius:10px}
 }
 
 /* ── PROJECT DETAIL ── */
@@ -532,10 +535,19 @@ function go(id){
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo(0,0);
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+    // lock scroll on home, unlock elsewhere
+    document.body.style.overflow = id==='pg-home' ? 'hidden' : '';
     const nav=document.getElementById('nav');
     if(id==='pg-home'){nav.classList.add('nav-home-white');nav.classList.remove('scrolled')}
     else{nav.classList.remove('nav-home-white');nav.classList.add('scrolled')}
     if(id==='pg-work')buildWorkGrid();
+    else {
+      // 다른 페이지로 이동 시 work grid 비워서 렌더링 방지
+      const grid=document.getElementById('work-grid');
+      if(grid && id!=='pg-work') grid.innerHTML='';
+    }
     if(id==='pg-about'){
       const el=document.getElementById('about-body-text');
       const lbl=document.getElementById('about-label-top');
@@ -571,6 +583,10 @@ function buildWorkGrid(){
     const card=document.createElement('div');
     card.className='work-card';
     card.onclick=()=>openProject(i);
+
+    // apply aspect ratio from Notion if set
+    const ratio=p.ratio||null;
+    if(ratio) card.style.aspectRatio=ratio;
 
     const thumb=p.thumbnail||p.thumb||null;
     const thumbMobile=p.thumbnailMobile||null;
@@ -765,6 +781,8 @@ function bindHover(){
 }
 bindHover();
 loadProjects();
+// lock scroll on initial home page
+document.body.style.overflow='hidden';
 </script>
 </body>
 </html>
