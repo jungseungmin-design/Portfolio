@@ -114,13 +114,25 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   justify-content:space-between;
   border-right:1px solid #1a1a18;
 }
+/* About 페이지 스타일과 통일 */
+.work-sidebar-label{
+  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2rem;display:block;
+}
 .work-sidebar-title{
-  font-family:var(--serif);font-size:clamp(1.4rem,1.8vw,1.8rem);
-  color:#fff;font-weight:400;line-height:1.3;margin-bottom:.75rem;
+  font-family:var(--sans);
+  font-size:clamp(1.55rem,2.2vw,2.4rem);
+  font-weight:300;
+  line-height:1.45;
+  color:rgba(255,255,255,.4);
+  margin-bottom:0;
+}
+.work-sidebar-title strong{
+  font-weight:700;
+  color:#fff;
 }
 .work-sidebar-sub{
-  font-size:.78rem;color:rgba(255,255,255,.4);
-  line-height:1.7;font-weight:300;
+  display:none;
 }
 .work-sidebar-bottom{
   font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
@@ -136,17 +148,53 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 }
 .work-card{
   break-inside:avoid;
-  position:relative;overflow:hidden;
+  position:relative;
   cursor:none;display:block;
   margin-bottom:8px;
   border-radius:12px;
+  overflow:hidden;
+  background:#0E0E0D;
 }
-/* remove fixed aspect ratios — controlled by Notion Ratio field */
-.wc-img{width:100%;display:block;transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
-.wc-video{width:100%;display:block}
-.wc-placeholder{width:100%;min-height:300px;transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
-.work-card:hover .wc-img{transform:scale(1.04)}
-.work-card:hover .wc-placeholder{transform:scale(1.04)}
+
+/* image — fills card, slight scale on hover */
+.wc-media-clip{
+  width:100%;
+  display:block;
+  overflow:hidden;
+  border-radius:12px;
+  transform:scale(1);
+  transition:transform .6s cubic-bezier(.25,.46,.45,.94),
+             border-radius .5s cubic-bezier(.25,.46,.45,.94);
+}
+.work-card:hover .wc-media-clip{
+  transform:scale(1.0) translateY(-28px);
+  border-radius:12px 12px 4px 4px;
+}
+
+.wc-media{width:100%;display:block;}
+.wc-img{width:100%;display:block;}
+.wc-video{width:100%;display:block;}
+.wc-placeholder{width:100%;min-height:300px;}
+
+/* text bar — always present at bottom, slides up into view */
+.wc-info{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:56px;
+  padding:0 1.4rem;
+  display:flex;align-items:center;
+  background:#0E0E0D;
+  transform:translateY(100%);
+  transition:transform .45s cubic-bezier(.25,.46,.45,.94);
+  pointer-events:none;
+  border-radius:0 0 12px 12px;
+}
+.work-card:hover .wc-info{
+  transform:translateY(0);
+}
+.wc-info-left{display:flex;flex-direction:column;gap:.15rem}
+.card-title{font-family:var(--serif);font-size:.95rem;color:#fff;font-weight:400;line-height:1.2}
+.card-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4)}
 
 /* card overlay info */
 .wc-info{
@@ -404,8 +452,8 @@ a,button,[data-hover]{cursor:none}
   <div class="work-layout">
     <aside class="work-sidebar">
       <div>
-        <h2 class="work-sidebar-title">Selected<br>Work</h2>
-        <p class="work-sidebar-sub">Multi-disciplinary design spanning brand identity, spatial experiences, and digital interfaces.</p>
+        <span class="work-sidebar-label">Work</span>
+        <p class="work-sidebar-title">Selected<br><strong>Work.</strong></p>
       </div>
       <div class="work-sidebar-bottom">© 2025 Jung Seungmin</div>
     </aside>
@@ -595,32 +643,31 @@ function buildWorkGrid(){
 
     let mediaHTML='';
     if(videoThumb){
-      // video or GIF thumbnail — always playing
       const isVideo=/\.(mp4|webm|mov)(\?|$)/i.test(videoThumb);
-      const isGif=/\.gif(\?|$)/i.test(videoThumb);
       if(isVideo){
-        mediaHTML=`<video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video>`;
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video></div></div>`;
       } else {
-        mediaHTML=`<img class="wc-video" src="${videoThumb}" alt="${p.title}">`;
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-video" src="${videoThumb}" alt="${p.title}"></div></div>`;
       }
     } else if(thumb){
       if(thumbMobile){
-        mediaHTML=`<picture style="width:100%;height:100%;display:block">
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><picture style="width:100%;display:block">
           <source media="(max-width:768px)" srcset="${thumbMobile}">
-          <img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.parentElement.parentElement.classList.add('${bg}')">
-        </picture>`;
+          <img class="wc-img" src="${thumb}" alt="${p.title}">
+        </picture></div></div>`;
       } else {
-        mediaHTML=`<img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none';this.parentElement.classList.add('${bg}')">`;
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none'"></div></div>`;
       }
     } else {
-      mediaHTML=`<div class="wc-placeholder ${bg}"></div>`;
+      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><div class="wc-placeholder ${bg}"></div></div></div>`;
     }
 
     card.innerHTML=mediaHTML+`
-      <div class="wc-arrow">↗</div>
       <div class="wc-info">
-        <div class="card-cat">${p.category||p.cat||''}</div>
-        <div class="card-title">${p.title}</div>
+        <div class="wc-info-left">
+          <div class="card-title">${p.title}</div>
+          <div class="card-cat">${p.category||p.cat||''}</div>
+        </div>
       </div>`;
     grid.appendChild(card);
   });
