@@ -211,50 +211,162 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   .work-card{border-radius:10px}
 }
 
-/* ── PROJECT DETAIL ── */
-.project-hero{position:relative;height:70vh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;background:var(--black)}
-.project-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.project-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,14,13,.9) 0%,transparent 50%)}
-.project-hero-content{position:relative;z-index:2;padding:0 3rem 3rem;display:flex;justify-content:space-between;align-items:flex-end}
-.project-hero-title{font-family:var(--serif);font-size:clamp(3rem,5vw,4.5rem);color:#fff;font-weight:400}
-.project-meta{text-align:right}
-.meta-item{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.4rem}
-.meta-val{font-size:.82rem;color:#fff;font-weight:300}
-.back-btn{position:absolute;top:7rem;left:3rem;z-index:10;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);text-decoration:none;display:flex;align-items:center;gap:.5rem;transition:color .2s}
-.back-btn:hover{color:var(--gold)}
+/* ── PROJECT DETAIL — Basic Agency style ── */
+#pg-project{background:#1a1a1a;min-height:100vh;transition:background-color .6s ease}
+
+/* 커튼 전환 */
+.proj-curtain{
+  position:fixed;inset:0;background:#000;z-index:300;
+  transform:translateY(100%);pointer-events:none;
+}
+.proj-curtain.rise{transition:transform .55s cubic-bezier(.76,0,.24,1)}
+.proj-curtain.rise.go{transform:translateY(0%)}
+.proj-curtain.fall{transition:transform .45s cubic-bezier(.76,0,.24,1)}
+.proj-curtain.fall.go{transform:translateY(-100%)}
+
+/* back button */
+.back-btn{
+  position:fixed;top:1.8rem;left:3rem;z-index:400;
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);text-decoration:none;
+  display:flex;align-items:center;gap:.5rem;transition:color .2s,opacity .3s;
+}
+.back-btn:hover{color:#fff}
 .back-btn::before{content:'←';font-size:.9rem}
-/* project body: only scope on left, desc on right — no duplicate below */
-.project-body{display:grid;grid-template-columns:1fr 2fr;gap:5rem;padding:5rem 3rem}
-.scope-list{list-style:none}
-.scope-list li{font-size:.75rem;letter-spacing:.08em;color:var(--muted);padding:.6rem 0;border-bottom:1px solid var(--surface)}
-.project-desc{font-size:1.05rem;line-height:1.8;color:var(--black);font-weight:300;margin-bottom:2rem}
-.tag-pills{display:flex;flex-wrap:wrap;gap:.6rem}
-.tag-pill{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--surface);color:var(--muted);padding:.4rem 1rem}
-.gallery{padding:0 3rem 5rem;display:flex;flex-direction:column;gap:4rem}
-.gallery-diagram{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;align-items:center}
-.diag-node{border:1px solid var(--surface);padding:2rem;text-align:center}
-.diag-node-title{font-family:var(--serif);font-size:1.1rem;font-weight:400;margin-bottom:.6rem}
-.diag-node-sub{font-size:.72rem;color:var(--muted);line-height:1.6}
-.diag-line{stroke-dasharray:200;stroke-dashoffset:200;transition:stroke-dashoffset 1.2s ease}
-.diag-line.drawn{stroke-dashoffset:0}
-.text-block{display:grid;grid-template-columns:3rem 1fr;gap:2rem;max-width:800px}
-.text-block-bar{width:1px;background:var(--gold);margin-top:.2rem}
-.text-block-label{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:block}
-.text-block-body{font-size:1rem;line-height:1.85;color:var(--black);font-weight:300}
-.gallery-images{display:grid;gap:1.2rem}
-.gallery-images.one{grid-template-columns:1fr}
-.gallery-images.two{grid-template-columns:1fr 1fr}
-.gallery-images.asym{grid-template-columns:1.4fr 1fr}
-.gallery-img{overflow:hidden;background:var(--surface)}
-.gallery-img img{width:100%;height:100%;object-fit:cover;display:block}
-.gallery-img.ar-wide{aspect-ratio:16/9}
-.gallery-img.ar-port{aspect-ratio:4/5}
-.gallery-img.ar-sq{aspect-ratio:1}
-.next-project{display:flex;align-items:center;justify-content:space-between;padding:3rem;background:var(--black);cursor:none;text-decoration:none;transition:background .3s;border-top:1px solid #1a1a18}
-.next-project:hover{background:#0a0a09}
-.np-label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.np-title{font-family:var(--serif);font-size:2rem;color:#fff;font-weight:400;margin-top:.4rem}
-.np-arrow{font-size:2rem;color:var(--gold)}
+.back-btn.light{color:var(--muted)}
+.back-btn.light:hover{color:var(--black)}
+
+/* ① HERO — 대표색 풀스크린 */
+.proj-hero{
+  position:relative;height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  overflow:hidden;
+}
+.proj-hero-bg{position:absolute;inset:0;z-index:0;}
+.proj-hero-bg img{
+  width:100%;height:100%;object-fit:cover;
+  opacity:.4;mix-blend-mode:luminosity;
+}
+.proj-hero-content{
+  position:relative;z-index:2;
+  padding:0 5vw 5rem;
+}
+.proj-hero-eyebrow{
+  font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-bottom:1.2rem;display:block;
+}
+.proj-hero-title{
+  font-family:var(--serif);
+  font-size:clamp(4rem,9vw,9rem);
+  color:#fff;font-weight:400;
+  line-height:.9;letter-spacing:-.02em;
+}
+
+/* ② OVERVIEW */
+.proj-overview{
+  padding:7rem 5vw;
+  display:grid;grid-template-columns:280px 1fr;gap:6rem;
+}
+.proj-overview-label{
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:1.5rem;display:block;
+  transition:color .5s;
+}
+.proj-overview-label.light{color:var(--gold)}
+.proj-service-list{list-style:none}
+.proj-service-list li{
+  font-size:.82rem;color:rgba(255,255,255,.55);
+  padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.08);
+  font-weight:300;transition:color .5s,border-color .5s;
+}
+.proj-service-list.light li{color:var(--muted);border-bottom-color:#eee}
+.proj-overview-title{
+  font-family:var(--serif);
+  font-size:clamp(1.5rem,2.2vw,2rem);
+  font-weight:400;line-height:1.3;
+  margin-bottom:2rem;color:#fff;transition:color .5s;
+}
+.proj-overview-title.light{color:var(--black)}
+.proj-overview-body{
+  font-size:clamp(.88rem,1.1vw,.98rem);
+  line-height:1.95;color:rgba(255,255,255,.5);
+  font-weight:300;transition:color .5s;
+}
+.proj-overview-body.light{color:#555}
+.proj-overview-body p{margin-bottom:1.4rem}
+.proj-overview-body p:last-child{margin-bottom:0}
+.proj-overview-body strong{font-weight:500;color:rgba(255,255,255,.85);transition:color .5s}
+.proj-overview-body.light strong{color:var(--black)}
+
+/* ③ META STRIP */
+.proj-meta-strip{
+  padding:3rem 5vw;
+  display:flex;gap:4rem;flex-wrap:wrap;
+  border-top:1px solid rgba(255,255,255,.1);
+  transition:border-color .5s;
+}
+.proj-meta-strip.light{border-top-color:#eee}
+.proj-meta-item{}
+.proj-meta-label{
+  font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);margin-bottom:.4rem;display:block;transition:color .5s;
+}
+.proj-meta-label.light{color:var(--muted)}
+.proj-meta-val{font-size:.82rem;color:rgba(255,255,255,.7);font-weight:300;transition:color .5s}
+.proj-meta-val.light{color:var(--black)}
+.tag-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
+.tag-pill{
+  font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);
+  padding:.3rem .85rem;border-radius:100px;transition:border-color .5s,color .5s;
+}
+.tag-pill.light{border-color:#ddd;color:#999}
+
+/* ④ CONTENT BLOCKS — white bg */
+.proj-blocks{background:#fff;padding-bottom:6rem}
+.pb-text{padding:2.5rem 5vw;max-width:820px}
+.pb-text p{font-size:clamp(.88rem,1.1vw,.98rem);line-height:1.95;color:#444;font-weight:300;margin-bottom:1.2rem}
+.pb-text p strong{font-weight:500;color:var(--black)}
+.pb-h2{padding:3rem 5vw .5rem}
+.pb-h2 h2{font-family:var(--serif);font-size:clamp(1.6rem,2.5vw,2.4rem);font-weight:400;color:var(--black)}
+.pb-h3{padding:2rem 5vw .5rem}
+.pb-h3 h3{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.pb-img-one{margin:.5rem 0}
+.pb-img-one figure img{width:100%;display:block}
+.pb-img-two{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:.5rem 0}
+.pb-img-two figure img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.pb-img-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:.5rem 0}
+.pb-img-three figure img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.pb-figure{margin:0;overflow:hidden}
+.pb-figure figcaption{font-size:.58rem;letter-spacing:.08em;color:#aaa;padding:.5rem 5vw 0}
+.pb-video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:.5rem 0}
+.pb-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.pb-video-native{margin:.5rem 0}
+.pb-video-native video{width:100%;display:block}
+.pb-divider{height:4rem}
+
+/* ⑤ NEXT PROJECT */
+.next-project{
+  display:block;position:relative;
+  height:60vh;min-height:320px;
+  overflow:hidden;cursor:none;text-decoration:none;
+}
+.np-bg{
+  position:absolute;inset:0;
+  transition:transform .8s cubic-bezier(.25,.46,.45,.94);
+}
+.np-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
+.next-project:hover .np-bg{transform:scale(1.04)}
+.np-content{
+  position:absolute;inset:0;z-index:2;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:3rem 5vw;
+  background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 60%);
+}
+.np-left{}
+.np-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.4rem}
+.np-title{font-family:var(--serif);font-size:clamp(2rem,4vw,3.5rem);color:#fff;font-weight:400}
+.np-arrow{font-size:2.5rem;color:var(--gold);align-self:flex-end}
 
 /* ══════════════════════════════════════════
    ABOUT — text reveal animation
@@ -404,6 +516,7 @@ a,button,[data-hover]{cursor:none}
 <div id="cur-dot"></div>
 <div id="cur-ring"></div>
 <div id="overlay"></div>
+<div id="proj-curtain" class="proj-curtain"></div>
 
 <nav id="nav" class="nav-home-white">
   <a class="nav-logo" href="#" onclick="go('pg-home');return false">JS</a>
@@ -596,17 +709,29 @@ function go(id){
   },300);
 }
 function openProject(idx){
-  const ov=document.getElementById('overlay');
-  ov.style.opacity='1';ov.style.pointerEvents='all';
+  const curtain=document.getElementById('proj-curtain');
+  // 1) 커튼 올라오기
+  curtain.className='proj-curtain rise';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    curtain.classList.add('go');
+  }));
   setTimeout(()=>{
+    // 2) 페이지 전환
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
     document.getElementById('pg-project').classList.add('active');
-    buildProject(idx);window.scrollTo(0,0);
+    buildProject(idx);
+    window.scrollTo(0,0);
+    document.body.style.overflow='';
     document.getElementById('nav').classList.remove('nav-home-white');
     document.getElementById('nav').classList.add('scrolled');
-    ov.style.opacity='0';ov.style.pointerEvents='none';
-    setTimeout(()=>{bindHover();initDiagramAnim()},100);
-  },300);
+    // 3) 커튼 내려가기
+    curtain.className='proj-curtain fall';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      curtain.classList.add('go');
+    }));
+    setTimeout(()=>{curtain.className='proj-curtain';},500);
+    setTimeout(()=>{bindHover();},100);
+  },600);
 }
 
 /* ══ WORK GRID ══ */
@@ -661,55 +786,120 @@ function buildWorkGrid(){
 }
 
 /* ══ PROJECT DETAIL ══ */
+let projScrollHandler=null;
+
 function buildProject(idx){
   const list=projects.length?projects:FALLBACK_PROJECTS;
   const p=list[idx];
   const next=list[(idx+1)%list.length];
-  const cover=p.cover||p.detail||null;
-  const bg=p.bgClass||'tb1';
-  const heroBg=cover
-    ?`<img src="${cover}" alt="${p.title}" onerror="this.style.display='none'">`
-    :`<div class="${bg}" style="position:absolute;inset:0"></div>`;
+  const bgColor=p.bgColor||'#1C1C1C';
   const cat=p.category||p.cat||'';
   const scopeList=(p.scope||[]).map(s=>`<li>${s}</li>`).join('');
   const tagPills=(p.tags||[]).map(t=>`<span class="tag-pill">${t}</span>`).join('');
-
-  // render Notion blocks
   const bodyHTML=renderBlocks(p.blocks||[]);
+  const cover=p.cover||p.detail||null;
+  const nextCover=next.cover||next.detail||null;
+  const nextBg=next.bgColor||'#1C1C1C';
+
+  // set page bg to project color
+  document.getElementById('pg-project').style.background=bgColor;
 
   document.getElementById('proj-content').innerHTML=`
-    <section class="project-hero">
-      ${heroBg}
-      <div class="project-hero-grad"></div>
-      <div class="project-hero-content">
-        <h1 class="project-hero-title">${p.title}</h1>
-        <div class="project-meta">
-          <div class="meta-item">Category</div>
-          <div class="meta-val" style="margin-bottom:1rem">${cat}</div>
-          <div class="meta-item">Client</div>
-          <div class="meta-val">${p.client||''}</div>
+    <!-- HERO -->
+    <section class="proj-hero" style="background:${bgColor}">
+      <div class="proj-hero-bg">
+        ${cover?`<img src="${cover}" alt="${p.title}">`:''}
+      </div>
+      <div class="proj-hero-content">
+        <span class="proj-hero-eyebrow">${cat}</span>
+        <h1 class="proj-hero-title">${p.title}</h1>
+      </div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section class="proj-overview" id="proj-overview">
+      <div class="proj-overview-left">
+        <span class="proj-overview-label" id="ov-label">Services</span>
+        <ul class="proj-service-list" id="ov-services">${scopeList}</ul>
+      </div>
+      <div class="proj-overview-right">
+        <h2 class="proj-overview-title" id="ov-title">${p.title} — ${cat}</h2>
+        <div class="proj-overview-body" id="ov-body">
+          <div id="proj-body-text"></div>
         </div>
       </div>
     </section>
 
-    <section class="project-body">
-      <div>
-        <span class="sec-label">Scope of Work</span>
-        <ul class="scope-list">${scopeList}</ul>
-        ${tagPills?`<div class="tag-pills" style="margin-top:2rem">${tagPills}</div>`:''}
+    <!-- META STRIP -->
+    <div class="proj-meta-strip" id="proj-meta-strip">
+      <div class="proj-meta-item">
+        <span class="proj-meta-label" id="meta-cat-lbl">Category</span>
+        <span class="proj-meta-val" id="meta-cat-val">${cat}</span>
       </div>
-      <div id="proj-body-text"></div>
-    </section>
+      <div class="proj-meta-item">
+        <span class="proj-meta-label" id="meta-cli-lbl">Client</span>
+        <span class="proj-meta-val" id="meta-cli-val">${p.client||''}</span>
+      </div>
+      ${tagPills?`<div class="proj-meta-item">
+        <span class="proj-meta-label" id="meta-tag-lbl">Tags</span>
+        <div class="tag-pills" id="meta-tags">${tagPills}</div>
+      </div>`:''}
+    </div>
 
+    <!-- CONTENT BLOCKS -->
     <div class="proj-blocks">${bodyHTML}</div>
 
+    <!-- NEXT PROJECT -->
     <a class="next-project" href="#" onclick="openProject(${(idx+1)%list.length});return false">
-      <div>
-        <div class="np-label">Next Project</div>
-        <div class="np-title">${next.title}</div>
+      <div class="np-bg" style="background:${nextBg}">
+        ${nextCover?`<img src="${nextCover}" alt="${next.title}">`:''}
       </div>
-      <span class="np-arrow">→</span>
+      <div class="np-content">
+        <div class="np-left">
+          <div class="np-label">Next Project</div>
+          <div class="np-title">${next.title}</div>
+        </div>
+        <span class="np-arrow">→</span>
+      </div>
     </a>`;
+
+  // scroll-driven color transition: project color → white
+  if(projScrollHandler) window.removeEventListener('scroll', projScrollHandler);
+  const pg=document.getElementById('pg-project');
+  const btn=document.querySelector('.back-btn');
+
+  // parse bgColor to interpolate toward white
+  const hex=bgColor.replace('#','');
+  const r=parseInt(hex.slice(0,2),16)||28;
+  const g=parseInt(hex.slice(2,4),16)||28;
+  const b=parseInt(hex.slice(4,6),16)||28;
+
+  projScrollHandler=function(){
+    const overviewTop=document.getElementById('proj-overview')?.offsetTop||window.innerHeight;
+    const blocksTop=document.querySelector('.proj-blocks')?.offsetTop||overviewTop*2;
+    const scrollY=window.scrollY;
+
+    // transition from bgColor to white over the overview section
+    const progress=Math.min(1,Math.max(0,(scrollY-overviewTop*0.3)/(blocksTop-overviewTop*0.3)));
+    const cr=Math.round(r+(255-r)*progress);
+    const cg=Math.round(g+(255-g)*progress);
+    const cb=Math.round(b+(255-b)*progress);
+    pg.style.background=`rgb(${cr},${cg},${cb})`;
+
+    // switch text colors at midpoint
+    const mid=progress>0.5;
+    ['ov-label','ov-title','ov-body'].forEach(id=>{
+      document.getElementById(id)?.classList.toggle('light',mid);
+    });
+    document.getElementById('ov-services')?.classList.toggle('light',mid);
+    document.getElementById('proj-meta-strip')?.classList.toggle('light',mid);
+    ['meta-cat-lbl','meta-cat-val','meta-cli-lbl','meta-cli-val','meta-tag-lbl'].forEach(id=>{
+      document.getElementById(id)?.classList.toggle('light',mid);
+    });
+    document.querySelectorAll('.tag-pill').forEach(el=>el.classList.toggle('light',mid));
+    if(btn) btn.classList.toggle('light', scrollY > window.innerHeight*0.8);
+  };
+  window.addEventListener('scroll', projScrollHandler, {passive:true});
 }
 
 function renderBlocks(blocks){
