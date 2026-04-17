@@ -277,9 +277,9 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   padding:.3rem .85rem;border-radius:100px;font-weight:500;
 }
 
-/* RIGHT — scrollable text */
+/* RIGHT — scrollable text, more gap from left */
 .proj-scrolltext{
-  padding:6rem 5vw 6rem 0;
+  padding:6rem 5vw 6rem 5vw;
 }
 .proj-scrolltext-inner{max-width:680px}
 
@@ -860,10 +860,9 @@ function buildProject(idx){
       <aside class="proj-sidebar">
         <div>
           <h2 class="proj-sidebar-title">${p.title}</h2>
-          <ul class="proj-sidebar-meta">
-            ${cat?`<li>${cat}</li>`:''}
-            ${p.client?`<li>${p.client}</li>`:''}
-            ${scopeItems}
+          <ul class="proj-sidebar-meta" style="margin-top:1.2rem">
+            ${(p.scope||[]).map(s=>`<li>${s}</li>`).join('')}
+            ${p.client?`<li style="margin-top:.5rem">${p.client}</li>`:''}
           </ul>
           ${tagItems?`<div class="proj-sidebar-tags" style="margin-top:1.5rem">${tagItems}</div>`:''}
         </div>
