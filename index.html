@@ -236,9 +236,36 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .proj-hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#1c1c1c}
 .proj-hero-bg{position:absolute;inset:0;z-index:0}
 .proj-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
-.proj-hero-content{position:relative;z-index:2;padding:0 5vw 5rem}
-.proj-hero-eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:1rem;display:block;font-weight:400}
-.proj-hero-title{font-family:var(--sans);font-size:clamp(3rem,6vw,6rem);color:#fff;font-weight:700;line-height:1;letter-spacing:-.02em}
+.proj-hero-content{
+  position:relative;z-index:2;
+  padding:0 5vw 4rem;
+  display:flex;flex-direction:column;gap:2rem;
+}
+.proj-hero-eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);display:block;font-weight:400}
+/* slogan — same as Basic Agency: large bold sans */
+.proj-hero-slogan{
+  font-family:var(--sans);
+  font-size:clamp(1.6rem,3.5vw,3rem);
+  color:#fff;font-weight:700;
+  line-height:1.1;letter-spacing:-.02em;
+  max-width:55vw;
+}
+/* scope pills inside hero */
+.proj-hero-pills{display:flex;flex-wrap:wrap;gap:.5rem}
+.proj-hero-pill{
+  font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.4);color:rgba(255,255,255,.75);
+  padding:.3rem .9rem;border-radius:100px;font-weight:500;
+  background:transparent;
+}
+/* keep title large for hero */
+.proj-hero-title{
+  font-family:var(--sans);
+  font-size:clamp(4rem,8vw,8rem);
+  color:#fff;font-weight:700;
+  line-height:.9;letter-spacing:-.03em;
+  display:none; /* title shown in 3col sidebar instead */
+}
 
 /* ② 3-COL — exactly Basic Agency: ~38% left / 62% right */
 .proj-3col{
@@ -846,23 +873,27 @@ function buildProject(idx){
   // set page bg
   document.getElementById('pg-project').style.background='#eeeae3';
 
+  const slogan=p.slogan||cat||'';
+  const scopePills=(p.scope||[]).map(s=>`<span class="proj-hero-pill">${s}</span>`).join('');
+
   document.getElementById('proj-content').innerHTML=`
     <section class="proj-hero" style="background:${bgColor}">
       <div class="proj-hero-bg">${cover?`<img src="${cover}" alt="${p.title}">`:''}
       </div>
       <div class="proj-hero-content">
-        <span class="proj-hero-eyebrow">${cat}</span>
-        <h1 class="proj-hero-title">${p.title}</h1>
+        <span class="proj-hero-eyebrow">${p.title}${cat?' — '+cat:''}</span>
+        ${slogan?`<p class="proj-hero-slogan">${slogan}</p>`:''}
+        ${scopePills?`<div class="proj-hero-pills">${scopePills}</div>`:''}
       </div>
     </section>
 
     <div class="proj-3col">
       <aside class="proj-sidebar">
         <div>
-          <h2 class="proj-sidebar-title">${p.title}</h2>
-          <ul class="proj-sidebar-meta" style="margin-top:1.2rem">
+          <ul class="proj-sidebar-meta">
+            ${cat?`<li>${cat}</li>`:''}
+            ${p.client?`<li>${p.client}</li>`:''}
             ${(p.scope||[]).map(s=>`<li>${s}</li>`).join('')}
-            ${p.client?`<li style="margin-top:.5rem">${p.client}</li>`:''}
           </ul>
           ${tagItems?`<div class="proj-sidebar-tags" style="margin-top:1.5rem">${tagItems}</div>`:''}
         </div>
