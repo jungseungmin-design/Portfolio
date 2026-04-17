@@ -164,6 +164,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   border-radius:12px;
   background:#000;
   overflow:hidden;
+  padding-bottom:64px;
 }
 
 /* image — clip-path bottom shrinks on hover, revealing text underneath */
@@ -175,7 +176,8 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   position:relative;
   z-index:1;
   clip-path:inset(0 0 0 0 round 12px);
-  transition:clip-path 1.2s cubic-bezier(.25,.46,.45,.94);
+  transition:clip-path 0.85s cubic-bezier(.25,.46,.45,.94);
+  margin-bottom:-64px;
 }
 .work-card:hover .wc-media-clip{
   clip-path:inset(0 0 64px 0 round 12px 12px 0 0);
