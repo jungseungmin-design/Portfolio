@@ -212,7 +212,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 }
 
 /* ── PROJECT DETAIL ── */
-#pg-project{background:#1c1c1c;min-height:100vh}
+#pg-project{background:#eeeae3;min-height:100vh}
 
 /* 커튼 전환 */
 .proj-curtain{position:fixed;inset:0;background:#000;z-index:300;transform:translateY(100%);pointer-events:none}
@@ -221,134 +221,141 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .proj-curtain.fall{transition:transform .45s cubic-bezier(.76,0,.24,1)}
 .proj-curtain.fall.go{transform:translateY(-100%)}
 
-/* back button */
-.back-btn{position:fixed;top:1.8rem;left:3rem;z-index:400;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);text-decoration:none;display:flex;align-items:center;gap:.5rem;transition:color .2s}
-.back-btn:hover{color:#fff}
+/* back button — nav 아래 배치 */
+.back-btn{
+  position:fixed;top:5rem;left:2.5rem;z-index:400;
+  font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(0,0,0,.5);text-decoration:none;
+  display:flex;align-items:center;gap:.4rem;
+  transition:color .2s;font-family:var(--sans);font-weight:500;
+}
+.back-btn:hover{color:#000}
 .back-btn::before{content:'←';font-size:.9rem}
-.back-btn.light{color:var(--muted)}
-.back-btn.light:hover{color:var(--black)}
 
 /* ① HERO */
-.proj-hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.proj-hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#1c1c1c}
 .proj-hero-bg{position:absolute;inset:0;z-index:0}
-.proj-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.45;mix-blend-mode:luminosity}
+.proj-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
 .proj-hero-content{position:relative;z-index:2;padding:0 5vw 5rem}
-.proj-hero-eyebrow{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:1.2rem;display:block}
-.proj-hero-title{font-family:var(--serif);font-size:clamp(4rem,8vw,8rem);color:#fff;font-weight:400;line-height:.9;letter-spacing:-.02em}
+.proj-hero-eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:1rem;display:block;font-weight:400}
+.proj-hero-title{font-family:var(--sans);font-size:clamp(3rem,6vw,6rem);color:#fff;font-weight:700;line-height:1;letter-spacing:-.02em}
 
-/* ② 3-COLUMN STICKY LAYOUT */
+/* ② 3-COL — exactly Basic Agency: ~38% left / 62% right */
 .proj-3col{
   display:grid;
-  grid-template-columns:1fr 2fr;
-  min-height:100vh;
-  background:#1c1c1c;
-  transition:background .6s ease;
+  grid-template-columns:38% 62%;
+  align-items:start;
+  background:#eeeae3;
 }
 
-/* LEFT — sticky sidebar */
+/* LEFT sidebar — sticky */
 .proj-sidebar{
-  position:sticky;
-  top:0;
-  height:100vh;
-  padding:5rem 3rem 4rem 5vw;
+  position:sticky;top:0;height:100vh;
+  padding:6rem 3rem 4rem 5vw;
   display:flex;flex-direction:column;
-  justify-content:space-between;
-  border-right:1px solid rgba(255,255,255,.08);
-  transition:border-color .5s;
+  justify-content:flex-start;
+  gap:2rem;
 }
-.proj-sidebar.light{border-right-color:#eee}
-
-.proj-sidebar-top{}
-.proj-sidebar-label{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:2rem;display:block;transition:color .5s}
-.proj-sidebar-label.light{color:var(--gold)}
-.proj-sidebar-title{font-family:var(--serif);font-size:clamp(1.8rem,2.5vw,2.4rem);color:#fff;font-weight:400;line-height:1.15;margin-bottom:2rem;transition:color .5s}
-.proj-sidebar-title.light{color:var(--black)}
-.proj-sidebar-desc{font-size:.82rem;line-height:1.75;color:rgba(255,255,255,.4);font-weight:300;margin-bottom:2.5rem;transition:color .5s}
-.proj-sidebar-desc.light{color:#666}
-
-/* meta list in sidebar */
-.proj-sidebar-meta{list-style:none}
-.proj-sidebar-meta li{padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.07);transition:border-color .5s}
-.proj-sidebar-meta.light li{border-bottom-color:#f0f0f0}
-.proj-sidebar-meta-label{font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.2rem;display:block;transition:color .5s}
-.proj-sidebar-meta-label.light{color:var(--muted)}
-.proj-sidebar-meta-val{font-size:.78rem;color:rgba(255,255,255,.65);font-weight:300;transition:color .5s}
-.proj-sidebar-meta-val.light{color:var(--black)}
-
-/* tags at bottom of sidebar */
+.proj-sidebar-title{
+  font-family:var(--sans);
+  font-size:clamp(1.6rem,2.2vw,2.2rem);
+  color:#000;font-weight:700;
+  line-height:1.1;letter-spacing:-.02em;
+  margin:0;
+}
+.proj-sidebar-meta{
+  list-style:none;margin:0;
+}
+.proj-sidebar-meta li{
+  font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;
+  color:#333;padding:.18rem 0;font-weight:500;line-height:1.5;
+}
 .proj-sidebar-tags{display:flex;flex-wrap:wrap;gap:.4rem}
-.proj-sidebar-tag{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);padding:.3rem .75rem;border-radius:100px;transition:border-color .5s,color .5s}
-.proj-sidebar-tag.light{border-color:#ddd;color:#999}
+.proj-sidebar-tag{
+  font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;
+  border:1.5px solid rgba(0,0,0,.25);color:rgba(0,0,0,.55);
+  padding:.3rem .85rem;border-radius:100px;font-weight:500;
+}
 
 /* RIGHT — scrollable text */
 .proj-scrolltext{
-  padding:5rem 5vw 5rem 4rem;
+  padding:6rem 5vw 6rem 0;
 }
-.proj-scrolltext-inner{
-  max-width:640px;
-}
+.proj-scrolltext-inner{max-width:680px}
 
-/* text blocks in scroll area */
+/* Body text — matches Basic Agency size exactly */
 .pst-para{
-  font-size:clamp(.9rem,1.15vw,1rem);
-  line-height:1.95;
-  color:rgba(255,255,255,.5);
-  font-weight:300;
+  font-family:var(--sans);
+  font-size:clamp(1.05rem,1.35vw,1.2rem);
+  line-height:1.7;
+  color:#111;
+  font-weight:400;
   margin-bottom:2rem;
-  transition:color .5s;
+  letter-spacing:-.01em;
 }
-.pst-para.light{color:#444}
-.pst-para strong{font-weight:500;color:rgba(255,255,255,.85);transition:color .5s}
-.pst-para.light strong{color:var(--black)}
+.pst-para strong{font-weight:700}
 
-.pst-h2{font-family:var(--serif);font-size:clamp(1.4rem,2vw,1.8rem);color:#fff;font-weight:400;margin:3rem 0 1rem;line-height:1.2;transition:color .5s}
-.pst-h2.light{color:var(--black)}
-.pst-h3{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:2rem 0 .6rem}
+/* Section heading — APPROACH style */
+.pst-h2{
+  font-family:var(--sans);
+  font-size:.78rem;
+  color:#000;font-weight:700;
+  margin:3rem 0 1.2rem;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  display:block;
+}
+.pst-h3{
+  font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gold);margin:2rem 0 .8rem;font-weight:500;display:block;
+}
 
-/* ③ MEDIA SECTION — full width, white bg */
+/* ③ MEDIA SECTION */
 .proj-media{background:#fff;padding-bottom:6rem}
-
-/* image + caption row */
 .proj-media-block{margin-bottom:0}
-.pmb-full{width:100%}
 .pmb-full img{width:100%;display:block}
 .pmb-two{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .pmb-two img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
 .pmb-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px}
 .pmb-three img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
-.pmb-caption{padding:1rem 5vw 2.5rem;display:flex;gap:4rem;align-items:flex-start}
-.pmb-caption-index{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:#bbb;flex-shrink:0;padding-top:.15rem}
-.pmb-caption-text{font-size:.82rem;line-height:1.7;color:#666;font-weight:300}
-.pmb-caption-text strong{font-weight:500;color:var(--black)}
-
-/* text blocks inside media section */
-.proj-media .pb-text{padding:3rem 5vw;max-width:760px}
-.proj-media .pb-text p{font-size:clamp(.88rem,1.1vw,.98rem);line-height:1.95;color:#444;font-weight:300;margin-bottom:1.2rem}
-.proj-media .pb-text p strong{font-weight:500;color:var(--black)}
+.pmb-caption{
+  padding:1rem 5vw 2.5rem;
+  display:flex;gap:3rem;align-items:flex-start;
+}
+.pmb-caption-index{
+  font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#aaa;flex-shrink:0;padding-top:.1rem;font-weight:500;
+}
+.pmb-caption-text{
+  font-size:.88rem;line-height:1.65;color:#555;font-weight:400;
+}
+.pmb-caption-text strong{font-weight:700;color:#000}
+.proj-media .pb-text{padding:3rem 5vw;max-width:720px}
+.proj-media .pb-text p{font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.75;color:#111;font-weight:400;margin-bottom:1.5rem;letter-spacing:-.005em}
+.proj-media .pb-text p strong{font-weight:700}
 .proj-media .pb-h2{padding:3rem 5vw 1rem}
-.proj-media .pb-h2 h2{font-family:var(--serif);font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:400;color:var(--black)}
+.proj-media .pb-h2 h2{font-family:var(--sans);font-size:clamp(.8rem,.9vw,.88rem);font-weight:700;color:#000;text-transform:uppercase;letter-spacing:.06em}
 .proj-media .pb-h3{padding:2rem 5vw .5rem}
-.proj-media .pb-h3 h3{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.proj-media .pb-h3 h3{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:500}
 .proj-media .pb-video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:.5rem 0}
 .proj-media .pb-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
 .proj-media .pb-video-native video{width:100%;display:block}
 .proj-media .pb-divider{height:4rem}
 
 /* ④ NEXT PROJECT */
-.next-project{display:block;position:relative;height:60vh;min-height:320px;overflow:hidden;cursor:none;text-decoration:none}
+.next-project{display:block;position:relative;height:60vh;min-height:300px;overflow:hidden;cursor:none;text-decoration:none}
 .np-bg{position:absolute;inset:0;transition:transform .8s cubic-bezier(.25,.46,.45,.94)}
 .np-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
 .next-project:hover .np-bg{transform:scale(1.04)}
 .np-content{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;padding:3rem 5vw;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 60%)}
-.np-left{}
-.np-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.4rem}
-.np-title{font-family:var(--serif);font-size:clamp(2rem,4vw,3.5rem);color:#fff;font-weight:400}
-.np-arrow{font-size:2.5rem;color:var(--gold);align-self:flex-end}
+.np-label{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.4rem;font-weight:500}
+.np-title{font-family:var(--sans);font-size:clamp(1.8rem,3.5vw,3rem);color:#fff;font-weight:700;letter-spacing:-.01em}
+.np-arrow{font-size:2rem;color:var(--gold);align-self:flex-end}
 
 /* mobile */
 @media(max-width:768px){
-  .proj-3col{grid-template-columns:1fr}
-  .proj-sidebar{position:relative;height:auto;min-height:0;padding:4rem 1.5rem 2rem}
+  .proj-3col{grid-template-columns:1fr;padding-top:3rem}
+  .proj-sidebar{position:relative;height:auto;padding:2rem 1.5rem}
   .proj-scrolltext{padding:2rem 1.5rem 3rem}
   .pmb-two,.pmb-three{grid-template-columns:1fr}
   .back-btn{left:1.5rem}
@@ -784,46 +791,62 @@ function buildProject(idx){
   const nextCover=next.cover||next.detail||null;
   const nextBg=next.bgColor||'#1C1C1C';
 
-  // parse bgColor for scroll interpolation
-  const hex=(bgColor||'1c1c1c').replace('#','');
-  const r=parseInt(hex.slice(0,2),16)||28;
-  const g=parseInt(hex.slice(2,4),16)||28;
-  const b=parseInt(hex.slice(4,6),16)||28;
-
-  // separate text blocks vs image/video blocks
+  // split: text blocks → sidebar scroll, images/video → media section
   const blocks=p.blocks||[];
   const textBlocks=[];
   const mediaBlocks=[];
-  let inMedia=false;
+  let mediaStarted=false;
   blocks.forEach(bl=>{
-    if(bl.type==='images'||bl.type==='video'){inMedia=true}
-    if(inMedia) mediaBlocks.push(bl);
+    if(!mediaStarted&&(bl.type==='images'||bl.type==='video')) mediaStarted=true;
+    if(mediaStarted) mediaBlocks.push(bl);
     else textBlocks.push(bl);
   });
 
-  // render sidebar text blocks (paragraphs + headings)
+  // right scroll text
   const scrollHTML=textBlocks.map(bl=>{
     if(bl.type==='text') return `<p class="pst-para">${bl.text}</p>`;
-    if(bl.type==='heading'&&bl.level===2) return `<h2 class="pst-h2">${bl.text}</h2>`;
-    if(bl.type==='heading'&&bl.level===3) return `<h3 class="pst-h3">${bl.text}</h3>`;
-    if(bl.type==='divider') return `<div style="height:2.5rem"></div>`;
+    if(bl.type==='heading'&&bl.level===2) return `<p class="pst-h2">${bl.text}</p>`;
+    if(bl.type==='heading'&&bl.level===3) return `<p class="pst-h3">${bl.text}</p>`;
+    if(bl.type==='divider') return `<div style="height:2rem"></div>`;
     return '';
   }).join('');
 
-  // render media blocks
-  const mediaHTML=renderMediaBlocks(mediaBlocks);
+  // media section
+  const mediaHTML=mediaBlocks.map(bl=>{
+    if(bl.type==='images'){
+      const n=bl.images.length;
+      const cls=n===1?'pmb-full':n===2?'pmb-two':'pmb-three';
+      const imgs=bl.images.map(im=>`<img src="${im.url}" alt="${im.caption||''}" loading="lazy">`).join('');
+      const caps=bl.images.filter(im=>im.caption).map((im,ci)=>`
+        <div class="pmb-caption">
+          <span class="pmb-caption-index">${String(ci+1).padStart(2,'0')}</span>
+          <span class="pmb-caption-text">${im.caption}</span>
+        </div>`).join('');
+      return `<div class="proj-media-block"><div class="${cls}">${imgs}</div>${caps}</div>`;
+    }
+    if(bl.type==='video'){
+      const url=bl.url;
+      const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
+      const vm=url.match(/vimeo\.com\/(\d+)/);
+      if(yt) return `<div class="proj-media-block"><div class="pb-video"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div></div>`;
+      if(vm) return `<div class="proj-media-block"><div class="pb-video"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div></div>`;
+      return `<div class="proj-media-block"><div class="pb-video-native"><video src="${url}" autoplay muted loop playsinline></video></div></div>`;
+    }
+    if(bl.type==='text') return `<div class="pb-text"><p>${bl.text}</p></div>`;
+    if(bl.type==='heading'&&bl.level===2) return `<div class="pb-h2"><h2>${bl.text}</h2></div>`;
+    if(bl.type==='heading'&&bl.level===3) return `<div class="pb-h3"><h3>${bl.text}</h3></div>`;
+    if(bl.type==='divider') return `<div class="pb-divider"></div>`;
+    return '';
+  }).join('');
 
-  // scope as sidebar meta items
-  const scopeItems=(p.scope||[]).map(s=>`
-    <li>
-      <span class="proj-sidebar-meta-label">—</span>
-      <span class="proj-sidebar-meta-val">${s}</span>
-    </li>`).join('');
-
+  // scope list for sidebar
+  const scopeItems=(p.scope||[]).map(s=>`<li>${s}</li>`).join('');
   const tagItems=(p.tags||[]).map(t=>`<span class="proj-sidebar-tag">${t}</span>`).join('');
 
+  // set page bg
+  document.getElementById('pg-project').style.background='#eeeae3';
+
   document.getElementById('proj-content').innerHTML=`
-    <!-- HERO -->
     <section class="proj-hero" style="background:${bgColor}">
       <div class="proj-hero-bg">${cover?`<img src="${cover}" alt="${p.title}">`:''}
       </div>
@@ -833,50 +856,36 @@ function buildProject(idx){
       </div>
     </section>
 
-    <!-- 3-COL STICKY -->
-    <div class="proj-3col" id="proj-3col" style="background:${bgColor}">
-
-      <!-- LEFT SIDEBAR -->
-      <aside class="proj-sidebar" id="proj-sidebar">
-        <div class="proj-sidebar-top">
-          <span class="proj-sidebar-label">Overview</span>
+    <div class="proj-3col">
+      <aside class="proj-sidebar">
+        <div>
           <h2 class="proj-sidebar-title">${p.title}</h2>
-          <p class="proj-sidebar-desc">${cat}${p.client?` — ${p.client}`:''}</p>
           <ul class="proj-sidebar-meta">
-            <li>
-              <span class="proj-sidebar-meta-label">Client</span>
-              <span class="proj-sidebar-meta-val">${p.client||'—'}</span>
-            </li>
-            <li>
-              <span class="proj-sidebar-meta-label">Category</span>
-              <span class="proj-sidebar-meta-val">${cat}</span>
-            </li>
+            ${cat?`<li>${cat}</li>`:''}
+            ${p.client?`<li>${p.client}</li>`:''}
             ${scopeItems}
           </ul>
+          ${tagItems?`<div class="proj-sidebar-tags" style="margin-top:1.5rem">${tagItems}</div>`:''}
         </div>
-        ${tagItems?`<div class="proj-sidebar-tags">${tagItems}</div>`:''}
       </aside>
 
-      <!-- RIGHT SCROLL TEXT -->
-      <div class="proj-scrolltext" id="proj-scrolltext">
+      <div class="proj-scrolltext">
         <div class="proj-scrolltext-inner">
-          ${scrollHTML||'<p class="pst-para">프로젝트 설명을 Notion 페이지 본문에 입력해주세요.</p>'}
+          ${scrollHTML||'<p class="pst-para">Notion 페이지 본문에 프로젝트 설명을 입력해주세요.</p>'}
         </div>
       </div>
     </div>
 
-    <!-- MEDIA SECTION -->
-    <div class="proj-media" id="proj-media">
+    <div class="proj-media">
       ${mediaHTML}
     </div>
 
-    <!-- NEXT PROJECT -->
     <a class="next-project" href="#" onclick="openProject(${(idx+1)%list.length});return false">
       <div class="np-bg" style="background:${nextBg}">
         ${nextCover?`<img src="${nextCover}" alt="${next.title}">`:''}
       </div>
       <div class="np-content">
-        <div class="np-left">
+        <div>
           <div class="np-label">Next Project</div>
           <div class="np-title">${next.title}</div>
         </div>
@@ -884,188 +893,15 @@ function buildProject(idx){
       </div>
     </a>`;
 
-  // scroll handler: bgColor → white
+  // scroll: back button color changes when past hero
   if(projScrollHandler) window.removeEventListener('scroll',projScrollHandler);
-  const pg=document.getElementById('pg-project');
   const btn=document.querySelector('.back-btn');
-
+  // start white (on dark hero)
+  if(btn) btn.style.color='rgba(255,255,255,.8)';
   projScrollHandler=function(){
-    const threeCol=document.getElementById('proj-3col');
-    const media=document.getElementById('proj-media');
-    if(!threeCol||!media) return;
-    const startY=threeCol.offsetTop;
-    const endY=media.offsetTop;
-    const scrollY=window.scrollY;
-    const prog=Math.min(1,Math.max(0,(scrollY-startY*0.5)/(endY-startY*0.8)));
-
-    // interpolate bg
-    const cr=Math.round(r+(255-r)*prog);
-    const cg=Math.round(g+(255-g)*prog);
-    const cb=Math.round(b+(255-b)*prog);
-    const col=`rgb(${cr},${cg},${cb})`;
-    threeCol.style.background=col;
-    pg.style.background=col;
-
-    // toggle light class at 60%
-    const light=prog>0.6;
-    const sidebar=document.getElementById('proj-sidebar');
-    if(sidebar){
-      sidebar.classList.toggle('light',light);
-      sidebar.querySelectorAll('.proj-sidebar-label,.proj-sidebar-title,.proj-sidebar-desc,.proj-sidebar-meta,.proj-sidebar-meta-label,.proj-sidebar-meta-val,.proj-sidebar-tag').forEach(el=>el.classList.toggle('light',light));
-    }
-    document.querySelectorAll('.pst-para,.pst-h2').forEach(el=>el.classList.toggle('light',light));
-    if(btn) btn.classList.toggle('light', scrollY>window.innerHeight*0.8);
+    if(btn) btn.style.color=window.scrollY>window.innerHeight*0.85?'rgba(0,0,0,.5)':'rgba(255,255,255,.8)';
   };
   window.addEventListener('scroll',projScrollHandler,{passive:true});
-}
-
-function renderMediaBlocks(blocks){
-  if(!blocks||!blocks.length) return '';
-  let html='';
-  let i=0;
-  while(i<blocks.length){
-    const bl=blocks[i];
-    if(bl.type==='images'){
-      const count=bl.images.length;
-      const gridCls=count===1?'pmb-full':count===2?'pmb-two':'pmb-three';
-      const imgs=bl.images.map(im=>`<img src="${im.url}" alt="${im.caption||''}" loading="lazy">`).join('');
-      const caps=bl.images.filter(im=>im.caption).map((im,ci)=>`
-        <div class="pmb-caption">
-          <span class="pmb-caption-index">${String(ci+1).padStart(2,'0')}</span>
-          <span class="pmb-caption-text">${im.caption}</span>
-        </div>`).join('');
-      html+=`<div class="proj-media-block"><div class="${gridCls}">${imgs}</div>${caps}</div>`;
-    } else if(bl.type==='video'){
-      const url=bl.url;
-      const ytM=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
-      const vmM=url.match(/vimeo\.com\/(\d+)/);
-      if(ytM) html+=`<div class="proj-media-block"><div class="pb-video"><iframe src="https://www.youtube.com/embed/${ytM[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div></div>`;
-      else if(vmM) html+=`<div class="proj-media-block"><div class="pb-video"><iframe src="https://player.vimeo.com/video/${vmM[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div></div>`;
-      else html+=`<div class="proj-media-block"><div class="pb-video-native"><video src="${url}" autoplay muted loop playsinline></video></div></div>`;
-    } else if(bl.type==='text'){
-      html+=`<div class="pb-text"><p>${bl.text}</p></div>`;
-    } else if(bl.type==='heading'&&bl.level===2){
-      html+=`<div class="pb-h2"><h2>${bl.text}</h2></div>`;
-    } else if(bl.type==='heading'&&bl.level===3){
-      html+=`<div class="pb-h3"><h3>${bl.text}</h3></div>`;
-    } else if(bl.type==='divider'){
-      html+=`<div class="pb-divider"></div>`;
-    }
-    i++;
-  }
-  return html;
-}
-  const list=projects.length?projects:FALLBACK_PROJECTS;
-  const p=list[idx];
-  const next=list[(idx+1)%list.length];
-  const bgColor=p.bgColor||'#1C1C1C';
-  const cat=p.category||p.cat||'';
-  const scopeList=(p.scope||[]).map(s=>`<li>${s}</li>`).join('');
-  const tagPills=(p.tags||[]).map(t=>`<span class="tag-pill">${t}</span>`).join('');
-  const bodyHTML=renderBlocks(p.blocks||[]);
-  const cover=p.cover||p.detail||null;
-  const nextCover=next.cover||next.detail||null;
-  const nextBg=next.bgColor||'#1C1C1C';
-
-  // set page bg to project color
-  document.getElementById('pg-project').style.background=bgColor;
-
-  document.getElementById('proj-content').innerHTML=`
-    <!-- HERO -->
-    <section class="proj-hero" style="background:${bgColor}">
-      <div class="proj-hero-bg">
-        ${cover?`<img src="${cover}" alt="${p.title}">`:''}
-      </div>
-      <div class="proj-hero-content">
-        <span class="proj-hero-eyebrow">${cat}</span>
-        <h1 class="proj-hero-title">${p.title}</h1>
-      </div>
-    </section>
-
-    <!-- OVERVIEW -->
-    <section class="proj-overview" id="proj-overview">
-      <div class="proj-overview-left">
-        <span class="proj-overview-label" id="ov-label">Services</span>
-        <ul class="proj-service-list" id="ov-services">${scopeList}</ul>
-      </div>
-      <div class="proj-overview-right">
-        <h2 class="proj-overview-title" id="ov-title">${p.title} — ${cat}</h2>
-        <div class="proj-overview-body" id="ov-body">
-          <div id="proj-body-text"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- META STRIP -->
-    <div class="proj-meta-strip" id="proj-meta-strip">
-      <div class="proj-meta-item">
-        <span class="proj-meta-label" id="meta-cat-lbl">Category</span>
-        <span class="proj-meta-val" id="meta-cat-val">${cat}</span>
-      </div>
-      <div class="proj-meta-item">
-        <span class="proj-meta-label" id="meta-cli-lbl">Client</span>
-        <span class="proj-meta-val" id="meta-cli-val">${p.client||''}</span>
-      </div>
-      ${tagPills?`<div class="proj-meta-item">
-        <span class="proj-meta-label" id="meta-tag-lbl">Tags</span>
-        <div class="tag-pills" id="meta-tags">${tagPills}</div>
-      </div>`:''}
-    </div>
-
-    <!-- CONTENT BLOCKS -->
-    <div class="proj-blocks">${bodyHTML}</div>
-
-    <!-- NEXT PROJECT -->
-    <a class="next-project" href="#" onclick="openProject(${(idx+1)%list.length});return false">
-      <div class="np-bg" style="background:${nextBg}">
-        ${nextCover?`<img src="${nextCover}" alt="${next.title}">`:''}
-      </div>
-      <div class="np-content">
-        <div class="np-left">
-          <div class="np-label">Next Project</div>
-          <div class="np-title">${next.title}</div>
-        </div>
-        <span class="np-arrow">→</span>
-      </div>
-    </a>`;
-
-  // scroll-driven color transition: project color → white
-  if(projScrollHandler) window.removeEventListener('scroll', projScrollHandler);
-  const pg=document.getElementById('pg-project');
-  const btn=document.querySelector('.back-btn');
-
-  // parse bgColor to interpolate toward white
-  const hex=bgColor.replace('#','');
-  const r=parseInt(hex.slice(0,2),16)||28;
-  const g=parseInt(hex.slice(2,4),16)||28;
-  const b=parseInt(hex.slice(4,6),16)||28;
-
-  projScrollHandler=function(){
-    const overviewTop=document.getElementById('proj-overview')?.offsetTop||window.innerHeight;
-    const blocksTop=document.querySelector('.proj-blocks')?.offsetTop||overviewTop*2;
-    const scrollY=window.scrollY;
-
-    // transition from bgColor to white over the overview section
-    const progress=Math.min(1,Math.max(0,(scrollY-overviewTop*0.3)/(blocksTop-overviewTop*0.3)));
-    const cr=Math.round(r+(255-r)*progress);
-    const cg=Math.round(g+(255-g)*progress);
-    const cb=Math.round(b+(255-b)*progress);
-    pg.style.background=`rgb(${cr},${cg},${cb})`;
-
-    // switch text colors at midpoint
-    const mid=progress>0.5;
-    ['ov-label','ov-title','ov-body'].forEach(id=>{
-      document.getElementById(id)?.classList.toggle('light',mid);
-    });
-    document.getElementById('ov-services')?.classList.toggle('light',mid);
-    document.getElementById('proj-meta-strip')?.classList.toggle('light',mid);
-    ['meta-cat-lbl','meta-cat-val','meta-cli-lbl','meta-cli-val','meta-tag-lbl'].forEach(id=>{
-      document.getElementById(id)?.classList.toggle('light',mid);
-    });
-    document.querySelectorAll('.tag-pill').forEach(el=>el.classList.toggle('light',mid));
-    if(btn) btn.classList.toggle('light', scrollY > window.innerHeight*0.8);
-  };
-  window.addEventListener('scroll', projScrollHandler, {passive:true});
 }
 
 function renderBlocks(blocks){
