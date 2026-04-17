@@ -150,13 +150,23 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   break-inside:avoid;
   position:relative;
   cursor:none;display:block;
-  margin-bottom:64px;
+  margin-bottom:8px;
   border-radius:12px;
-  overflow:visible;
   background:#000;
+  overflow:hidden;
 }
 
-/* image — slides up on hover to physically reveal text below */
+.work-card{
+  break-inside:avoid;
+  position:relative;
+  cursor:none;display:block;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:#000;
+  overflow:hidden;
+}
+
+/* image — clip-path bottom shrinks on hover, revealing text underneath */
 .wc-media-clip{
   width:100%;
   display:block;
@@ -164,10 +174,11 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   overflow:hidden;
   position:relative;
   z-index:1;
-  transition:transform .6s cubic-bezier(.25,.46,.45,.94);
+  clip-path:inset(0 0 0 0 round 12px);
+  transition:clip-path 1.2s cubic-bezier(.25,.46,.45,.94);
 }
 .work-card:hover .wc-media-clip{
-  transform:translateY(-64px);
+  clip-path:inset(0 0 64px 0 round 12px 12px 0 0);
 }
 
 .wc-media{width:100%;display:block;}
@@ -175,7 +186,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .wc-video{width:100%;display:block;}
 .wc-placeholder{width:100%;min-height:300px;}
 
-/* text bar — always visible at bottom, image slides up to reveal */
+/* text — always exists behind image, revealed when image bottom clips up */
 .wc-info{
   position:absolute;
   bottom:0;left:0;right:0;
