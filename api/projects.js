@@ -42,6 +42,7 @@ export default async function handler(req, res) {
         videoThumb: p.Video_Thumb?.url || null,
         cover: p.Cover?.url || null,
         ratio: p.Ratio?.rich_text?.[0]?.plain_text || null,
+        bgColor: p.BgColor?.rich_text?.[0]?.plain_text || null,
         tags: (p.Tags?.rich_text?.[0]?.plain_text || '').split(',').map(t => t.trim()).filter(Boolean),
         scope: (p.Scope?.rich_text?.[0]?.plain_text || '').split(',').map(s => s.trim()).filter(Boolean),
         order: p.Order?.number || 0,
