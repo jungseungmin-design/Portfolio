@@ -101,7 +101,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .form-submit:hover{border-color:var(--gold);color:var(--gold)}
 
 /* ── WORK PAGE — Koto style ── */
-#pg-work{background:var(--black);min-height:100vh;display:flex;flex-direction:column}
+#pg-work{background:#000;min-height:100vh;display:flex;flex-direction:column}
 
 .work-layout{display:flex;flex:1;min-height:100vh}
 
@@ -112,7 +112,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   position:sticky;top:0;height:100vh;
   display:flex;flex-direction:column;
   justify-content:space-between;
-  border-right:1px solid #1a1a18;
+  border-right:1px solid #111;
 }
 /* About 페이지 스타일과 통일 */
 .work-sidebar-label{
@@ -150,25 +150,24 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   break-inside:avoid;
   position:relative;
   cursor:none;display:block;
-  margin-bottom:8px;
+  margin-bottom:64px;
   border-radius:12px;
-  overflow:hidden;
-  background:#0E0E0D;
+  overflow:visible;
+  background:#000;
 }
 
-/* image — fills card, slight scale on hover */
+/* image — slides up on hover to physically reveal text below */
 .wc-media-clip{
   width:100%;
   display:block;
-  overflow:hidden;
   border-radius:12px;
-  transform:scale(1);
-  transition:transform .6s cubic-bezier(.25,.46,.45,.94),
-             border-radius .5s cubic-bezier(.25,.46,.45,.94);
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+  transition:transform .6s cubic-bezier(.25,.46,.45,.94);
 }
 .work-card:hover .wc-media-clip{
-  transform:scale(1.0) translateY(-28px);
-  border-radius:12px 12px 4px 4px;
+  transform:translateY(-64px);
 }
 
 .wc-media{width:100%;display:block;}
@@ -176,45 +175,20 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .wc-video{width:100%;display:block;}
 .wc-placeholder{width:100%;min-height:300px;}
 
-/* text bar — always present at bottom, slides up into view */
+/* text bar — always visible at bottom, image slides up to reveal */
 .wc-info{
   position:absolute;
   bottom:0;left:0;right:0;
-  height:56px;
+  height:64px;
   padding:0 1.4rem;
   display:flex;align-items:center;
-  background:#0E0E0D;
-  transform:translateY(100%);
-  transition:transform .45s cubic-bezier(.25,.46,.45,.94);
+  background:#000;
+  z-index:0;
   pointer-events:none;
-  border-radius:0 0 12px 12px;
-}
-.work-card:hover .wc-info{
-  transform:translateY(0);
 }
 .wc-info-left{display:flex;flex-direction:column;gap:.15rem}
 .card-title{font-family:var(--serif);font-size:.95rem;color:#fff;font-weight:400;line-height:1.2}
-.card-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4)}
-
-/* card overlay info */
-.wc-info{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:2rem 1.8rem 1.8rem;
-  background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 100%);
-  opacity:0;transition:opacity .35s ease;
-  pointer-events:none;
-}
-.work-card:hover .wc-info{opacity:1}
-.wc-arrow{
-  position:absolute;top:1.5rem;right:1.5rem;
-  width:38px;height:38px;border:1px solid rgba(255,255,255,.4);
-  border-radius:50%;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:.9rem;
-  opacity:0;transition:opacity .35s;
-}
-.work-card:hover .wc-arrow{opacity:1}
-.card-cat{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem}
-.card-title{font-family:var(--serif);font-size:clamp(1rem,1.5vw,1.3rem);color:#fff;font-weight:400}
+.card-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
 
 /* mobile */
 @media(max-width:900px){
