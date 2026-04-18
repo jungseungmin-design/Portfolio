@@ -278,8 +278,14 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   background:#eeeae3;
 }
 
-/* LEFT sidebar — sticky */
-.proj-sidebar{
+/* sidebar slogan — 부연설명, 크고 bold */
+.proj-sidebar-slogan{
+  font-family:var(--sans);
+  font-size:clamp(1.3rem,1.8vw,1.7rem);
+  color:#000;font-weight:700;
+  line-height:1.15;letter-spacing:-.01em;
+  margin:0;
+}
   position:sticky;top:0;height:100vh;
   padding:6rem 3rem 4rem 5vw;
   display:flex;flex-direction:column;
@@ -885,16 +891,14 @@ function buildProject(idx){
       </div>
       <div class="proj-hero-content">
         <h1 class="proj-hero-title">${p.title}</h1>
-        ${slogan?`<span class="proj-hero-slogan">${slogan}</span>`:''}
-        ${scopePills?`<div class="proj-hero-pills">${scopePills}</div>`:''}
       </div>
     </section>
 
     <div class="proj-3col">
       <aside class="proj-sidebar">
         <div>
-          <ul class="proj-sidebar-meta">
-            ${cat?`<li>${cat}</li>`:''}
+          ${slogan?`<p class="proj-sidebar-slogan">${slogan}</p>`:''}
+          <ul class="proj-sidebar-meta" style="margin-top:${slogan?'1.5rem':'0'}">
             ${p.client?`<li>${p.client}</li>`:''}
             ${(p.scope||[]).map(s=>`<li>${s}</li>`).join('')}
           </ul>
