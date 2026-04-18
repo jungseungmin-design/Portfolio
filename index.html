@@ -239,28 +239,16 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .proj-hero-content{
   position:relative;z-index:2;
   padding:0 5vw 4rem;
-  display:flex;flex-direction:column;gap:1.5rem;
+  display:flex;flex-direction:column;gap:2rem;
 }
-.proj-hero-eyebrow{
-  font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
-  color:rgba(255,255,255,.55);display:block;font-weight:400;
-}
-/* 타이틀 — 크고 bold, 히어로 메인 */
-.proj-hero-title{
-  font-family:var(--sans);
-  font-size:clamp(4rem,7vw,7rem);
-  color:#fff;font-weight:700;
-  line-height:.95;letter-spacing:-.03em;
-  display:block;
-}
-/* 슬로건 — 타이틀보다 작게, 히어로 하단 */
+.proj-hero-eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);display:block;font-weight:400}
+/* slogan — same as Basic Agency: large bold sans */
 .proj-hero-slogan{
   font-family:var(--sans);
-  font-size:clamp(1rem,1.4vw,1.25rem);
-  color:rgba(255,255,255,.65);font-weight:400;
-  line-height:1.5;letter-spacing:-.005em;
+  font-size:clamp(1.6rem,3.5vw,3rem);
+  color:#fff;font-weight:700;
+  line-height:1.1;letter-spacing:-.02em;
   max-width:55vw;
-  display:block;
 }
 /* scope pills inside hero */
 .proj-hero-pills{display:flex;flex-wrap:wrap;gap:.5rem}
@@ -268,6 +256,15 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;
   border:1px solid rgba(255,255,255,.4);color:rgba(255,255,255,.75);
   padding:.3rem .9rem;border-radius:100px;font-weight:500;
+  background:transparent;
+}
+/* keep title large for hero */
+.proj-hero-title{
+  font-family:var(--sans);
+  font-size:clamp(4rem,8vw,8rem);
+  color:#fff;font-weight:700;
+  line-height:.9;letter-spacing:-.03em;
+  display:none; /* title shown in 3col sidebar instead */
 }
 
 /* ② 3-COL — exactly Basic Agency: ~38% left / 62% right */
@@ -278,14 +275,8 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   background:#eeeae3;
 }
 
-/* sidebar slogan — 부연설명, 크고 bold */
-.proj-sidebar-slogan{
-  font-family:var(--sans);
-  font-size:clamp(1.3rem,1.8vw,1.7rem);
-  color:#000;font-weight:700;
-  line-height:1.15;letter-spacing:-.01em;
-  margin:0;
-}
+/* LEFT sidebar — sticky */
+.proj-sidebar{
   position:sticky;top:0;height:100vh;
   padding:6rem 3rem 4rem 5vw;
   display:flex;flex-direction:column;
@@ -882,7 +873,7 @@ function buildProject(idx){
   // set page bg
   document.getElementById('pg-project').style.background='#eeeae3';
 
-  const slogan=p.slogan||'';
+  const slogan=p.slogan||cat||'';
   const scopePills=(p.scope||[]).map(s=>`<span class="proj-hero-pill">${s}</span>`).join('');
 
   document.getElementById('proj-content').innerHTML=`
@@ -890,15 +881,17 @@ function buildProject(idx){
       <div class="proj-hero-bg">${cover?`<img src="${cover}" alt="${p.title}">`:''}
       </div>
       <div class="proj-hero-content">
-        <h1 class="proj-hero-title">${p.title}</h1>
+        <span class="proj-hero-eyebrow">${p.title}${cat?' — '+cat:''}</span>
+        ${slogan?`<p class="proj-hero-slogan">${slogan}</p>`:''}
+        ${scopePills?`<div class="proj-hero-pills">${scopePills}</div>`:''}
       </div>
     </section>
 
     <div class="proj-3col">
       <aside class="proj-sidebar">
         <div>
-          ${slogan?`<p class="proj-sidebar-slogan">${slogan}</p>`:''}
-          <ul class="proj-sidebar-meta" style="margin-top:${slogan?'1.5rem':'0'}">
+          <ul class="proj-sidebar-meta">
+            ${cat?`<li>${cat}</li>`:''}
             ${p.client?`<li>${p.client}</li>`:''}
             ${(p.scope||[]).map(s=>`<li>${s}</li>`).join('')}
           </ul>
