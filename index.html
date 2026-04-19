@@ -257,13 +257,14 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   font-size:clamp(1.4rem,2.2vw,2.2rem);
   color:#000;font-weight:700;
   line-height:1.1;letter-spacing:-.02em;
-  margin:0;
+  margin:0 0 1.8rem 0;
 }
 /* client */
 .proj-ov-client{
   font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;
-  color:#555;font-weight:500;margin:0;
+  color:#555;font-weight:500;margin:0 0 1.2rem 0;
 }
+.proj-ov-left .proj-sidebar-tags{margin-top:.2rem}
 
 /* slogan */
 .proj-sidebar-slogan{font-family:var(--sans);font-size:clamp(1.2rem,1.8vw,1.8rem);color:#000;font-weight:700;line-height:1.15;letter-spacing:-.02em;margin:0}
@@ -884,13 +885,10 @@ function buildProject(idx){
     <div class="proj-overview-wrap">
       <aside class="proj-ov-left">
         <div>
-          <span class="proj-ov-section-tag">
-            ${p.title||'JS'}<span class="proj-ov-section-slash">/</span>Overview
-          </span>
           ${cat?`<p class="proj-ov-category">${cat}</p>`:''}
           ${p.client?`<p class="proj-ov-client">${p.client}</p>`:''}
-          ${scopePills?`<div class="proj-sidebar-tags" style="margin-top:1rem">${scopePills}</div>`:
-            tagItems?`<div class="proj-sidebar-tags" style="margin-top:1rem">${tagItems}</div>`:''}
+          ${scopePills?`<div class="proj-sidebar-tags">${scopePills}</div>`:
+            tagItems?`<div class="proj-sidebar-tags">${tagItems}</div>`:''}
         </div>
       </aside>
       <div class="proj-ov-right">
