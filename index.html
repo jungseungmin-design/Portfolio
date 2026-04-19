@@ -211,181 +211,134 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   .work-card{border-radius:10px}
 }
 
-/* ── PROJECT DETAIL ── */
+/* ── PROJECT DETAIL — WHOOP/Basic Agency style ── */
 #pg-project{background:#eeeae3;min-height:100vh}
 
-/* 커튼 전환 */
 .proj-curtain{position:fixed;inset:0;background:#000;z-index:300;transform:translateY(100%);pointer-events:none}
 .proj-curtain.rise{transition:transform .55s cubic-bezier(.76,0,.24,1)}
 .proj-curtain.rise.go{transform:translateY(0%)}
 .proj-curtain.fall{transition:transform .45s cubic-bezier(.76,0,.24,1)}
 .proj-curtain.fall.go{transform:translateY(-100%)}
 
-/* back button — nav 아래 배치 */
-.back-btn{
-  position:fixed;top:5rem;left:2.5rem;z-index:400;
-  font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
-  color:rgba(0,0,0,.5);text-decoration:none;
-  display:flex;align-items:center;gap:.4rem;
-  transition:color .2s;font-family:var(--sans);font-weight:500;
-}
-.back-btn:hover{color:#000}
-.back-btn::before{content:'←';font-size:.9rem}
+/* back button */
+.back-btn{position:fixed;top:4.5rem;left:2.5rem;z-index:400;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.8);text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:color .3s;font-family:var(--sans);font-weight:500}
+.back-btn:hover{color:#fff}
+.back-btn::before{content:'←';font-size:.85rem}
 
-/* ① HERO */
-.proj-hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#1c1c1c}
+/* ── HERO ── */
+.proj-hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#111}
 .proj-hero-bg{position:absolute;inset:0;z-index:0}
-.proj-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
-.proj-hero-content{
-  position:relative;z-index:2;
-  padding:0 5vw 4rem;
-  display:flex;flex-direction:column;gap:2rem;
-}
-.proj-hero-eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);display:block;font-weight:400}
-/* slogan — same as Basic Agency: large bold sans */
-.proj-hero-slogan{
-  font-family:var(--sans);
-  font-size:clamp(1.6rem,3.5vw,3rem);
-  color:#fff;font-weight:700;
-  line-height:1.1;letter-spacing:-.02em;
-  max-width:55vw;
-}
-/* scope pills inside hero */
-.proj-hero-pills{display:flex;flex-wrap:wrap;gap:.5rem}
-.proj-hero-pill{
-  font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;
-  border:1px solid rgba(255,255,255,.4);color:rgba(255,255,255,.75);
-  padding:.3rem .9rem;border-radius:100px;font-weight:500;
-  background:transparent;
-}
-/* keep title large for hero */
-.proj-hero-title{
-  font-family:var(--sans);
-  font-size:clamp(4rem,8vw,8rem);
-  color:#fff;font-weight:700;
-  line-height:.9;letter-spacing:-.03em;
-  display:none; /* title shown in 3col sidebar instead */
-}
+.proj-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.55}
+.proj-hero-content{position:relative;z-index:2;padding:0 5vw 5rem}
+.proj-hero-eyebrow{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);display:block;font-weight:500;margin-bottom:1.2rem}
+.proj-hero-title{font-family:var(--sans);font-size:clamp(5rem,9vw,9rem);color:#fff;font-weight:700;line-height:.9;letter-spacing:-.03em;display:block;margin:0}
 
-/* ② 3-COL — exactly Basic Agency: ~38% left / 62% right */
-.proj-3col{
+/* ── OVERVIEW SECTION (sticky 3-col) ── */
+.proj-overview-wrap{
   display:grid;
   grid-template-columns:38% 62%;
   align-items:start;
   background:#eeeae3;
+  border-top:1px solid rgba(0,0,0,.1);
 }
-
-/* LEFT sidebar — sticky */
-.proj-sidebar{
+.proj-ov-left{
   position:sticky;top:0;height:100vh;
-  padding:6rem 3rem 4rem 5vw;
-  display:flex;flex-direction:column;
-  justify-content:flex-start;
+  padding:5rem 3rem 4rem 5vw;
+  display:flex;flex-direction:column;justify-content:flex-start;gap:2rem;
+  border-right:1px solid rgba(0,0,0,.08);
+}
+.proj-ov-section-tag{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.4);font-weight:500}
+.proj-ov-section-slash{color:var(--gold);margin:0 .3rem}
+.proj-ov-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.4);font-weight:500;margin-bottom:.3rem;display:block}
+
+/* slogan */
+.proj-sidebar-slogan{font-family:var(--sans);font-size:clamp(1.2rem,1.8vw,1.8rem);color:#000;font-weight:700;line-height:1.15;letter-spacing:-.02em;margin:0}
+
+/* scope list */
+.proj-scope-list{list-style:none;margin:0;padding:0}
+.proj-scope-list li{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;color:#444;padding:.2rem 0;font-weight:500;line-height:1.6}
+
+/* tags */
+.proj-sidebar-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.proj-sidebar-tag{font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;border:1.5px solid rgba(0,0,0,.2);color:rgba(0,0,0,.5);padding:.28rem .8rem;border-radius:100px;font-weight:500}
+
+/* overview right */
+.proj-ov-right{padding:5rem 5vw 5rem 4vw}
+.proj-ov-inner{max-width:660px}
+
+/* ── CONTENT SECTION (section label + big title + body + images) ── */
+.proj-section{
+  background:#eeeae3;
+  border-top:1px solid rgba(0,0,0,.1);
+}
+.proj-section-top{
+  display:grid;grid-template-columns:38% 62%;
+  padding:4rem 5vw 3rem;
+  align-items:baseline;
   gap:2rem;
 }
-.proj-sidebar-title{
-  font-family:var(--sans);
-  font-size:clamp(1.6rem,2.2vw,2.2rem);
-  color:#000;font-weight:700;
-  line-height:1.1;letter-spacing:-.02em;
-  margin:0;
+.proj-section-tag-wrap{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.4);font-weight:500}
+.proj-section-tag-slash{color:var(--gold);margin:0 .3rem}
+.proj-section-h2{
+  font-family:var(--sans);font-size:clamp(1.5rem,2.5vw,2.4rem);
+  font-weight:700;color:#000;line-height:1.1;letter-spacing:-.02em;
+  margin:0;max-width:560px;
 }
-.proj-sidebar-meta{
-  list-style:none;margin:0;
+/* section body */
+.proj-section-body{padding:0 5vw 3rem;max-width:660px;margin:0 0 0 38%}
+.proj-section-subt{
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(0,0,0,.4);font-weight:500;display:block;margin-bottom:.4rem;margin-top:2rem;
 }
-.proj-sidebar-meta li{
-  font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;
-  color:#333;padding:.18rem 0;font-weight:500;line-height:1.5;
-}
-.proj-sidebar-tags{display:flex;flex-wrap:wrap;gap:.4rem}
-.proj-sidebar-tag{
-  font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;
-  border:1.5px solid rgba(0,0,0,.25);color:rgba(0,0,0,.55);
-  padding:.3rem .85rem;border-radius:100px;font-weight:500;
+.proj-section-h3{
+  font-family:var(--sans);font-size:clamp(1rem,1.4vw,1.2rem);
+  font-weight:700;color:#000;line-height:1.2;letter-spacing:-.01em;
+  margin:0 0 1.2rem;
 }
 
-/* RIGHT — scrollable text, more gap from left */
-.proj-scrolltext{
-  padding:6rem 5vw 6rem 5vw;
-}
-.proj-scrolltext-inner{max-width:680px}
-
-/* Body text — matches Basic Agency size exactly */
-.pst-para{
-  font-family:var(--sans);
-  font-size:clamp(1.05rem,1.35vw,1.2rem);
-  line-height:1.7;
-  color:#111;
-  font-weight:400;
-  margin-bottom:2rem;
-  letter-spacing:-.01em;
-}
+/* shared text styles */
+.pst-para{font-family:var(--sans);font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.75;color:#222;font-weight:400;margin-bottom:1.8rem;letter-spacing:-.01em}
 .pst-para strong{font-weight:700}
+.pst-h2{font-family:var(--sans);font-size:.72rem;color:#000;font-weight:700;margin:3rem 0 1rem;letter-spacing:.08em;text-transform:uppercase;display:block}
+.pst-h3{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:2rem 0 .8rem;font-weight:500;display:block}
 
-/* Section heading — APPROACH style */
-.pst-h2{
-  font-family:var(--sans);
-  font-size:.78rem;
-  color:#000;font-weight:700;
-  margin:3rem 0 1.2rem;
-  letter-spacing:.07em;
-  text-transform:uppercase;
-  display:block;
-}
-.pst-h3{
-  font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--gold);margin:2rem 0 .8rem;font-weight:500;display:block;
-}
+/* images in sections */
+.proj-img-full{width:100%;display:block;margin:2rem 0 0}
+.proj-img-full img{width:100%;display:block}
+.proj-img-grid{display:grid;gap:3px;margin:2rem 0 0}
+.proj-img-grid.two{grid-template-columns:1fr 1fr}
+.proj-img-grid.three{grid-template-columns:1fr 1fr 1fr}
+.proj-img-grid img{width:100%;display:block;object-fit:cover}
+.proj-img-caption{padding:.8rem 5vw 0;display:flex;gap:2rem}
+.proj-img-caption-idx{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:#aaa;font-weight:500;flex-shrink:0;padding-top:.1rem}
+.proj-img-caption-txt{font-size:.82rem;line-height:1.65;color:#666;font-weight:400}
 
-/* ③ MEDIA SECTION */
-.proj-media{background:#fff;padding-bottom:6rem}
-.proj-media-block{margin-bottom:0}
-.pmb-full img{width:100%;display:block}
-.pmb-two{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.pmb-two img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
-.pmb-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px}
-.pmb-three img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
-.pmb-caption{
-  padding:1rem 5vw 2.5rem;
-  display:flex;gap:3rem;align-items:flex-start;
-}
-.pmb-caption-index{
-  font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
-  color:#aaa;flex-shrink:0;padding-top:.1rem;font-weight:500;
-}
-.pmb-caption-text{
-  font-size:.88rem;line-height:1.65;color:#555;font-weight:400;
-}
-.pmb-caption-text strong{font-weight:700;color:#000}
-.proj-media .pb-text{padding:3rem 5vw;max-width:720px}
-.proj-media .pb-text p{font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.75;color:#111;font-weight:400;margin-bottom:1.5rem;letter-spacing:-.005em}
-.proj-media .pb-text p strong{font-weight:700}
-.proj-media .pb-h2{padding:3rem 5vw 1rem}
-.proj-media .pb-h2 h2{font-family:var(--sans);font-size:clamp(.8rem,.9vw,.88rem);font-weight:700;color:#000;text-transform:uppercase;letter-spacing:.06em}
-.proj-media .pb-h3{padding:2rem 5vw .5rem}
-.proj-media .pb-h3 h3{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:500}
-.proj-media .pb-video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:.5rem 0}
-.proj-media .pb-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-.proj-media .pb-video-native video{width:100%;display:block}
-.proj-media .pb-divider{height:4rem}
+/* video */
+.proj-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:2rem 0}
+.proj-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.proj-video-native video{width:100%;display:block;margin:2rem 0}
 
-/* ④ NEXT PROJECT */
-.next-project{display:block;position:relative;height:60vh;min-height:300px;overflow:hidden;cursor:none;text-decoration:none}
+/* divider */
+.proj-divider{height:4rem}
+
+/* ── NEXT PROJECT ── */
+.next-project{display:block;position:relative;height:65vh;min-height:320px;overflow:hidden;cursor:none;text-decoration:none}
 .np-bg{position:absolute;inset:0;transition:transform .8s cubic-bezier(.25,.46,.45,.94)}
 .np-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
 .next-project:hover .np-bg{transform:scale(1.04)}
-.np-content{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;padding:3rem 5vw;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 60%)}
-.np-label{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.4rem;font-weight:500}
-.np-title{font-family:var(--sans);font-size:clamp(1.8rem,3.5vw,3rem);color:#fff;font-weight:700;letter-spacing:-.01em}
+.np-content{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;padding:3rem 5vw;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%)}
+.np-label{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.5rem;font-weight:500;display:block}
+.np-title{font-family:var(--sans);font-size:clamp(2rem,3.5vw,3.2rem);color:#fff;font-weight:700;letter-spacing:-.02em}
 .np-arrow{font-size:2rem;color:var(--gold);align-self:flex-end}
 
 /* mobile */
 @media(max-width:768px){
-  .proj-3col{grid-template-columns:1fr;padding-top:3rem}
-  .proj-sidebar{position:relative;height:auto;padding:2rem 1.5rem}
-  .proj-scrolltext{padding:2rem 1.5rem 3rem}
-  .pmb-two,.pmb-three{grid-template-columns:1fr}
-  .back-btn{left:1.5rem}
+  .proj-overview-wrap,.proj-section-top{grid-template-columns:1fr}
+  .proj-ov-left{position:relative;height:auto;padding:3rem 1.5rem 2rem;border-right:none}
+  .proj-ov-right{padding:2rem 1.5rem 3rem}
+  .proj-section-body{margin:0;padding:0 1.5rem 2rem}
+  .proj-img-grid.two,.proj-img-grid.three{grid-template-columns:1fr}
+  .back-btn{left:1.5rem;top:4rem}
 }
 
 /* ══════════════════════════════════════════
@@ -806,109 +759,138 @@ function buildWorkGrid(){
 }
 
 /* ══ PROJECT DETAIL ══ */
+/* ══ PROJECT DETAIL ══ */
 let projScrollHandler=null;
 
 function buildProject(idx){
   const list=projects.length?projects:FALLBACK_PROJECTS;
   const p=list[idx];
   const next=list[(idx+1)%list.length];
-  const bgColor=p.bgColor||'#1C1C1C';
+  const bgColor=p.bgColor||'#111';
   const cat=p.category||p.cat||'';
   const cover=p.cover||p.detail||null;
   const nextCover=next.cover||next.detail||null;
-  const nextBg=next.bgColor||'#1C1C1C';
+  const nextBg=next.bgColor||'#111';
+  const slogan=p.slogan||'';
+  const tagItems=(p.tags||[]).map(t=>`<span class="proj-sidebar-tag">${t}</span>`).join('');
+  const scopeItems=(p.scope||[]).map(s=>`<li>${s}</li>`).join('');
 
-  // split: text blocks → sidebar scroll, images/video → media section
+  // parse blocks into: overview-texts, then sections
+  // heading_2 triggers a new section, images/video go into current section
   const blocks=p.blocks||[];
-  const textBlocks=[];
-  const mediaBlocks=[];
-  let mediaStarted=false;
+  const overviewBlocks=[];
+  const sections=[];
+  let currentSection=null;
+  let overviewDone=false;
+
   blocks.forEach(bl=>{
-    if(!mediaStarted&&(bl.type==='images'||bl.type==='video')) mediaStarted=true;
-    if(mediaStarted) mediaBlocks.push(bl);
-    else textBlocks.push(bl);
+    if(bl.type==='heading'&&bl.level===2){
+      overviewDone=true;
+      currentSection={title:bl.text,sub:null,blocks:[]};
+      sections.push(currentSection);
+    } else if(bl.type==='heading'&&bl.level===3&&currentSection){
+      currentSection.sub=bl.text;
+    } else if(!overviewDone){
+      overviewBlocks.push(bl);
+    } else if(currentSection){
+      currentSection.blocks.push(bl);
+    }
   });
 
-  // right scroll text
-  const scrollHTML=textBlocks.map(bl=>{
-    if(bl.type==='text') return `<p class="pst-para">${bl.text}</p>`;
-    if(bl.type==='heading'&&bl.level===2) return `<p class="pst-h2">${bl.text}</p>`;
-    if(bl.type==='heading'&&bl.level===3) return `<p class="pst-h3">${bl.text}</p>`;
-    if(bl.type==='divider') return `<div style="height:2rem"></div>`;
-    return '';
-  }).join('');
+  function renderText(bls){
+    return bls.map(bl=>{
+      if(bl.type==='text') return `<p class="pst-para">${bl.text}</p>`;
+      if(bl.type==='heading'&&bl.level===3) return `<span class="pst-h3">${bl.text}</span>`;
+      if(bl.type==='divider') return `<div class="proj-divider"></div>`;
+      return '';
+    }).filter(Boolean).join('');
+  }
 
-  // media section
-  const mediaHTML=mediaBlocks.map(bl=>{
-    if(bl.type==='images'){
-      const n=bl.images.length;
-      const cls=n===1?'pmb-full':n===2?'pmb-two':'pmb-three';
-      const imgs=bl.images.map(im=>`<img src="${im.url}" alt="${im.caption||''}" loading="lazy">`).join('');
-      const caps=bl.images.filter(im=>im.caption).map((im,ci)=>`
-        <div class="pmb-caption">
-          <span class="pmb-caption-index">${String(ci+1).padStart(2,'0')}</span>
-          <span class="pmb-caption-text">${im.caption}</span>
-        </div>`).join('');
-      return `<div class="proj-media-block"><div class="${cls}">${imgs}</div>${caps}</div>`;
-    }
-    if(bl.type==='video'){
-      const url=bl.url;
-      const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
-      const vm=url.match(/vimeo\.com\/(\d+)/);
-      if(yt) return `<div class="proj-media-block"><div class="pb-video"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div></div>`;
-      if(vm) return `<div class="proj-media-block"><div class="pb-video"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div></div>`;
-      return `<div class="proj-media-block"><div class="pb-video-native"><video src="${url}" autoplay muted loop playsinline></video></div></div>`;
-    }
-    if(bl.type==='text') return `<div class="pb-text"><p>${bl.text}</p></div>`;
-    if(bl.type==='heading'&&bl.level===2) return `<div class="pb-h2"><h2>${bl.text}</h2></div>`;
-    if(bl.type==='heading'&&bl.level===3) return `<div class="pb-h3"><h3>${bl.text}</h3></div>`;
-    if(bl.type==='divider') return `<div class="pb-divider"></div>`;
-    return '';
-  }).join('');
+  function renderImages(bls){
+    return bls.map(bl=>{
+      if(bl.type==='images'){
+        const n=bl.images.length;
+        const cls=n>=3?'three':n===2?'two':'';
+        const imgs=bl.images.map(im=>`<img src="${im.url}" alt="${im.caption||''}" loading="lazy">`).join('');
+        const caps=bl.images.filter(im=>im.caption).map((im,i)=>`
+          <div class="proj-img-caption">
+            <span class="proj-img-caption-idx">${String(i+1).padStart(2,'0')}</span>
+            <span class="proj-img-caption-txt">${im.caption}</span>
+          </div>`).join('');
+        return `<div class="${cls?'proj-img-grid '+cls:'proj-img-full'}">${imgs}</div>${caps}`;
+      }
+      if(bl.type==='video'){
+        const url=bl.url;
+        const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
+        const vm=url.match(/vimeo\.com\/(\d+)/);
+        if(yt) return `<div class="proj-video-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div>`;
+        if(vm) return `<div class="proj-video-wrap"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`;
+        return `<div class="proj-video-native"><video src="${url}" autoplay muted loop playsinline></video></div>`;
+      }
+      return '';
+    }).filter(Boolean).join('');
+  }
 
-  // scope list for sidebar
-  const scopeItems=(p.scope||[]).map(s=>`<li>${s}</li>`).join('');
-  const tagItems=(p.tags||[]).map(t=>`<span class="proj-sidebar-tag">${t}</span>`).join('');
+  function renderSectionBlocks(bls){
+    const textBls=bls.filter(b=>b.type==='text'||b.type==='heading'&&b.level===3||b.type==='divider');
+    const mediaBls=bls.filter(b=>b.type==='images'||b.type==='video');
+    return renderText(textBls)+renderImages(mediaBls);
+  }
 
-  // set page bg
+  // overview right: text only
+  const overviewHTML=renderText(overviewBlocks)||'<p class="pst-para">Notion 본문에 프로젝트 설명을 입력해주세요.</p>';
+
+  // sections HTML
+  const sectionsHTML=sections.map((sec,si)=>`
+    <div class="proj-section">
+      <div class="proj-section-top">
+        <div class="proj-section-tag-wrap">
+          <span>${p.title||'JS'}</span>
+          <span class="proj-section-tag-slash">/</span>
+          <span>${sec.title}</span>
+        </div>
+        <h2 class="proj-section-h2">${sec.sub||sec.title}</h2>
+      </div>
+      <div class="proj-section-body">
+        ${renderSectionBlocks(sec.blocks)}
+      </div>
+    </div>`).join('');
+
   document.getElementById('pg-project').style.background='#eeeae3';
-
-  const slogan=p.slogan||cat||'';
-  const scopePills=(p.scope||[]).map(s=>`<span class="proj-hero-pill">${s}</span>`).join('');
 
   document.getElementById('proj-content').innerHTML=`
     <section class="proj-hero" style="background:${bgColor}">
       <div class="proj-hero-bg">${cover?`<img src="${cover}" alt="${p.title}">`:''}
       </div>
       <div class="proj-hero-content">
-        <span class="proj-hero-eyebrow">${p.title}${cat?' — '+cat:''}</span>
-        ${slogan?`<p class="proj-hero-slogan">${slogan}</p>`:''}
-        ${scopePills?`<div class="proj-hero-pills">${scopePills}</div>`:''}
+        <span class="proj-hero-eyebrow">${cat}</span>
+        <h1 class="proj-hero-title">${p.title}</h1>
       </div>
     </section>
 
-    <div class="proj-3col">
-      <aside class="proj-sidebar">
+    <div class="proj-overview-wrap">
+      <aside class="proj-ov-left">
         <div>
-          <ul class="proj-sidebar-meta">
-            ${cat?`<li>${cat}</li>`:''}
+          <span class="proj-ov-section-tag">
+            ${p.title||'JS'}<span class="proj-ov-section-slash">/</span>Overview
+          </span>
+          ${slogan?`<p class="proj-sidebar-slogan" style="margin-top:1.5rem">${slogan}</p>`:''}
+          <ul class="proj-scope-list" style="margin-top:${slogan?'1.5rem':'1rem'}">
             ${p.client?`<li>${p.client}</li>`:''}
-            ${(p.scope||[]).map(s=>`<li>${s}</li>`).join('')}
+            ${cat?`<li>${cat}</li>`:''}
+            ${scopeItems}
           </ul>
           ${tagItems?`<div class="proj-sidebar-tags" style="margin-top:1.5rem">${tagItems}</div>`:''}
         </div>
       </aside>
-
-      <div class="proj-scrolltext">
-        <div class="proj-scrolltext-inner">
-          ${scrollHTML||'<p class="pst-para">Notion 페이지 본문에 프로젝트 설명을 입력해주세요.</p>'}
+      <div class="proj-ov-right">
+        <div class="proj-ov-inner">
+          ${overviewHTML}
         </div>
       </div>
     </div>
 
-    <div class="proj-media">
-      ${mediaHTML}
-    </div>
+    ${sectionsHTML}
 
     <a class="next-project" href="#" onclick="openProject(${(idx+1)%list.length});return false">
       <div class="np-bg" style="background:${nextBg}">
@@ -916,20 +898,19 @@ function buildProject(idx){
       </div>
       <div class="np-content">
         <div>
-          <div class="np-label">Next Project</div>
+          <span class="np-label">Next Project</span>
           <div class="np-title">${next.title}</div>
         </div>
         <span class="np-arrow">→</span>
       </div>
     </a>`;
 
-  // scroll: back button color changes when past hero
+  // back btn color
   if(projScrollHandler) window.removeEventListener('scroll',projScrollHandler);
   const btn=document.querySelector('.back-btn');
-  // start white (on dark hero)
   if(btn) btn.style.color='rgba(255,255,255,.8)';
   projScrollHandler=function(){
-    if(btn) btn.style.color=window.scrollY>window.innerHeight*0.85?'rgba(0,0,0,.5)':'rgba(255,255,255,.8)';
+    if(btn) btn.style.color=window.scrollY>window.innerHeight*.85?'rgba(0,0,0,.5)':'rgba(255,255,255,.8)';
   };
   window.addEventListener('scroll',projScrollHandler,{passive:true});
 }
