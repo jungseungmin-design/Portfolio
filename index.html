@@ -243,13 +243,27 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 }
 .proj-ov-left{
   position:sticky;top:0;height:100vh;
-  padding:5rem 3rem 4rem 5vw;
-  display:flex;flex-direction:column;justify-content:flex-start;gap:2rem;
+  padding:10rem 3rem 4rem 5vw;
+  display:flex;flex-direction:column;justify-content:flex-start;gap:1.5rem;
   border-right:1px solid rgba(0,0,0,.08);
 }
 .proj-ov-section-tag{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.4);font-weight:500}
 .proj-ov-section-slash{color:var(--gold);margin:0 .3rem}
 .proj-ov-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.4);font-weight:500;margin-bottom:.3rem;display:block}
+
+/* category — 2.5배 크게, bold */
+.proj-ov-category{
+  font-family:var(--sans);
+  font-size:clamp(1.4rem,2.2vw,2.2rem);
+  color:#000;font-weight:700;
+  line-height:1.1;letter-spacing:-.02em;
+  margin:0;
+}
+/* client */
+.proj-ov-client{
+  font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;
+  color:#555;font-weight:500;margin:0;
+}
 
 /* slogan */
 .proj-sidebar-slogan{font-family:var(--sans);font-size:clamp(1.2rem,1.8vw,1.8rem);color:#000;font-weight:700;line-height:1.15;letter-spacing:-.02em;margin:0}
@@ -772,8 +786,8 @@ function buildProject(idx){
   const nextCover=next.cover||next.detail||null;
   const nextBg=next.bgColor||'#111';
   const slogan=p.slogan||'';
+  const scopePills=(p.scope||[]).map(s=>`<span class="proj-sidebar-tag">${s}</span>`).join('');
   const tagItems=(p.tags||[]).map(t=>`<span class="proj-sidebar-tag">${t}</span>`).join('');
-  const scopeItems=(p.scope||[]).map(s=>`<li>${s}</li>`).join('');
 
   // parse blocks into: overview-texts, then sections
   // heading_2 triggers a new section, images/video go into current section
@@ -863,7 +877,6 @@ function buildProject(idx){
       <div class="proj-hero-bg">${cover?`<img src="${cover}" alt="${p.title}">`:''}
       </div>
       <div class="proj-hero-content">
-        <span class="proj-hero-eyebrow">${cat}</span>
         <h1 class="proj-hero-title">${p.title}</h1>
       </div>
     </section>
@@ -874,13 +887,10 @@ function buildProject(idx){
           <span class="proj-ov-section-tag">
             ${p.title||'JS'}<span class="proj-ov-section-slash">/</span>Overview
           </span>
-          ${slogan?`<p class="proj-sidebar-slogan" style="margin-top:1.5rem">${slogan}</p>`:''}
-          <ul class="proj-scope-list" style="margin-top:${slogan?'1.5rem':'1rem'}">
-            ${p.client?`<li>${p.client}</li>`:''}
-            ${cat?`<li>${cat}</li>`:''}
-            ${scopeItems}
-          </ul>
-          ${tagItems?`<div class="proj-sidebar-tags" style="margin-top:1.5rem">${tagItems}</div>`:''}
+          ${cat?`<p class="proj-ov-category">${cat}</p>`:''}
+          ${p.client?`<p class="proj-ov-client">${p.client}</p>`:''}
+          ${scopePills?`<div class="proj-sidebar-tags" style="margin-top:1rem">${scopePills}</div>`:
+            tagItems?`<div class="proj-sidebar-tags" style="margin-top:1rem">${tagItems}</div>`:''}
         </div>
       </aside>
       <div class="proj-ov-right">
