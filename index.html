@@ -230,16 +230,16 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   position:relative;
   height:100vh;
   display:flex;flex-direction:column;justify-content:flex-end;
-  overflow:hidden;
   background:#111;
-  /* 배경색은 JS에서 style로 지정 */
+  padding:8px;
+  box-sizing:border-box;
 }
-/* 이미지 — 상하좌우 여백 + 둥근 모서리 */
+/* 이미지 — 상하좌우 여백, 각진 모서리 */
 .proj-hero-bg{
   position:absolute;
   inset:8px;
   z-index:0;
-  border-radius:10px;
+  border-radius:0;
   overflow:hidden;
 }
 .proj-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.85}
