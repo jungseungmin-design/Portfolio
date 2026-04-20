@@ -350,15 +350,11 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   padding-right:5vw;
   box-sizing:border-box;
 }
-/* 이미지: 풀와이드 */
-.proj-section-content .proj-img-landscape,
-.proj-section-content .proj-img-portrait-row,
+/* 이미지: 기본 proj-img-landscape 패딩(12vw) 그대로 사용 */
 .proj-section-content .proj-video-wrap,
-.proj-section-content .proj-video-native,
-.proj-section-media .proj-img-landscape,
-.proj-section-media .proj-img-portrait-row{
-  padding-left:0;
-  padding-right:0;
+.proj-section-content .proj-video-native{
+  padding-left:5vw;
+  padding-right:5vw;
 }
 /* 이미지 캡션 */
 .proj-img-subcap{
@@ -382,7 +378,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 
 /* ── PENTAGRAM-STYLE IMAGE LAYOUT ── */
 
-/* 가로 이미지 1장 — 중앙 배치, 양쪽 여백 */
+/* 가로 이미지 1장 — 좌우 여백 유지, 상하 간격 줄임 */
 .proj-img-landscape{
   padding:1rem 12vw;
 }
