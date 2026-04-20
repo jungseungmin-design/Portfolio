@@ -11,7 +11,6 @@ export default async function handler(req, res) {
   };
 
   try {
-    // 1) DB query — list of projects
     const dbRes = await fetch(`https://api.notion.com/v1/databases/${DATABASE_ID}/query`, {
       method: 'POST', headers,
       body: JSON.stringify({
@@ -21,11 +20,9 @@ export default async function handler(req, res) {
     });
     const dbData = await dbRes.json();
 
-    // 2) For each project, also fetch page blocks
     const projects = await Promise.all(dbData.results.map(async page => {
       const p = page.properties;
 
-      // fetch blocks for this page
       const blocksRes = await fetch(`https://api.notion.com/v1/blocks/${page.id}/children?page_size=100`, {
         headers
       });
@@ -47,7 +44,7 @@ export default async function handler(req, res) {
         tags: (p.Tags?.rich_text?.[0]?.plain_text || '').split(',').map(t => t.trim()).filter(Boolean),
         scope: (p.Scope?.rich_text?.[0]?.plain_text || '').split(',').map(s => s.trim()).filter(Boolean),
         order: p.Order?.number || 0,
-        blocks, // page body blocks
+        blocks,
       };
     }));
 
@@ -78,17 +75,22 @@ function parseBlocks(raw) {
       out.push({ type: 'heading', level: 3, text: richText(b.heading_3.rich_text) });
       i++; continue;
     }
+    if (type === 'quote') {
+      const text = richText(b.quote.rich_text);
+      if (text) out.push({ type: 'quote', text });
+      i++; continue;
+    }
     if (type === 'image') {
       const url = b.image.type === 'external' ? b.image.external.url : b.image.file?.url || '';
       const caption = richText(b.image.caption || []);
-      // peek ahead — group consecutive images
+      // 연속 이미지 묶기 (최대 3장)
       const group = [{ url, caption }];
       while (i + group.length < raw.length && raw[i + group.length].type === 'image') {
         const nb = raw[i + group.length];
         const nurl = nb.image.type === 'external' ? nb.image.external.url : nb.image.file?.url || '';
         const ncap = richText(nb.image.caption || []);
         group.push({ url: nurl, caption: ncap });
-        if (group.length === 3) break; // max 3 per group
+        if (group.length === 3) break;
       }
       out.push({ type: 'images', images: group });
       i += group.length; continue;
@@ -107,7 +109,6 @@ function parseBlocks(raw) {
       out.push({ type: 'divider' });
       i++; continue;
     }
-    // skip unknown
     i++;
   }
   return out;
