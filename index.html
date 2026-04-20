@@ -354,9 +354,11 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .proj-section-content .proj-img-landscape,
 .proj-section-content .proj-img-portrait-row,
 .proj-section-content .proj-video-wrap,
-.proj-section-content .proj-video-native{
-  padding-left:5vw;
-  padding-right:5vw;
+.proj-section-content .proj-video-native,
+.proj-section-media .proj-img-landscape,
+.proj-section-media .proj-img-portrait-row{
+  padding-left:0;
+  padding-right:0;
 }
 /* 이미지 캡션 */
 .proj-img-subcap{
@@ -382,16 +384,16 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 
 /* 가로 이미지 1장 — 중앙 배치, 양쪽 여백 */
 .proj-img-landscape{
-  padding:4rem 12vw;
+  padding:1rem 12vw;
 }
 .proj-img-landscape img{
   width:100%;display:block;
-  aspect-ratio:16/9;object-fit:cover;
+  object-fit:cover;
 }
 
-/* 세로 이미지 2장 + 우측 텍스트 — 가로 이미지와 같은 너비 */
+/* 세로 이미지 2장 나란히 */
 .proj-img-portrait-row{
-  padding:4rem 12vw;
+  padding:1rem 12vw;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:1.5rem;
