@@ -330,24 +330,82 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   margin:0 0 1.2rem;
 }
 
-/* images in sections */
-.proj-img-full{width:100%;display:block;margin:2rem 0 0}
+/* ── PENTAGRAM-STYLE IMAGE LAYOUT ── */
+
+/* 가로 이미지 1장 — 중앙 배치, 양쪽 여백 */
+.proj-img-landscape{
+  padding:4rem 12vw;
+}
+.proj-img-landscape img{
+  width:100%;display:block;
+  aspect-ratio:16/9;object-fit:cover;
+}
+
+/* 세로 이미지 2장 + 우측 텍스트 — 가로 이미지와 같은 너비 */
+.proj-img-portrait-row{
+  padding:4rem 12vw;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  align-items:start;
+}
+.proj-img-portrait-row img{
+  width:100%;display:block;
+  aspect-ratio:3/4;object-fit:cover;
+}
+
+/* 세로 이미지 1장 + 우측 텍스트 */
+.proj-img-portrait-text{
+  padding:4rem 12vw;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  align-items:start;
+}
+.proj-img-portrait-text img{
+  width:100%;display:block;
+  aspect-ratio:3/4;object-fit:cover;
+}
+.proj-img-caption-block{
+  padding-top:1rem;
+}
+.proj-img-caption-block p{
+  font-family:var(--sans);
+  font-size:clamp(.95rem,1.2vw,1.05rem);
+  line-height:1.75;color:#333;
+  font-weight:400;letter-spacing:-.01em;
+}
+
+/* 풀와이드 이미지 (섹션 전체) */
+.proj-img-full{width:100%;display:block;margin:3rem 0}
 .proj-img-full img{width:100%;display:block}
-.proj-img-grid{display:grid;gap:3px;margin:2rem 0 0}
+
+/* 3단 그리드 */
+.proj-img-grid{display:grid;gap:3px;margin:3rem 12vw}
 .proj-img-grid.two{grid-template-columns:1fr 1fr}
 .proj-img-grid.three{grid-template-columns:1fr 1fr 1fr}
 .proj-img-grid img{width:100%;display:block;object-fit:cover}
-.proj-img-caption{padding:.8rem 5vw 0;display:flex;gap:2rem}
+
+/* 캡션 (번호형) */
+.proj-img-caption{padding:.8rem 12vw 0;display:flex;gap:2rem}
 .proj-img-caption-idx{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:#aaa;font-weight:500;flex-shrink:0;padding-top:.1rem}
 .proj-img-caption-txt{font-size:.82rem;line-height:1.65;color:#666;font-weight:400}
 
 /* video */
-.proj-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:2rem 0}
+.proj-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:3rem 12vw}
 .proj-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-.proj-video-native video{width:100%;display:block;margin:2rem 0}
+.proj-video-native video{width:100%;display:block;margin:3rem 0}
 
 /* divider */
 .proj-divider{height:4rem}
+
+/* mobile */
+@media(max-width:768px){
+  .proj-img-landscape,.proj-img-portrait-row,.proj-img-portrait-text{padding:2rem 1.5rem}
+  .proj-img-portrait-row,.proj-img-portrait-text{grid-template-columns:1fr}
+  .proj-img-grid{margin:2rem 1.5rem}
+  .proj-img-caption{padding:.8rem 1.5rem 0}
+}
 
 /* ── NEXT PROJECT ── */
 .next-project{display:block;position:relative;height:30vh;min-height:160px;overflow:hidden;cursor:none;text-decoration:none}
@@ -838,14 +896,38 @@ function buildProject(idx){
     return bls.map(bl=>{
       if(bl.type==='images'){
         const n=bl.images.length;
-        const cls=n>=3?'three':n===2?'two':'';
-        const imgs=bl.images.map(im=>`<img src="${im.url}" alt="${im.caption||''}" loading="lazy">`).join('');
-        const caps=bl.images.filter(im=>im.caption).map((im,i)=>`
-          <div class="proj-img-caption">
-            <span class="proj-img-caption-idx">${String(i+1).padStart(2,'0')}</span>
-            <span class="proj-img-caption-txt">${im.caption}</span>
-          </div>`).join('');
-        return `<div class="${cls?'proj-img-grid '+cls:'proj-img-full'}">${imgs}</div>${caps}`;
+        const first=bl.images[0];
+        const second=bl.images[1];
+
+        if(n===1){
+          // 가로 1장 — 중앙 여백
+          const cap=first.caption?`<div class="proj-img-caption-block"><p>${first.caption}</p></div>`:'';
+          return `<div class="proj-img-landscape">
+            <img src="${first.url}" alt="${first.caption||''}" loading="lazy">
+            ${cap}
+          </div>`;
+        }
+        if(n===2){
+          // 세로 2장 나란히 (또는 1장+캡션)
+          const cap1=first.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${first.caption}</p>`:'';
+          const cap2=second.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${second.caption}</p>`:'';
+          return `<div class="proj-img-portrait-row">
+            <div><img src="${first.url}" alt="${first.caption||''}" loading="lazy">${cap1}</div>
+            <div><img src="${second.url}" alt="${second.caption||''}" loading="lazy">${cap2}</div>
+          </div>`;
+        }
+        if(n>=3){
+          // 3장: 첫 가로 1장 + 아래 세로 2장
+          const third=bl.images[2];
+          return `<div class="proj-img-landscape">
+            <img src="${first.url}" alt="${first.caption||''}" loading="lazy">
+          </div>
+          <div class="proj-img-portrait-row">
+            <div><img src="${second.url}" alt="${second.caption||''}" loading="lazy"></div>
+            <div><img src="${third.url}" alt="${third.caption||''}" loading="lazy"></div>
+          </div>`;
+        }
+        return '';
       }
       if(bl.type==='video'){
         const url=bl.url;
