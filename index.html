@@ -338,17 +338,37 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 
 /* section content — 순서 유지 */
 .proj-section-content{}
-/* 텍스트: 우측 66% */
+/* 텍스트: 이미지와 같은 우측선(12vw)에 맞춰 정렬 */
 .proj-section-content .pst-para,
 .proj-section-content .pst-h2,
 .proj-section-content .pst-h3,
 .proj-section-content .proj-divider{
-  width:66%;
+  width:56%;
   margin-left:auto;
-  margin-right:0;
-  padding-left:2vw;
-  padding-right:5vw;
+  margin-right:12vw;
+  padding-left:0;
+  padding-right:0;
   box-sizing:border-box;
+}
+/* 이미지: 기본 proj-img-landscape 패딩(12vw) 그대로 사용 */
+.proj-section-content .proj-video-wrap,
+.proj-section-content .proj-video-native{
+  padding-left:5vw;
+  padding-right:5vw;
+}
+/* mobile */
+@media(max-width:768px){
+  .proj-section-content .pst-para,
+  .proj-section-content .pst-h2,
+  .proj-section-content .pst-h3,
+  .proj-section-content .proj-divider{
+    width:100%;margin-left:0;margin-right:0;padding:0 1.5rem;
+  }
+  .proj-section-content .proj-video-wrap{
+    padding:0 1.5rem;
+  }
+  .proj-img-landscape{padding:1rem 1.5rem}
+  .proj-img-portrait-row{padding:1rem 1.5rem}
 }
 /* 이미지: 기본 proj-img-landscape 패딩(12vw) 그대로 사용 */
 .proj-section-content .proj-video-wrap,
