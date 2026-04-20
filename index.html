@@ -336,23 +336,46 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .proj-section-media .proj-img-portrait-row{padding:2rem 5vw}
 .proj-section-media .proj-video-wrap{margin:2rem 5vw}
 
-/* section content — 순서 유지, 텍스트는 들여쓰기, 이미지는 풀와이드 */
+/* section content — 순서 유지 */
 .proj-section-content{}
+/* 텍스트: 우측 66% */
 .proj-section-content .pst-para,
 .proj-section-content .pst-h2,
 .proj-section-content .pst-h3,
 .proj-section-content .proj-divider{
-  padding-left:calc(38% + 5vw);
+  width:66%;
+  margin-left:auto;
+  margin-right:0;
+  padding-left:2vw;
   padding-right:5vw;
-  max-width:calc(38% + 660px);
   box-sizing:border-box;
 }
+/* 이미지: 풀와이드 */
 .proj-section-content .proj-img-landscape,
 .proj-section-content .proj-img-portrait-row,
 .proj-section-content .proj-video-wrap,
 .proj-section-content .proj-video-native{
   padding-left:5vw;
   padding-right:5vw;
+}
+/* 이미지 캡션 */
+.proj-img-subcap{
+  font-size:.78rem;color:#888;margin-top:.5rem;
+  line-height:1.5;font-weight:400;
+}
+/* mobile */
+@media(max-width:768px){
+  .proj-section-content .pst-para,
+  .proj-section-content .pst-h2,
+  .proj-section-content .pst-h3,
+  .proj-section-content .proj-divider{
+    width:100%;margin-left:0;padding:0 1.5rem;
+  }
+  .proj-section-content .proj-img-landscape,
+  .proj-section-content .proj-img-portrait-row,
+  .proj-section-content .proj-video-wrap{
+    padding:0 1.5rem;
+  }
 }
 
 /* ── PENTAGRAM-STYLE IMAGE LAYOUT ── */
@@ -913,45 +936,58 @@ function buildProject(idx){
   });
 
   function renderAll(bls){
-    return bls.map(bl=>{
-      if(bl.type==='text') return `<p class="pst-para">${bl.text}</p>`;
-      if(bl.type==='heading'&&bl.level===3) return `<span class="pst-h3">${bl.text}</span>`;
-      if(bl.type==='divider') return `<div class="proj-divider"></div>`;
+    const out=[];
+    let i=0;
+    while(i<bls.length){
+      const bl=bls[i];
+      if(bl.type==='text'){
+        out.push(`<p class="pst-para">${bl.text}</p>`);
+        i++; continue;
+      }
+      if(bl.type==='heading'&&bl.level===3){
+        out.push(`<span class="pst-h3">${bl.text}</span>`);
+        i++; continue;
+      }
+      if(bl.type==='divider'){
+        out.push(`<div class="proj-divider"></div>`);
+        i++; continue;
+      }
       if(bl.type==='images'){
-        const n=bl.images.length;
-        const first=bl.images[0];
-        const second=bl.images[1];
-        if(n===1){
-          const cap=first.caption?`<div class="proj-img-caption-block"><p>${first.caption}</p></div>`:'';
-          return `<div class="proj-img-landscape"><img src="${first.url}" alt="${first.caption||''}" loading="lazy">${cap}</div>`;
+        const imgs=bl.images;
+        const n=imgs.length;
+
+        // [pair] 캡션이 있으면 2장 나란히
+        const hasPair=imgs.some(im=>im.caption&&im.caption.trim().toLowerCase()==='[pair]');
+
+        if(hasPair&&n>=2){
+          const cap1=imgs[0].caption&&imgs[0].caption.toLowerCase()!=='[pair]'?`<p class="proj-img-subcap">${imgs[0].caption}</p>`:'';
+          const cap2=imgs[1].caption&&imgs[1].caption.toLowerCase()!=='[pair]'?`<p class="proj-img-subcap">${imgs[1].caption}</p>`:'';
+          out.push(`<div class="proj-img-portrait-row">
+            <div><img src="${imgs[0].url}" alt="" loading="lazy">${cap1}</div>
+            <div><img src="${imgs[1].url}" alt="" loading="lazy">${cap2}</div>
+          </div>`);
+          i++; continue;
         }
-        if(n===2){
-          const cap1=first.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${first.caption}</p>`:'';
-          const cap2=second.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${second.caption}</p>`:'';
-          return `<div class="proj-img-portrait-row">
-            <div><img src="${first.url}" alt="${first.caption||''}" loading="lazy">${cap1}</div>
-            <div><img src="${second.url}" alt="${second.caption||''}" loading="lazy">${cap2}</div>
-          </div>`;
-        }
-        if(n>=3){
-          const third=bl.images[2];
-          return `<div class="proj-img-landscape"><img src="${first.url}" alt="${first.caption||''}" loading="lazy"></div>
-          <div class="proj-img-portrait-row">
-            <div><img src="${second.url}" alt="${second.caption||''}" loading="lazy"></div>
-            <div><img src="${third.url}" alt="${third.caption||''}" loading="lazy"></div>
-          </div>`;
-        }
+
+        // 기본: 각 이미지 독립 1장 풀와이드
+        imgs.forEach(im=>{
+          const cap=im.caption?`<p class="proj-img-subcap">${im.caption}</p>`:'';
+          out.push(`<div class="proj-img-landscape"><img src="${im.url}" alt="${im.caption||''}" loading="lazy">${cap}</div>`);
+        });
+        i++; continue;
       }
       if(bl.type==='video'){
         const url=bl.url;
         const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
         const vm=url.match(/vimeo\.com\/(\d+)/);
-        if(yt) return `<div class="proj-video-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div>`;
-        if(vm) return `<div class="proj-video-wrap"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`;
-        return `<div class="proj-video-native"><video src="${url}" autoplay muted loop playsinline></video></div>`;
+        if(yt) out.push(`<div class="proj-video-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div>`);
+        else if(vm) out.push(`<div class="proj-video-wrap"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`);
+        else out.push(`<div class="proj-video-native"><video src="${url}" autoplay muted loop playsinline style="width:100%;display:block"></video></div>`);
+        i++; continue;
       }
-      return '';
-    }).filter(Boolean).join('');
+      i++;
+    }
+    return out.join('');
   }
 
   function renderText(bls){
