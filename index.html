@@ -38,7 +38,12 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* ── PAGE SYSTEM ── */
 .pg{display:none;min-height:100vh}
 .pg.active{display:block}
-#pg-work:not(.active),#pg-project:not(.active){display:none !important;visibility:hidden;pointer-events:none}
+/* 비활성 페이지 완전 격리 */
+#pg-work:not(.active),#pg-project:not(.active){
+  display:none !important;
+  visibility:hidden;
+  pointer-events:none;
+}
 #overlay{position:fixed;inset:0;background:var(--black);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
 .sec-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:block}
 
@@ -53,6 +58,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-30px) scale(1.06)}}
 .grain{position:absolute;inset:0;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
 .hero-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(14,14,13,.85) 100%)}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
 .hero-content{position:relative;z-index:3;padding:0 3rem 3.5rem;display:flex;justify-content:space-between;align-items:flex-end}
 .hero-eyebrow{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:1rem;display:block}
 .hero-title{font-family:var(--serif);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:400;line-height:1;color:#fff}
@@ -94,27 +100,110 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .form-submit{align-self:flex-start;margin-top:.5rem;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.25);padding:.9rem 2.5rem;cursor:none;transition:border-color .3s,color .3s}
 .form-submit:hover{border-color:var(--gold);color:var(--gold)}
 
-/* ── WORK PAGE ── */
+/* ── WORK PAGE — Koto style ── */
 #pg-work{background:#000;min-height:100vh;display:flex;flex-direction:column}
+
 .work-layout{display:flex;flex:1;min-height:100vh}
-.work-sidebar{width:280px;flex-shrink:0;padding:8rem 2.5rem 3rem;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid #111}
-.work-sidebar-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;display:block}
-.work-sidebar-title{font-family:var(--sans);font-size:clamp(1.55rem,2.2vw,2.4rem);font-weight:300;line-height:1.45;color:rgba(255,255,255,.4);margin-bottom:0}
-.work-sidebar-title strong{font-weight:700;color:#fff}
-.work-sidebar-bottom{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25)}
-.work-masonry{flex:1;columns:2;column-gap:8px;padding:8px}
-.work-card{break-inside:avoid;position:relative;cursor:none;display:block;margin-bottom:8px;border-radius:12px;background:#000;overflow:hidden;padding-bottom:64px}
-.wc-media-clip{width:100%;display:block;border-radius:12px;overflow:hidden;position:relative;z-index:1;clip-path:inset(0 0 0 0 round 12px);transition:clip-path 0.28s cubic-bezier(.25,.46,.45,.94);margin-bottom:-64px}
-.work-card:hover .wc-media-clip{clip-path:inset(0 0 64px 0 round 12px 12px 0 0)}
-.wc-media{width:100%;display:block}
-.wc-img{width:100%;display:block}
-.wc-video{width:100%;display:block}
-.wc-placeholder{width:100%;min-height:300px}
-.wc-info{position:absolute;bottom:0;left:0;right:0;height:64px;padding:0 1.4rem;display:flex;align-items:center;background:#000;z-index:0;pointer-events:none}
+
+/* Left sidebar */
+.work-sidebar{
+  width:280px;flex-shrink:0;
+  padding:8rem 2.5rem 3rem;
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  border-right:1px solid #111;
+}
+/* About 페이지 스타일과 통일 */
+.work-sidebar-label{
+  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2rem;display:block;
+}
+.work-sidebar-title{
+  font-family:var(--sans);
+  font-size:clamp(1.55rem,2.2vw,2.4rem);
+  font-weight:300;
+  line-height:1.45;
+  color:rgba(255,255,255,.4);
+  margin-bottom:0;
+}
+.work-sidebar-title strong{
+  font-weight:700;
+  color:#fff;
+}
+.work-sidebar-sub{
+  display:none;
+}
+.work-sidebar-bottom{
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.25);
+}
+
+/* Right masonry grid */
+.work-masonry{
+  flex:1;
+  columns:2;
+  column-gap:8px;
+  padding:8px;
+}
+.work-card{
+  break-inside:avoid;
+  position:relative;
+  cursor:none;display:block;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:#000;
+  overflow:hidden;
+}
+
+.work-card{
+  break-inside:avoid;
+  position:relative;
+  cursor:none;display:block;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:#000;
+  overflow:hidden;
+  padding-bottom:64px;
+}
+
+/* image — clip-path bottom shrinks on hover, revealing text underneath */
+.wc-media-clip{
+  width:100%;
+  display:block;
+  border-radius:12px;
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+  clip-path:inset(0 0 0 0 round 12px);
+  transition:clip-path 0.28s cubic-bezier(.25,.46,.45,.94);
+  margin-bottom:-64px;
+}
+.work-card:hover .wc-media-clip{
+  clip-path:inset(0 0 64px 0 round 12px 12px 0 0);
+}
+
+.wc-media{width:100%;display:block;}
+.wc-img{width:100%;display:block;}
+.wc-video{width:100%;display:block;}
+.wc-placeholder{width:100%;min-height:300px;}
+
+/* text — always exists behind image, revealed when image bottom clips up */
+.wc-info{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:64px;
+  padding:0 1.4rem;
+  display:flex;align-items:center;
+  background:#000;
+  z-index:0;
+  pointer-events:none;
+}
 .wc-info-left{display:flex;flex-direction:column;gap:.15rem}
 .card-title{font-family:var(--sans);font-size:.95rem;color:#fff;font-weight:400;line-height:1.2}
 .card-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
 
+/* mobile */
 @media(max-width:900px){
   .work-layout{flex-direction:column}
   .work-sidebar{width:100%;height:auto;position:relative;padding:6rem 1.5rem 2rem;border-right:none;border-bottom:1px solid #1a1a18}
@@ -122,151 +211,205 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   .work-card{border-radius:10px}
 }
 
-/* ── PROJECT DETAIL ── */
+/* ── PROJECT DETAIL — WHOOP/Basic Agency style ── */
 #pg-project{background:#eeeae3;min-height:100vh}
+
 .proj-curtain{position:fixed;inset:0;background:#000;z-index:300;transform:translateY(100%);pointer-events:none}
 .proj-curtain.rise{transition:transform .55s cubic-bezier(.76,0,.24,1)}
 .proj-curtain.rise.go{transform:translateY(0%)}
 .proj-curtain.fall{transition:transform .45s cubic-bezier(.76,0,.24,1)}
 .proj-curtain.fall.go{transform:translateY(-100%)}
 
+/* back button */
 .back-btn{position:fixed;top:4.5rem;left:2.5rem;z-index:400;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.8);text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:color .3s;font-family:var(--sans);font-weight:500}
 .back-btn:hover{color:#fff}
 .back-btn::before{content:'←';font-size:.85rem}
 
-.proj-hero{position:relative;height:70vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
-.proj-hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
-.proj-hero-bg img{width:100%;height:100%;object-fit:cover}
-.proj-hero-content{position:relative;z-index:2;padding:0 6vw 5rem}
-.proj-hero-title{font-family:var(--sans);font-size:clamp(5rem,9vw,9rem);color:#fff;font-weight:700;line-height:.9;letter-spacing:-.03em;display:block;margin:0}
+/* ── HERO ── */
+.proj-bg-wrap{}
 
-/* ── OVERVIEW ── */
-.proj-overview-wrap{display:grid;grid-template-columns:38% 62%;align-items:start;background:transparent;border-top:1px solid rgba(255,255,255,.12)}
-.proj-ov-left{position:sticky;top:0;height:100vh;padding:10rem 3rem 4rem 5vw;display:flex;flex-direction:column;justify-content:flex-start;gap:1.5rem}
-.proj-ov-category{font-family:var(--sans);font-size:clamp(1.4rem,2.2vw,2.2rem);color:#000;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin:0 0 1.45rem 0}
-.proj-ov-client{font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:#555;font-weight:500;margin:0 0 1.2rem 0}
-.proj-sidebar-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.2rem}
+.proj-hero{
+  position:relative;
+  height:70vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  overflow:hidden;
+}
+.proj-hero-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+}
+.proj-hero-bg img{width:100%;height:100%;object-fit:cover}
+.proj-hero-content{
+  position:relative;z-index:2;
+  padding:0 6vw 5rem;
+}
+.proj-hero-title{
+  font-family:var(--sans);
+  font-size:clamp(5rem,9vw,9rem);
+  color:#fff;font-weight:700;
+  line-height:.9;letter-spacing:-.03em;
+  display:block;margin:0;
+}
+
+/* ── OVERVIEW SECTION (sticky 3-col) ── */
+.proj-overview-wrap{
+  display:grid;
+  grid-template-columns:38% 62%;
+  align-items:start;
+  background:transparent;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.proj-ov-left{
+  position:sticky;top:0;height:100vh;
+  padding:10rem 3rem 4rem 5vw;
+  display:flex;flex-direction:column;justify-content:flex-start;gap:1.5rem;
+}
+.proj-ov-category{
+  font-family:var(--sans);
+  font-size:clamp(1.4rem,2.2vw,2.2rem);
+  color:#000;font-weight:700;
+  line-height:1.1;letter-spacing:-.02em;
+  margin:0 0 1.45rem 0;
+}
+.proj-ov-client{
+  font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;
+  color:#555;font-weight:500;margin:0 0 1.2rem 0;
+}
+.proj-ov-left .proj-sidebar-tags{margin-top:.2rem}
+
+/* slogan */
+.proj-sidebar-slogan{font-family:var(--sans);font-size:clamp(1.2rem,1.8vw,1.8rem);color:#000;font-weight:700;line-height:1.15;letter-spacing:-.02em;margin:0}
+
+/* scope list */
+.proj-scope-list{list-style:none;margin:0;padding:0}
+.proj-scope-list li{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;color:#444;padding:.2rem 0;font-weight:500;line-height:1.6}
+
+/* tags */
+.proj-sidebar-tags{display:flex;flex-wrap:wrap;gap:.4rem}
 .proj-sidebar-tag{font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;border:1.5px solid rgba(0,0,0,.2);color:rgba(0,0,0,.55);padding:.28rem .8rem;border-radius:100px;font-weight:500}
-.proj-ov-right{padding:5rem 5vw 5rem 4vw}
+
+/* overview right */
+.proj-ov-right{padding:5rem 0 5rem 4vw;overflow:visible}
 .proj-ov-inner{max-width:660px}
+/* overview 내 이미지는 우측 컬럼 기준으로 풀와이드 */
+.proj-ov-right .proj-img-landscape{padding:2rem 0}
+.proj-ov-right .proj-img-landscape img{width:100%;display:block}
+.proj-ov-right .proj-img-portrait-row{padding:2rem 0;gap:1rem}
+.proj-ov-right .proj-img-caption-block{padding:0}
+
+/* text */
 .pst-para{font-family:var(--sans);font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.75;color:#222;font-weight:400;margin-bottom:1.8rem;letter-spacing:-.01em}
 .pst-para strong{font-weight:700}
+.pst-h2{font-family:var(--sans);font-size:.72rem;color:#000;font-weight:700;margin:3rem 0 1rem;letter-spacing:.08em;text-transform:uppercase;display:block}
 .pst-h3{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:2rem 0 .8rem;font-weight:500;display:block}
 
-/* ── CONTENT SECTIONS ── */
-.proj-section{background:#eeeae3;border-top:1px solid rgba(0,0,0,.1)}
-.proj-section-top{display:grid;grid-template-columns:38% 62%;padding:4rem 5vw 3rem;align-items:baseline;gap:2rem}
+/* ── CONTENT SECTION (section label + big title + body + images) ── */
+.proj-section{
+  background:#eeeae3;
+  border-top:1px solid rgba(0,0,0,.1);
+}
+.proj-section-top{
+  display:grid;grid-template-columns:38% 62%;
+  padding:4rem 5vw 3rem;
+  align-items:baseline;
+  gap:2rem;
+}
 .proj-section-tag-wrap{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.4);font-weight:500}
 .proj-section-tag-slash{color:var(--gold);margin:0 .3rem}
-.proj-section-h2{font-family:var(--sans);font-size:clamp(1.5rem,2.5vw,2.4rem);font-weight:700;color:#000;line-height:1.1;letter-spacing:-.02em;margin:0;max-width:560px}
+.proj-section-h2{
+  font-family:var(--sans);font-size:clamp(1.5rem,2.5vw,2.4rem);
+  font-weight:700;color:#000;line-height:1.1;letter-spacing:-.02em;
+  margin:0;max-width:560px;
+}
+/* section body */
 .proj-section-body{padding:0 5vw 3rem;max-width:660px;margin:0 0 0 38%}
-.proj-section-subt{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.4);font-weight:500;display:block;margin-bottom:.4rem;margin-top:2rem}
-.proj-section-h3{font-family:var(--sans);font-size:clamp(1rem,1.4vw,1.2rem);font-weight:700;color:#000;line-height:1.2;letter-spacing:-.01em;margin:0 0 1.2rem}
+.proj-section-subt{
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(0,0,0,.4);font-weight:500;display:block;margin-bottom:.4rem;margin-top:2rem;
+}
+.proj-section-h3{
+  font-family:var(--sans);font-size:clamp(1rem,1.4vw,1.2rem);
+  font-weight:700;color:#000;line-height:1.2;letter-spacing:-.01em;
+  margin:0 0 1.2rem;
+}
 
-/* ══════════════════════════════════════
-   PENTAGRAM-STYLE IMAGE LAYOUT
-══════════════════════════════════════ */
+/* ── PENTAGRAM-STYLE IMAGE LAYOUT ── */
 
-/* 이미지 1장 — 70% 중앙 */
+/* 가로 이미지 1장 — 중앙 배치, 양쪽 여백 */
 .proj-img-landscape{
-  display:flex;
-  justify-content:center;
-  padding:3rem 0;
+  padding:4rem 12vw;
 }
 .proj-img-landscape img{
-  width:70%;
-  display:block;
-  aspect-ratio:16/9;
-  object-fit:cover;
+  width:100%;display:block;
+  aspect-ratio:16/9;object-fit:cover;
 }
 
-/* 이미지 2장 — 70% 너비 안에서 나란히 */
+/* 세로 이미지 2장 + 우측 텍스트 — 가로 이미지와 같은 너비 */
 .proj-img-portrait-row{
-  display:flex;
-  justify-content:center;
-  padding:3rem 0;
-}
-.proj-img-portrait-row-inner{
+  padding:4rem 12vw;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:1.5rem;
-  width:70%;
+  align-items:start;
 }
-.proj-img-portrait-row-inner img{
-  width:100%;
-  display:block;
-  aspect-ratio:3/4;
-  object-fit:cover;
+.proj-img-portrait-row img{
+  width:100%;display:block;
+  aspect-ratio:3/4;object-fit:cover;
 }
 
-/* 이미지 3장 — 가로 1장 위 + 세로 2장 아래 (동일 70% 정렬) */
-.proj-img-three-wrap{
-  padding:3rem 0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:1.5rem;
-}
-.proj-img-three-wrap .top-img{
-  width:70%;
-  display:block;
-  aspect-ratio:16/9;
-  object-fit:cover;
-}
-.proj-img-three-wrap .bottom-row{
+/* 세로 이미지 1장 + 우측 텍스트 */
+.proj-img-portrait-text{
+  padding:4rem 12vw;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:1.5rem;
-  width:70%;
+  align-items:start;
 }
-.proj-img-three-wrap .bottom-row img{
-  width:100%;
-  display:block;
-  aspect-ratio:3/4;
-  object-fit:cover;
+.proj-img-portrait-text img{
+  width:100%;display:block;
+  aspect-ratio:3/4;object-fit:cover;
 }
-
-/* 인용문 — 우측 이미지 너비만큼 (35%), 우측 정렬 */
-.proj-blockquote{
-  display:flex;
-  justify-content:flex-end;
-  padding:2rem 15% 2rem 0;
+.proj-img-caption-block{
+  padding-top:1rem;
 }
-.proj-blockquote blockquote{
-  width:calc(35% - 0.75rem);
-  font-family:var(--serif);
-  font-size:clamp(.95rem,1.3vw,1.1rem);
-  line-height:1.75;
-  color:#333;
-  font-weight:400;
-  font-style:italic;
-  border-left:2px solid var(--gold);
-  padding-left:1.5rem;
+.proj-img-caption-block p{
+  font-family:var(--sans);
+  font-size:clamp(.95rem,1.2vw,1.05rem);
+  line-height:1.75;color:#333;
+  font-weight:400;letter-spacing:-.01em;
 }
 
-/* 비디오 */
-.proj-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:3rem 15%}
+/* 풀와이드 이미지 (섹션 전체) */
+.proj-img-full{width:100%;display:block;margin:3rem 0}
+.proj-img-full img{width:100%;display:block}
+
+/* 3단 그리드 */
+.proj-img-grid{display:grid;gap:3px;margin:3rem 12vw}
+.proj-img-grid.two{grid-template-columns:1fr 1fr}
+.proj-img-grid.three{grid-template-columns:1fr 1fr 1fr}
+.proj-img-grid img{width:100%;display:block;object-fit:cover}
+
+/* 캡션 (번호형) */
+.proj-img-caption{padding:.8rem 12vw 0;display:flex;gap:2rem}
+.proj-img-caption-idx{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:#aaa;font-weight:500;flex-shrink:0;padding-top:.1rem}
+.proj-img-caption-txt{font-size:.82rem;line-height:1.65;color:#666;font-weight:400}
+
+/* video */
+.proj-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:3rem 12vw}
 .proj-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-.proj-video-native video{width:70%;display:block;margin:3rem auto}
-
-/* 섹션 내 텍스트 */
-.proj-body-text{padding:0}
-.proj-body-text p{font-family:var(--sans);font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.75;color:#222;font-weight:400;margin-bottom:1.5rem;letter-spacing:-.01em}
-.proj-body-text .pst-h3{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:2rem 0 .8rem;font-weight:500;display:block}
+.proj-video-native video{width:100%;display:block;margin:3rem 0}
 
 /* divider */
 .proj-divider{height:4rem}
 
 /* mobile */
 @media(max-width:768px){
-  .proj-img-landscape img{width:90%}
-  .proj-img-portrait-row-inner{width:90%;grid-template-columns:1fr}
-  .proj-img-three-wrap .top-img{width:90%}
-  .proj-img-three-wrap .bottom-row{width:90%;grid-template-columns:1fr}
-  .proj-blockquote{padding:2rem 5%;justify-content:flex-start}
-  .proj-blockquote blockquote{width:100%}
-  .proj-video-wrap{margin:2rem 5%}
-  .proj-video-native video{width:90%}
+  .proj-img-landscape,.proj-img-portrait-row,.proj-img-portrait-text{padding:2rem 1.5rem}
+  .proj-img-portrait-row,.proj-img-portrait-text{grid-template-columns:1fr}
+  .proj-img-grid{margin:2rem 1.5rem}
+  .proj-img-caption{padding:.8rem 1.5rem 0}
 }
 
 /* ── NEXT PROJECT ── */
@@ -279,38 +422,157 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .np-title{font-family:var(--sans);font-size:clamp(2rem,3.5vw,3.2rem);color:#fff;font-weight:700;letter-spacing:-.02em}
 .np-arrow{font-size:2rem;color:var(--gold);align-self:flex-end}
 
+/* mobile */
 @media(max-width:768px){
   .proj-overview-wrap,.proj-section-top{grid-template-columns:1fr}
   .proj-ov-left{position:relative;height:auto;padding:3rem 1.5rem 2rem;border-right:none}
   .proj-ov-right{padding:2rem 1.5rem 3rem}
   .proj-section-body{margin:0;padding:0 1.5rem 2rem}
+  .proj-img-grid.two,.proj-img-grid.three{grid-template-columns:1fr}
   .back-btn{left:1.5rem;top:4rem}
 }
 
-/* ── ABOUT ── */
+/* ══════════════════════════════════════════
+   ABOUT — text reveal animation
+═══════════════════════════════════════════ */
 #pg-about{background:var(--black);color:#fff}
-.about-text-section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:7rem 5vw 5rem}
-.about-label-top{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2.5rem;display:block;opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease}
-.about-label-top.in{opacity:1;transform:translateY(0)}
-.about-body-text{font-family:var(--sans);font-size:clamp(1.55rem,3.2vw,3rem);font-weight:300;line-height:1.45;color:rgba(255,255,255,.4);max-width:100%}
-.about-body-text .aw{display:inline;color:rgba(255,255,255,.4);transition:color .5s ease}
-.about-body-text .aw-bold{font-weight:700;color:rgba(255,255,255,.4);background-image:linear-gradient(var(--gold),var(--gold));background-repeat:no-repeat;background-size:0% 1.5px;background-position:0 100%;padding-bottom:3px;transition:color .5s ease,background-size .5s ease}
-.about-body-text .aw-bold.revealed{color:#fff;background-size:100% 1.5px}
 
+.about-text-section{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:7rem 5vw 5rem;
+}
+
+.about-label-top{
+  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2.5rem;display:block;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.about-label-top.in{opacity:1;transform:translateY(0)}
+
+/* main text block */
+.about-body-text{
+  font-family:var(--sans);
+  font-size:clamp(1.55rem,3.2vw,3rem);
+  font-weight:300;
+  line-height:1.45;
+  color:rgba(255,255,255,.4);
+  max-width:100%;
+}
+
+/* every word is a span */
+.about-body-text .aw{
+  display:inline;
+  color:rgba(255,255,255,.4);
+  transition:color .5s ease;
+}
+
+/* bold keyword — starts muted, animates to white + gold underline */
+.about-body-text .aw-bold{
+  font-weight:700;
+  color:rgba(255,255,255,.4);
+  /* pseudo-underline via background-image — allows left→right draw animation */
+  background-image:linear-gradient(var(--gold),var(--gold));
+  background-repeat:no-repeat;
+  background-size:0% 1.5px;
+  background-position:0 100%;
+  padding-bottom:3px;
+  transition:color .5s ease, background-size .5s ease;
+}
+/* revealed state */
+.about-body-text .aw-bold.revealed{
+  color:#fff;
+  background-size:100% 1.5px;
+}
+
+/* ── PROJECT BLOCKS (Notion body) ── */
+.proj-blocks{display:flex;flex-direction:column;gap:0}
+
+/* text */
+.pb-text{padding:3rem 5vw;max-width:860px;margin:0 auto;width:100%}
+.pb-text p{font-size:clamp(1rem,1.4vw,1.15rem);line-height:1.9;color:var(--black);font-weight:300}
+
+/* headings */
+.pb-h2,.pb-h3{padding:2rem 5vw 0;max-width:860px;margin:0 auto;width:100%}
+.pb-h2 h2{font-family:var(--serif);font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:400;color:var(--black)}
+.pb-h3 h3{font-family:var(--sans);font-size:clamp(.9rem,1.2vw,1rem);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:500}
+
+/* single image */
+.pb-img-one{width:100%;margin:1rem 0}
+.pb-img-one figure img{width:100%;display:block;object-fit:cover}
+
+/* 2-image grid */
+.pb-img-two{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:1rem 0}
+.pb-img-two figure img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:4/3}
+
+/* 3-image grid */
+.pb-img-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:1rem 0}
+.pb-img-three figure img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:1}
+
+/* figure caption */
+.pb-figure{margin:0;overflow:hidden}
+.pb-figure figcaption{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:.5rem 0 0;text-align:center}
+
+/* video embed */
+.pb-video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:1rem 0}
+.pb-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+
+/* native video */
+.pb-video-native{margin:1rem 0}
+.pb-video-native video{width:100%;display:block}
+
+/* divider */
+.pb-divider{height:4rem}
+
+/* mobile */
+@media(max-width:768px){
+  .pb-img-two{grid-template-columns:1fr}
+  .pb-img-three{grid-template-columns:1fr 1fr}
+  .pb-text,.pb-h2,.pb-h3{padding:2rem 1.5rem}
+}
 .footer-dark{border-top:1px solid #2a2a28}
 .footer span{font-size:.7rem;color:var(--muted);letter-spacing:.06em}
+
 a,button,[data-hover]{cursor:none}
 
-/* ── MOBILE GLOBAL ── */
+/* ══════════════════════════════
+   MOBILE
+══════════════════════════════ */
 @media(max-width:768px){
   nav{padding:1.2rem 1.5rem}
   .hero-content{padding:0 1.5rem 2.5rem;flex-direction:column;gap:1.5rem;align-items:flex-start}
   .hero-right{text-align:left;max-width:100%}
   .hero-title{font-size:clamp(2.8rem,10vw,4.5rem)}
-  .contact-section{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
-  .contact-title{font-size:clamp(1.6rem,6vw,2.2rem)}
+
+  /* WORK mobile: square aspect ratio */
+  .work-page-header{padding:5.5rem 0 1.5rem 1.5rem}
+  .work-card{aspect-ratio:1/1}
+  .wc-overlay{padding:1.5rem}
+
+  /* PROJECT DETAIL mobile */
+  .project-body{grid-template-columns:1fr;gap:2.5rem;padding:3rem 1.5rem}
+  .project-hero-content{flex-direction:column;gap:1rem;padding:0 1.5rem 2rem;align-items:flex-start}
+  .project-meta{text-align:left}
+  .back-btn{top:5rem;left:1.5rem}
+  .gallery{padding:0 1.5rem 3rem}
+  .gallery-diagram{grid-template-columns:1fr;gap:1rem}
+  .gallery-images.two,.gallery-images.asym{grid-template-columns:1fr}
+  .gallery-img.ar-port{aspect-ratio:4/5}
+  .next-project{padding:2rem 1.5rem}
+  .np-title{font-size:1.4rem}
+
+  /* ABOUT mobile */
   .about-text-section{padding:5rem 1.5rem 3rem}
   .about-body-text{font-size:clamp(1.1rem,5.5vw,1.5rem);line-height:1.5}
+  .about-social{flex-direction:column;gap:1.5rem;padding:2rem 1.5rem;align-items:flex-start}
+  .about-social-links{flex-direction:column;gap:1rem}
+  .about-expertise{padding:3rem 1.5rem}
+  .about-contact{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
+  .contact-section{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
+  .contact-title{font-size:clamp(1.6rem,6vw,2.2rem)}
+  .footer{padding:1.5rem}
 }
 </style>
 </head>
@@ -335,6 +597,7 @@ a,button,[data-hover]{cursor:none}
       <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
       <div class="grain"></div>
     </div>
+    <!-- video: <video class="hero-video" autoplay muted loop playsinline src="your-video.mp4"></video> -->
     <div class="hero-grad"></div>
     <div class="hero-content">
       <div>
@@ -370,10 +633,13 @@ a,button,[data-hover]{cursor:none}
 
 <!-- ═══════ ABOUT ═══════ -->
 <div id="pg-about" class="pg">
+
   <div class="about-text-section" id="about-text-section">
     <span class="about-label-top" id="about-label-top">About</span>
     <p class="about-body-text" id="about-body-text"></p>
   </div>
+
+  <!-- Contact -->
   <section class="contact-section" style="background:var(--black);border-top:1px solid #2a2a28">
     <h2 class="contact-title">Let's create something <em>together.</em></h2>
     <div class="contact-links">
@@ -398,13 +664,12 @@ a,button,[data-hover]{cursor:none}
       <button class="form-submit" type="submit">Send Message</button>
     </form>
   </section>
-  <footer class="footer footer-dark" style="background:var(--black);padding:1.5rem 3rem;display:flex;justify-content:space-between">
-    <span>© 2025 Jung Seungmin</span><span>Seoul · London · Available Worldwide</span>
-  </footer>
+
+  <footer class="footer footer-dark" style="background:var(--black)"><span>© 2025 Jung Seungmin</span><span>Seoul · London · Available Worldwide</span></footer>
 </div>
 
 <script>
-/* ══ DATA ══ */
+/* ══ PROJECT DATA — Notion API ══ */
 let projects = [];
 
 async function loadProjects() {
@@ -412,17 +677,44 @@ async function loadProjects() {
     const res = await fetch('/api/projects');
     if (!res.ok) throw new Error('API error');
     projects = await res.json();
-    if (document.getElementById('pg-work').classList.contains('active')) buildWorkGrid();
+    // If on work page, rebuild grid with fresh data
+    if (document.getElementById('pg-work').classList.contains('active')) {
+      buildWorkGrid();
+    }
   } catch(e) {
-    console.warn('Notion API unavailable, using fallback');
+    console.warn('Notion API unavailable, using fallback data');
     projects = FALLBACK_PROJECTS;
   }
 }
 
-const FALLBACK_PROJECTS = [
-  {title:'CAKE Seoul',category:'Spatial Design',client:'CAKE',scope:['Spatial Strategy','Brand Translation','Interior Identity'],tags:['Spatial Design','Brand Identity'],cover:null,thumbnail:null,bgClass:'tb1',order:1,blocks:[]},
-  {title:'Novo App',category:'UI/UX Design',client:'Novo Financial',scope:['Product Strategy','UX Research','Interface Design'],tags:['UI/UX','Product Design'],cover:null,thumbnail:null,bgClass:'pl-novo',order:2,blocks:[]},
-  {title:'Bloom Magazine',category:'Editorial Design',client:'Bloom Publishing',scope:['Publication Design','Art Direction'],tags:['Editorial','Typography'],cover:null,thumbnail:null,bgClass:'pl-bloom',order:3,blocks:[]},
+/* ══ FALLBACK DATA (used if API unavailable) ══ */
+const FALLBACK_PROJECTS=[
+  {title:'CAKE Seoul',category:'Spatial Design',client:'CAKE Seoul',
+   description:'A comprehensive spatial identity system for CAKE Seoul — a cultural hub and creative community space in the heart of the city.',
+   scope:['Spatial Strategy','Brand Translation','Interior Identity','Signage & Wayfinding','Community Programming'],
+   tags:['Spatial Design','Brand Identity','Signage','Interior'],
+   cover:'portfolio_imgs/img04.jpg',thumbnail:'portfolio_imgs/img00.jpg',
+   order:1},
+  {title:'Novo App',category:'UI/UX Design',client:'Novo Financial',
+   description:'A digital banking experience designed for the creative economy.',
+   scope:['Product Strategy','UX Research','Interface Design','Design System','Prototype Testing'],
+   tags:['UI/UX','Product Design','Design System','Fintech'],
+   cover:null,thumbnail:null,bgClass:'pl-novo',order:2},
+  {title:'Bloom Magazine',category:'Editorial Design',client:'Bloom Publishing',
+   description:'Editorial identity and ongoing art direction for Bloom, a biannual publication.',
+   scope:['Publication Design','Art Direction','Typography System','Cover Design'],
+   tags:['Editorial','Typography','Publication','Art Direction'],
+   cover:null,thumbnail:null,bgClass:'pl-bloom',order:3},
+  {title:'Forêt Beauty',category:'Packaging Design',client:'Forêt',
+   description:'Packaging identity for a botanical skincare brand rooted in slow beauty.',
+   scope:['Brand Identity','Packaging Design','Material Sourcing','Print Production'],
+   tags:['Packaging','Brand Identity','Print'],
+   cover:null,thumbnail:null,bgClass:'tb4',order:4},
+  {title:'Orbit Festival',category:'Motion & Identity',client:'Orbit Festival',
+   description:'Full visual identity and motion system for an annual electronic music festival.',
+   scope:['Brand Identity','Motion Design','Environmental Graphics','Digital Campaign'],
+   tags:['Motion','Brand Identity','Festival','Campaign'],
+   cover:null,thumbnail:null,bgClass:'tb5',order:5}
 ];
 
 /* ══ CURSOR ══ */
@@ -455,17 +747,24 @@ function go(id){
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo(0,0);
-    document.body.style.overflow = id==='pg-home'?'hidden':'';
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+    // lock scroll on home, unlock elsewhere
+    document.body.style.overflow = id==='pg-home' ? 'hidden' : '';
     const nav=document.getElementById('nav');
     if(id==='pg-home'){nav.classList.add('nav-home-white');nav.classList.remove('scrolled')}
     else{nav.classList.remove('nav-home-white');nav.classList.add('scrolled')}
-    if(id==='pg-work') buildWorkGrid();
-    else {const grid=document.getElementById('work-grid');if(grid) grid.innerHTML='';}
+    if(id==='pg-work')buildWorkGrid();
+    else {
+      // 다른 페이지로 이동 시 work grid 비워서 렌더링 방지
+      const grid=document.getElementById('work-grid');
+      if(grid && id!=='pg-work') grid.innerHTML='';
+    }
     if(id==='pg-about'){
       const el=document.getElementById('about-body-text');
       const lbl=document.getElementById('about-label-top');
       if(el){el.dataset.built='';el.dataset.revealed='';el.innerHTML='';}
-      if(lbl) lbl.classList.remove('in');
+      if(lbl){lbl.classList.remove('in');}
       buildAboutText();
       setTimeout(runAboutReveal,50);
     }
@@ -473,12 +772,15 @@ function go(id){
     setTimeout(bindHover,50);
   },300);
 }
-
 function openProject(idx){
   const curtain=document.getElementById('proj-curtain');
+  // 1) 커튼 올라오기
   curtain.className='proj-curtain rise';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>curtain.classList.add('go')));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    curtain.classList.add('go');
+  }));
   setTimeout(()=>{
+    // 2) 페이지 전환
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
     document.getElementById('pg-project').classList.add('active');
     buildProject(idx);
@@ -486,10 +788,13 @@ function openProject(idx){
     document.body.style.overflow='';
     document.getElementById('nav').classList.remove('nav-home-white');
     document.getElementById('nav').classList.add('scrolled');
+    // 3) 커튼 내려가기
     curtain.className='proj-curtain fall';
-    requestAnimationFrame(()=>requestAnimationFrame(()=>curtain.classList.add('go')));
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      curtain.classList.add('go');
+    }));
     setTimeout(()=>{curtain.className='proj-curtain';},500);
-    setTimeout(bindHover,100);
+    setTimeout(()=>{bindHover();},100);
   },600);
 }
 
@@ -502,29 +807,49 @@ function buildWorkGrid(){
     const card=document.createElement('div');
     card.className='work-card';
     card.onclick=()=>openProject(i);
-    if(p.ratio) card.style.aspectRatio=p.ratio;
-    const thumb=p.thumbnail||null;
+
+    // apply aspect ratio from Notion if set
+    const ratio=p.ratio||null;
+    if(ratio) card.style.aspectRatio=ratio;
+
+    const thumb=p.thumbnail||p.thumb||null;
     const thumbMobile=p.thumbnailMobile||null;
     const videoThumb=p.videoThumb||null;
     const bg=p.bgClass||'tb1';
+
     let mediaHTML='';
     if(videoThumb){
       const isVideo=/\.(mp4|webm|mov)(\?|$)/i.test(videoThumb);
-      mediaHTML=isVideo
-        ?`<div class="wc-media-clip"><div class="wc-media"><video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video></div></div>`
-        :`<div class="wc-media-clip"><div class="wc-media"><img class="wc-video" src="${videoThumb}" alt="${p.title}"></div></div>`;
+      if(isVideo){
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video></div></div>`;
+      } else {
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-video" src="${videoThumb}" alt="${p.title}"></div></div>`;
+      }
     } else if(thumb){
-      mediaHTML=thumbMobile
-        ?`<div class="wc-media-clip"><div class="wc-media"><picture style="width:100%;display:block"><source media="(max-width:768px)" srcset="${thumbMobile}"><img class="wc-img" src="${thumb}" alt="${p.title}"></picture></div></div>`
-        :`<div class="wc-media-clip"><div class="wc-media"><img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none'"></div></div>`;
+      if(thumbMobile){
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><picture style="width:100%;display:block">
+          <source media="(max-width:768px)" srcset="${thumbMobile}">
+          <img class="wc-img" src="${thumb}" alt="${p.title}">
+        </picture></div></div>`;
+      } else {
+        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none'"></div></div>`;
+      }
     } else {
       mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><div class="wc-placeholder ${bg}"></div></div></div>`;
     }
-    card.innerHTML=mediaHTML+`<div class="wc-info"><div class="wc-info-left"><div class="card-title">${p.title}</div><div class="card-cat">${p.category||''}</div></div></div>`;
+
+    card.innerHTML=mediaHTML+`
+      <div class="wc-info">
+        <div class="wc-info-left">
+          <div class="card-title">${p.title}</div>
+          <div class="card-cat">${p.category||p.cat||''}</div>
+        </div>
+      </div>`;
     grid.appendChild(card);
   });
 }
 
+/* ══ PROJECT DETAIL ══ */
 /* ══ PROJECT DETAIL ══ */
 let projScrollHandler=null;
 
@@ -532,14 +857,17 @@ function buildProject(idx){
   const list=projects.length?projects:FALLBACK_PROJECTS;
   const p=list[idx];
   const next=list[(idx+1)%list.length];
-  const cat=p.category||'';
-  const cover=p.cover||null;
-  const nextCover=next.cover||null;
+  const bgColor=p.bgColor||'#111';
+  const cat=p.category||p.cat||'';
+  const cover=p.cover||p.detail||null;
+  const nextCover=next.cover||next.detail||null;
   const nextBg=next.bgColor||'#111';
+  const slogan=p.slogan||'';
   const scopePills=(p.scope||[]).map(s=>`<span class="proj-sidebar-tag">${s}</span>`).join('');
   const tagItems=(p.tags||[]).map(t=>`<span class="proj-sidebar-tag">${t}</span>`).join('');
 
-  // blocks 파싱: heading_2 이전 → overview, 이후 → sections
+  // parse blocks into: overview-texts, then sections
+  // heading_2 triggers a new section, images/video go into current section
   const blocks=p.blocks||[];
   const overviewBlocks=[];
   const sections=[];
@@ -560,80 +888,72 @@ function buildProject(idx){
     }
   });
 
-  // overview 우측: 텍스트만
-  function renderOverviewText(bls){
+  function renderAll(bls){
     return bls.map(bl=>{
       if(bl.type==='text') return `<p class="pst-para">${bl.text}</p>`;
       if(bl.type==='heading'&&bl.level===3) return `<span class="pst-h3">${bl.text}</span>`;
-      if(bl.type==='quote') return `<div class="proj-blockquote"><blockquote>${bl.text}</blockquote></div>`;
       if(bl.type==='divider') return `<div class="proj-divider"></div>`;
+      if(bl.type==='images'){
+        const n=bl.images.length;
+        const first=bl.images[0];
+        const second=bl.images[1];
+        if(n===1){
+          const cap=first.caption?`<div class="proj-img-caption-block"><p>${first.caption}</p></div>`:'';
+          return `<div class="proj-img-landscape"><img src="${first.url}" alt="${first.caption||''}" loading="lazy">${cap}</div>`;
+        }
+        if(n===2){
+          const cap1=first.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${first.caption}</p>`:'';
+          const cap2=second.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${second.caption}</p>`:'';
+          return `<div class="proj-img-portrait-row">
+            <div><img src="${first.url}" alt="${first.caption||''}" loading="lazy">${cap1}</div>
+            <div><img src="${second.url}" alt="${second.caption||''}" loading="lazy">${cap2}</div>
+          </div>`;
+        }
+        if(n>=3){
+          const third=bl.images[2];
+          return `<div class="proj-img-landscape"><img src="${first.url}" alt="${first.caption||''}" loading="lazy"></div>
+          <div class="proj-img-portrait-row">
+            <div><img src="${second.url}" alt="${second.caption||''}" loading="lazy"></div>
+            <div><img src="${third.url}" alt="${third.caption||''}" loading="lazy"></div>
+          </div>`;
+        }
+      }
+      if(bl.type==='video'){
+        const url=bl.url;
+        const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
+        const vm=url.match(/vimeo\.com\/(\d+)/);
+        if(yt) return `<div class="proj-video-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div>`;
+        if(vm) return `<div class="proj-video-wrap"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`;
+        return `<div class="proj-video-native"><video src="${url}" autoplay muted loop playsinline></video></div>`;
+      }
       return '';
     }).filter(Boolean).join('');
   }
 
-  // 섹션 본문: 순서 유지하며 텍스트 + 이미지 모두 렌더
-  function renderSectionBlocks(bls){
+  function renderText(bls){
     return bls.map(bl=>{
-      if(bl.type==='text') return `<div class="proj-body-text"><p>${bl.text}</p></div>`;
+      if(bl.type==='text') return `<p class="pst-para">${bl.text}</p>`;
       if(bl.type==='heading'&&bl.level===3) return `<span class="pst-h3">${bl.text}</span>`;
-      if(bl.type==='quote') return `<div class="proj-blockquote"><blockquote>${bl.text}</blockquote></div>`;
       if(bl.type==='divider') return `<div class="proj-divider"></div>`;
-      if(bl.type==='images') return renderImages(bl);
-      if(bl.type==='video') return renderVideo(bl.url);
       return '';
     }).filter(Boolean).join('');
   }
 
-  // ── 이미지 렌더 (Pentagram 스타일) ──
-  function renderImages(bl){
-    const n=bl.images.length;
-    const imgs=bl.images;
 
-    if(n===1){
-      // 가로 1장 — 70% 중앙
-      return `<div class="proj-img-landscape">
-        <img src="${imgs[0].url}" alt="${imgs[0].caption||''}" loading="lazy">
-      </div>`;
-    }
 
-    if(n===2){
-      // 세로 2장 나란히 — 70% 안에서
-      return `<div class="proj-img-portrait-row">
-        <div class="proj-img-portrait-row-inner">
-          <img src="${imgs[0].url}" alt="${imgs[0].caption||''}" loading="lazy">
-          <img src="${imgs[1].url}" alt="${imgs[1].caption||''}" loading="lazy">
-        </div>
-      </div>`;
-    }
-
-    if(n>=3){
-      // 3장: 가로 1장 위 + 세로 2장 아래
-      return `<div class="proj-img-three-wrap">
-        <img class="top-img" src="${imgs[0].url}" alt="${imgs[0].caption||''}" loading="lazy">
-        <div class="bottom-row">
-          <img src="${imgs[1].url}" alt="${imgs[1].caption||''}" loading="lazy">
-          <img src="${imgs[2].url}" alt="${imgs[2].caption||''}" loading="lazy">
-        </div>
-      </div>`;
-    }
-    return '';
+  function renderSectionBlocks(bls){
+    return renderAll(bls);
   }
 
-  function renderVideo(url){
-    const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
-    const vm=url.match(/vimeo\.com\/(\d+)/);
-    if(yt) return `<div class="proj-video-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div>`;
-    if(vm) return `<div class="proj-video-wrap"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`;
-    return `<div class="proj-video-native"><video src="${url}" autoplay muted loop playsinline></video></div>`;
-  }
+  // overview right: text only
+  const overviewHTML=renderAll(overviewBlocks)||'<p class="pst-para">Notion 본문에 프로젝트 설명을 입력해주세요.</p>';
 
-  const overviewHTML=renderOverviewText(overviewBlocks)||'<p class="pst-para">Notion 본문에 프로젝트 설명을 입력해주세요.</p>';
-
-  const sectionsHTML=sections.map(sec=>`
+  // sections HTML
+  const sectionsHTML=sections.map((sec,si)=>`
     <div class="proj-section">
       <div class="proj-section-top">
         <div class="proj-section-tag-wrap">
-          <span>${p.title||''}</span>
+          <span>${p.title||'JS'}</span>
           <span class="proj-section-tag-slash">/</span>
           <span>${sec.title}</span>
         </div>
@@ -644,27 +964,31 @@ function buildProject(idx){
       </div>
     </div>`).join('');
 
-  document.getElementById('proj-content').innerHTML=`
-    <section class="proj-hero">
-      <div class="proj-hero-bg">${cover?`<img src="${cover}" alt="${p.title}">`:''}
-      </div>
-      <div class="proj-hero-content">
-        <h1 class="proj-hero-title">${p.title}</h1>
-      </div>
-    </section>
+  document.getElementById('pg-project').style.background='#eeeae3';
 
-    <div class="proj-overview-wrap">
-      <aside class="proj-ov-left">
-        <div>
-          ${cat?`<p class="proj-ov-category">${cat}</p>`:''}
-          ${p.client?`<p class="proj-ov-client">${p.client}</p>`:''}
-          ${scopePills?`<div class="proj-sidebar-tags">${scopePills}</div>`:
-            tagItems?`<div class="proj-sidebar-tags">${tagItems}</div>`:''}
+  document.getElementById('proj-content').innerHTML=`
+    <div class="proj-bg-wrap" id="proj-bg-wrap">
+      <section class="proj-hero">
+        <div class="proj-hero-bg">${cover?`<img src="${cover}" alt="${p.title}">`:''}
         </div>
-      </aside>
-      <div class="proj-ov-right">
-        <div class="proj-ov-inner">
-          ${overviewHTML}
+        <div class="proj-hero-content">
+          <h1 class="proj-hero-title">${p.title}</h1>
+        </div>
+      </section>
+
+      <div class="proj-overview-wrap">
+        <aside class="proj-ov-left">
+          <div>
+            ${cat?`<p class="proj-ov-category">${cat}</p>`:''}
+            ${p.client?`<p class="proj-ov-client">${p.client}</p>`:''}
+            ${scopePills?`<div class="proj-sidebar-tags">${scopePills}</div>`:
+              tagItems?`<div class="proj-sidebar-tags">${tagItems}</div>`:''}
+          </div>
+        </aside>
+        <div class="proj-ov-right">
+          <div class="proj-ov-inner">
+            ${overviewHTML}
+          </div>
         </div>
       </div>
     </div>
@@ -684,7 +1008,7 @@ function buildProject(idx){
       </div>
     </a>`;
 
-  // back btn 색상 전환
+  // back btn color change on scroll
   if(projScrollHandler) window.removeEventListener('scroll',projScrollHandler);
   const btn=document.querySelector('.back-btn');
   if(btn) btn.style.color='rgba(255,255,255,.8)';
@@ -696,7 +1020,61 @@ function buildProject(idx){
   window.addEventListener('scroll',projScrollHandler,{passive:true});
 }
 
-/* ══ ABOUT ══ */
+function renderBlocks(blocks){
+  if(!blocks||!blocks.length) return '';
+  return blocks.map(b=>{
+    if(b.type==='text'){
+      return `<div class="pb-text"><p>${b.text}</p></div>`;
+    }
+    if(b.type==='heading'){
+      const tag=b.level===2?'h2':'h3';
+      const cls=b.level===2?'pb-h2':'pb-h3';
+      return `<div class="${cls}"><${tag}>${b.text}</${tag}></div>`;
+    }
+    if(b.type==='images'){
+      const count=b.images.length;
+      const gridCls=count===1?'pb-img-one':count===2?'pb-img-two':'pb-img-three';
+      const imgs=b.images.map(img=>`
+        <figure class="pb-figure">
+          <img src="${img.url}" alt="${img.caption||''}" loading="lazy">
+          ${img.caption?`<figcaption>${img.caption}</figcaption>`:''}
+        </figure>`).join('');
+      return `<div class="${gridCls}">${imgs}</div>`;
+    }
+    if(b.type==='video'){
+      const url=b.url;
+      // YouTube / Vimeo embed
+      const ytMatch=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
+      const vmMatch=url.match(/vimeo\.com\/(\d+)/);
+      if(ytMatch){
+        return `<div class="pb-video"><iframe src="https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0&rel=0" frameborder="0" allowfullscreen></iframe></div>`;
+      }
+      if(vmMatch){
+        return `<div class="pb-video"><iframe src="https://player.vimeo.com/video/${vmMatch[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`;
+      }
+      // direct video file
+      return `<div class="pb-video-native"><video src="${url}" autoplay muted loop playsinline></video></div>`;
+    }
+    if(b.type==='divider'){
+      return `<div class="pb-divider"></div>`;
+    }
+    return '';
+  }).join('');
+}
+
+/* ══ DIAGRAM ANIM ══ */
+function initDiagramAnim(){
+  const lines=document.querySelectorAll('.diag-line');
+  if(!lines.length)return;
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){lines.forEach((l,i)=>setTimeout(()=>l.classList.add('drawn'),i*400));obs.disconnect()}});
+  },{threshold:.3});
+  const wrap=document.getElementById('diag-wrap');
+  if(wrap)obs.observe(wrap);
+}
+
+
+/* ══ ABOUT TEXT REVEAL ══ */
 const ABOUT_WORDS=[
   {w:'I',b:false},{w:'am',b:false},{w:'a',b:false},
   {w:'multi-disciplinary',b:true},{w:'Designer',b:true},
@@ -719,7 +1097,9 @@ function buildAboutText(){
   const el=document.getElementById('about-body-text');
   if(!el||el.dataset.built)return;
   el.dataset.built='1';
-  el.innerHTML=ABOUT_WORDS.map(m=>`<span class="aw${m.b?' aw-bold':''}">${m.w} </span>`).join('');
+  el.innerHTML=ABOUT_WORDS.map(m=>
+    `<span class="aw${m.b?' aw-bold':''}">${m.w} </span>`
+  ).join('');
 }
 
 function runAboutReveal(){
@@ -729,10 +1109,12 @@ function runAboutReveal(){
   if(!el||el.dataset.revealed)return;
   el.dataset.revealed='1';
   const bolds=[...el.querySelectorAll('.aw-bold')];
-  bolds.forEach((sp,i)=>setTimeout(()=>sp.classList.add('revealed'),300+i*75));
+  bolds.forEach((sp,i)=>{
+    setTimeout(()=>sp.classList.add('revealed'), 300+i*75);
+  });
 }
 
-/* ══ HOVER ══ */
+/* ══ HOVER BIND ══ */
 function bindHover(){
   document.querySelectorAll('a,button,.work-card,.next-project').forEach(el=>{
     el.addEventListener('mouseenter',()=>document.body.classList.add('cur-hover'));
@@ -741,6 +1123,7 @@ function bindHover(){
 }
 bindHover();
 loadProjects();
+// lock scroll on initial home page
 document.body.style.overflow='hidden';
 </script>
 </body>
