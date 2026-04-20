@@ -293,7 +293,12 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* overview right */
 .proj-ov-right{padding:5rem 0 5rem 4vw;overflow:visible}
 .proj-ov-inner{max-width:660px}
-/* overview 내 이미지는 우측 컬럼 기준으로 풀와이드 */
+/* overview 이미지 — 우측 컬럼 전체 너비 */
+.proj-ov-media{padding:0 5vw 0 0}
+.proj-ov-media .proj-img-landscape{padding:2rem 0}
+.proj-ov-media .proj-img-landscape img{width:100%;display:block}
+.proj-ov-media .proj-img-portrait-row{padding:2rem 0;gap:1rem}
+.proj-ov-media .proj-img-caption-block{padding:0}
 .proj-ov-right .proj-img-landscape{padding:2rem 0}
 .proj-ov-right .proj-img-landscape img{width:100%;display:block}
 .proj-ov-right .proj-img-portrait-row{padding:2rem 0;gap:1rem}
@@ -323,17 +328,13 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   font-weight:700;color:#000;line-height:1.1;letter-spacing:-.02em;
   margin:0;max-width:560px;
 }
-/* section body */
+/* section body — 텍스트만 좁은 컬럼 */
 .proj-section-body{padding:0 5vw 3rem;max-width:660px;margin:0 0 0 38%}
-.proj-section-subt{
-  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(0,0,0,.4);font-weight:500;display:block;margin-bottom:.4rem;margin-top:2rem;
-}
-.proj-section-h3{
-  font-family:var(--sans);font-size:clamp(1rem,1.4vw,1.2rem);
-  font-weight:700;color:#000;line-height:1.2;letter-spacing:-.01em;
-  margin:0 0 1.2rem;
-}
+/* 이미지는 section 내에서 풀와이드 (body 밖에 배치) */
+.proj-section-media{padding:0 0 2rem}
+.proj-section-media .proj-img-landscape{padding:2rem 5vw}
+.proj-section-media .proj-img-portrait-row{padding:2rem 5vw}
+.proj-section-media .proj-video-wrap{margin:2rem 5vw}
 
 /* ── PENTAGRAM-STYLE IMAGE LAYOUT ── */
 
@@ -945,15 +946,63 @@ function buildProject(idx){
 
 
 
-  function renderSectionBlocks(bls){
-    return renderAll(bls);
+  function renderTextOnly(bls){
+    return bls.map(bl=>{
+      if(bl.type==='text') return `<p class="pst-para">${bl.text}</p>`;
+      if(bl.type==='heading'&&bl.level===3) return `<span class="pst-h3">${bl.text}</span>`;
+      if(bl.type==='divider') return `<div class="proj-divider"></div>`;
+      return '';
+    }).filter(Boolean).join('');
   }
 
-  // overview right: text only
-  const overviewHTML=renderAll(overviewBlocks)||'<p class="pst-para">Notion 본문에 프로젝트 설명을 입력해주세요.</p>';
+  function renderMediaOnly(bls){
+    return bls.map(bl=>{
+      if(bl.type==='images'){
+        const n=bl.images.length;
+        const first=bl.images[0];
+        const second=bl.images[1];
+        if(n===1){
+          const cap=first.caption?`<div class="proj-img-caption-block"><p>${first.caption}</p></div>`:'';
+          return `<div class="proj-img-landscape"><img src="${first.url}" alt="${first.caption||''}" loading="lazy">${cap}</div>`;
+        }
+        if(n===2){
+          const cap1=first.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${first.caption}</p>`:'';
+          const cap2=second.caption?`<p style="font-size:.8rem;color:#888;margin-top:.6rem">${second.caption}</p>`:'';
+          return `<div class="proj-img-portrait-row">
+            <div><img src="${first.url}" alt="" loading="lazy">${cap1}</div>
+            <div><img src="${second.url}" alt="" loading="lazy">${cap2}</div>
+          </div>`;
+        }
+        if(n>=3){
+          const third=bl.images[2];
+          return `<div class="proj-img-landscape"><img src="${first.url}" alt="" loading="lazy"></div>
+          <div class="proj-img-portrait-row">
+            <div><img src="${second.url}" alt="" loading="lazy"></div>
+            <div><img src="${third.url}" alt="" loading="lazy"></div>
+          </div>`;
+        }
+      }
+      if(bl.type==='video'){
+        const url=bl.url;
+        const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
+        const vm=url.match(/vimeo\.com\/(\d+)/);
+        if(yt) return `<div class="proj-video-wrap" style="margin:2rem 5vw"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" frameborder="0" allowfullscreen></iframe></div>`;
+        if(vm) return `<div class="proj-video-wrap" style="margin:2rem 5vw"><iframe src="https://player.vimeo.com/video/${vm[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`;
+        return `<div style="margin:2rem 5vw"><video src="${url}" autoplay muted loop playsinline style="width:100%;display:block"></video></div>`;
+      }
+      return '';
+    }).filter(Boolean).join('');
+  }
 
-  // sections HTML
-  const sectionsHTML=sections.map((sec,si)=>`
+  // overview: 텍스트와 이미지 분리
+  const overviewTextHTML=renderTextOnly(overviewBlocks)||'<p class="pst-para">Notion 본문에 프로젝트 설명을 입력해주세요.</p>';
+  const overviewMediaHTML=renderMediaOnly(overviewBlocks);
+
+  // sections: 텍스트는 좁은 컬럼, 이미지는 풀와이드
+  const sectionsHTML=sections.map((sec,si)=>{
+    const textHTML=renderTextOnly(sec.blocks);
+    const mediaHTML=renderMediaOnly(sec.blocks);
+    return `
     <div class="proj-section">
       <div class="proj-section-top">
         <div class="proj-section-tag-wrap">
@@ -963,10 +1012,10 @@ function buildProject(idx){
         </div>
         <h2 class="proj-section-h2">${sec.sub||sec.title}</h2>
       </div>
-      <div class="proj-section-body">
-        ${renderSectionBlocks(sec.blocks)}
-      </div>
-    </div>`).join('');
+      ${textHTML?`<div class="proj-section-body">${textHTML}</div>`:''}
+      ${mediaHTML?`<div class="proj-section-media">${mediaHTML}</div>`:''}
+    </div>`;
+  }).join('');
 
   document.getElementById('pg-project').style.background='#eeeae3';
 
@@ -991,8 +1040,9 @@ function buildProject(idx){
         </aside>
         <div class="proj-ov-right">
           <div class="proj-ov-inner">
-            ${overviewHTML}
+            ${overviewTextHTML}
           </div>
+          ${overviewMediaHTML?`<div class="proj-ov-media">${overviewMediaHTML}</div>`:''}
         </div>
       </div>
     </div>
