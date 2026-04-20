@@ -677,7 +677,6 @@ async function loadProjects() {
     const res = await fetch('/api/projects');
     if (!res.ok) throw new Error('API error');
     projects = await res.json();
-    // If on work page, rebuild grid with fresh data
     if (document.getElementById('pg-work').classList.contains('active')) {
       buildWorkGrid();
     }
@@ -741,6 +740,10 @@ window.addEventListener('scroll',()=>{
 
 /* ══ PAGE TRANSITION ══ */
 function go(id){
+  // URL 해시 업데이트
+  const hashMap={'pg-home':'','pg-work':'#work','pg-about':'#about'};
+  history.replaceState(null,'',hashMap[id]||'');
+
   const ov=document.getElementById('overlay');
   ov.style.opacity='1';ov.style.pointerEvents='all';
   setTimeout(()=>{
@@ -749,14 +752,12 @@ function go(id){
     window.scrollTo(0,0);
     document.documentElement.scrollTop=0;
     document.body.scrollTop=0;
-    // lock scroll on home, unlock elsewhere
     document.body.style.overflow = id==='pg-home' ? 'hidden' : '';
     const nav=document.getElementById('nav');
     if(id==='pg-home'){nav.classList.add('nav-home-white');nav.classList.remove('scrolled')}
     else{nav.classList.remove('nav-home-white');nav.classList.add('scrolled')}
     if(id==='pg-work')buildWorkGrid();
     else {
-      // 다른 페이지로 이동 시 work grid 비워서 렌더링 방지
       const grid=document.getElementById('work-grid');
       if(grid && id!=='pg-work') grid.innerHTML='';
     }
@@ -773,14 +774,18 @@ function go(id){
   },300);
 }
 function openProject(idx){
+  const list=projects.length?projects:FALLBACK_PROJECTS;
+  const p=list[idx];
+  // URL 해시 업데이트
+  const slug=p.title.toLowerCase().replace(/[^a-z0-9가-힣]+/g,'-').replace(/^-|-$/g,'');
+  history.replaceState(null,'',`#work/${slug}`);
+
   const curtain=document.getElementById('proj-curtain');
-  // 1) 커튼 올라오기
   curtain.className='proj-curtain rise';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     curtain.classList.add('go');
   }));
   setTimeout(()=>{
-    // 2) 페이지 전환
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
     document.getElementById('pg-project').classList.add('active');
     buildProject(idx);
@@ -788,7 +793,6 @@ function openProject(idx){
     document.body.style.overflow='';
     document.getElementById('nav').classList.remove('nav-home-white');
     document.getElementById('nav').classList.add('scrolled');
-    // 3) 커튼 내려가기
     curtain.className='proj-curtain fall';
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       curtain.classList.add('go');
@@ -1122,9 +1126,49 @@ function bindHover(){
   });
 }
 bindHover();
-loadProjects();
-// lock scroll on initial home page
-document.body.style.overflow='hidden';
+
+/* ══ HASH ROUTING ══ */
+async function handleHash(){
+  const hash=location.hash;
+  if(!hash||hash==='#'){
+    // 홈
+    return;
+  }
+  if(hash==='#work'){
+    go('pg-work'); return;
+  }
+  if(hash==='#about'){
+    go('pg-about'); return;
+  }
+  if(hash.startsWith('#work/')){
+    const slug=hash.replace('#work/','');
+    // 프로젝트 로드 후 slug 매칭
+    await loadProjects();
+    const list=projects.length?projects:FALLBACK_PROJECTS;
+    const idx=list.findIndex(p=>{
+      const s=p.title.toLowerCase().replace(/[^a-z0-9가-힣]+/g,'-').replace(/^-|-$/g,'');
+      return s===slug;
+    });
+    if(idx>=0){
+      // 커튼 없이 바로 진입
+      document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+      document.getElementById('pg-project').classList.add('active');
+      buildProject(idx);
+      window.scrollTo(0,0);
+      document.body.style.overflow='';
+      document.getElementById('nav').classList.remove('nav-home-white');
+      document.getElementById('nav').classList.add('scrolled');
+      bindHover();
+    }
+    return;
+  }
+}
+
+loadProjects().then(()=>handleHash());
+// lock scroll on initial home page (only if on home)
+if(!location.hash||location.hash==='#'){
+  document.body.style.overflow='hidden';
+}
 </script>
 </body>
 </html>
