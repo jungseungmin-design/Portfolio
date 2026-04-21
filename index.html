@@ -177,6 +177,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   columns:2;
   column-gap:8px;
   padding:8px;
+  column-fill:balance;
 }
 .work-card{
   break-inside:avoid;
@@ -188,6 +189,12 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   overflow:hidden;
   padding-bottom:64px;
 }
+/* 이미지 기본 비율 — 로드 전에도 높이 확보 */
+.wc-img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
+.wc-video{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
+/* ratio 필드로 카드 비율 지정한 경우 */
+.work-card[style*="aspect-ratio"] .wc-img,
+.work-card[style*="aspect-ratio"] .wc-video{aspect-ratio:unset;height:100%;}
 
 /* image — clip-path bottom shrinks on hover */
 .wc-media-clip{
@@ -1222,7 +1229,14 @@ function buildWorkGrid(){
 
     // apply aspect ratio from Notion if set
     const ratio=p.ratio||null;
-    if(ratio) card.style.aspectRatio=ratio;
+    if(ratio){
+      card.style.aspectRatio=ratio;
+      // 이미지도 같은 비율로
+      setTimeout(()=>{
+        const img=card.querySelector('.wc-img,.wc-video');
+        if(img) img.style.aspectRatio=ratio;
+      },0);
+    }
 
     const thumb=p.thumbnail||p.thumb||null;
     const thumbMobile=p.thumbnailMobile||null;
