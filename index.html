@@ -1225,69 +1225,83 @@ function buildWorkGrid(){
   const grid=document.getElementById('work-grid');
   grid.innerHTML='';
   const list=projects.length?projects:FALLBACK_PROJECTS;
+  const isMobile=window.innerWidth<=900;
 
-  // 두 컬럼 div 생성
-  const col1=document.createElement('div');
-  const col2=document.createElement('div');
-  col1.className='work-masonry-col';
-  col2.className='work-masonry-col';
-  grid.appendChild(col1);
-  grid.appendChild(col2);
-
-  list.forEach((p,i)=>{
-    const card=document.createElement('div');
-    card.className='work-card';
-    card.onclick=()=>openProject(i);
-
-    const ratio=p.ratio||null;
-    if(ratio){
-      card.style.aspectRatio=ratio;
-      setTimeout(()=>{
-        const img=card.querySelector('.wc-img,.wc-video');
-        if(img) img.style.aspectRatio=ratio;
-      },0);
-    }
-
-    const thumb=p.thumbnail||p.thumb||null;
-    const thumbMobile=p.thumbnailMobile||null;
-    const videoThumb=p.videoThumb||null;
-    const bg=p.bgClass||'tb1';
-
-    let mediaHTML='';
-    if(videoThumb){
-      const isVideo=/\.(mp4|webm|mov)(\?|$)/i.test(videoThumb);
-      if(isVideo){
-        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video></div></div>`;
-      } else {
-        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-video" src="${videoThumb}" alt="${p.title}"></div></div>`;
-      }
-    } else if(thumb){
-      if(thumbMobile){
-        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><picture style="width:100%;display:block">
-          <source media="(max-width:768px)" srcset="${thumbMobile}">
-          <img class="wc-img" src="${thumb}" alt="${p.title}">
-        </picture></div></div>`;
-      } else {
-        mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none'"></div></div>`;
-      }
-    } else {
-      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><div class="wc-placeholder ${bg}"></div></div></div>`;
-    }
-
-    card.innerHTML=mediaHTML+`
-      <div class="wc-info">
-        <div class="wc-info-left">
-          <div class="card-title">${p.title}</div>
-          <div class="card-cat">${p.category||p.cat||''}</div>
-        </div>
-      </div>`;
-
-    // 홀수 인덱스 → 1열, 짝수 인덱스 → 2열
-    if(i%2===0) col1.appendChild(card);
-    else col2.appendChild(card);
-  });
-
+  if(isMobile){
+    // 모바일: 단일 컬럼, 순서 그대로
+    const col=document.createElement('div');
+    col.className='work-masonry-col';
+    col.style.width='100%';
+    grid.appendChild(col);
+    list.forEach((p,i)=>{
+      const card=makeWorkCard(p,i);
+      col.appendChild(card);
+    });
+  } else {
+    // 데스크탑: 두 컬럼에 교대 배치
+    const col1=document.createElement('div');
+    const col2=document.createElement('div');
+    col1.className='work-masonry-col';
+    col2.className='work-masonry-col';
+    grid.appendChild(col1);
+    grid.appendChild(col2);
+    list.forEach((p,i)=>{
+      const card=makeWorkCard(p,i);
+      if(i%2===0) col1.appendChild(card);
+      else col2.appendChild(card);
+    });
+  }
   bindHover();
+}
+
+function makeWorkCard(p,i){
+  const card=document.createElement('div');
+  card.className='work-card';
+  card.onclick=()=>openProject(i);
+
+  const ratio=p.ratio||null;
+  if(ratio){
+    card.style.aspectRatio=ratio;
+    setTimeout(()=>{
+      const img=card.querySelector('.wc-img,.wc-video');
+      if(img) img.style.aspectRatio=ratio;
+    },0);
+  }
+
+  const thumb=p.thumbnail||p.thumb||null;
+  const thumbMobile=p.thumbnailMobile||null;
+  const videoThumb=p.videoThumb||null;
+  const bg=p.bgClass||'tb1';
+
+  let mediaHTML='';
+  if(videoThumb){
+    const isVideo=/\.(mp4|webm|mov)(\?|$)/i.test(videoThumb);
+    if(isVideo){
+      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video></div></div>`;
+    } else {
+      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-video" src="${videoThumb}" alt="${p.title}"></div></div>`;
+    }
+  } else if(thumb){
+    if(thumbMobile){
+      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><picture style="width:100%;display:block">
+        <source media="(max-width:768px)" srcset="${thumbMobile}">
+        <img class="wc-img" src="${thumb}" alt="${p.title}">
+      </picture></div></div>`;
+    } else {
+      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none'"></div></div>`;
+    }
+  } else {
+    mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><div class="wc-placeholder ${bg}"></div></div></div>`;
+  }
+
+  card.innerHTML=mediaHTML+`
+    <div class="wc-info">
+      <div class="wc-info-left">
+        <div class="card-title">${p.title}</div>
+        <div class="card-cat">${p.category||p.cat||''}</div>
+      </div>
+    </div>`;
+  return card;
 }
 
 /* ══ PROJECT DETAIL ══ */
@@ -1668,6 +1682,12 @@ async function handleHash(){
   }
 }
 
+bindHover();
+window.addEventListener('resize',()=>{
+  if(document.getElementById('pg-work').classList.contains('active')){
+    buildWorkGrid();
+  }
+});
 loadProjects().then(()=>handleHash());
 // lock scroll on initial home page (only if on home)
 if(!location.hash||location.hash==='#'){
