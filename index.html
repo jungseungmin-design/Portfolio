@@ -243,6 +243,27 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   .work-layout{flex-direction:column}
   .work-sidebar{width:100%;height:auto;position:relative;padding:6rem 1.5rem 2rem;border-right:none;border-bottom:1px solid #1a1a18}
   .work-masonry{columns:1;padding:8px}
+
+  /* 모바일: hover 효과 없애고 텍스트 항상 표시 */
+  .work-card{padding-bottom:0}
+  .wc-media-clip{
+    clip-path:none !important;
+    margin-bottom:0;
+    border-radius:12px 12px 0 0;
+  }
+  .wc-info{
+    position:relative;
+    transform:none !important;
+    opacity:1 !important;
+    height:auto;
+    padding:.8rem 1.2rem;
+  }
+
+  /* 커서 숨기기 */
+  #cur-dot,#cur-ring{display:none !important}
+  *{cursor:auto !important}
+  .work-card,.next-project,.thinking-card{cursor:pointer !important}
+}
   .work-card{border-radius:10px}
 }
 
@@ -785,9 +806,10 @@ a,button,[data-hover]{cursor:none}
   .hero-right{text-align:left;max-width:100%}
   .hero-title{font-size:clamp(2.8rem,10vw,4.5rem)}
 
-  /* WORK mobile: square aspect ratio */
+  /* WORK mobile */
   .work-page-header{padding:5.5rem 0 1.5rem 1.5rem}
-  .work-card{aspect-ratio:1/1}
+  .work-card{aspect-ratio:unset}
+  .wc-img,.wc-video{width:100%;display:block}
   .wc-overlay{padding:1.5rem}
 
   /* PROJECT DETAIL mobile */
@@ -1101,7 +1123,6 @@ function buildThinkingGrid(){
         :`<div class="thinking-card-cover-placeholder"></div>`}
       <div class="thinking-card-meta">
         <span class="thinking-card-cat">${p.category||'Thinking'}</span>
-        <span class="thinking-card-date">${p.date||''}</span>
       </div>
       <div class="thinking-card-title">${p.title}</div>`;
     grid.appendChild(card);
@@ -1157,7 +1178,6 @@ function buildThinkingPost(p){
     <div class="tpost-hero">
       <div class="tpost-meta">
         <span class="tpost-cat">${cat}</span>
-        ${date?`<span class="tpost-date">${date}</span>`:''}
       </div>
       <h1 class="tpost-title">${p.title}</h1>
     </div>
