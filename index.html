@@ -561,10 +561,23 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   font-size:clamp(3rem,6vw,5rem);
   font-weight:700;color:var(--black);
   letter-spacing:-.03em;
-  display:flex;align-items:center;gap:.5rem;
+  display:flex;align-items:center;gap:.4rem;
 }
-.thinking-header h1 span{
-  color:var(--gold);font-size:.6em;
+/* 살아있는 dot — 색상이 자연스럽게 순환 */
+.thinking-dot{
+  display:inline-block;
+  animation:dotColorCycle 4s ease-in-out infinite;
+  font-size:.75em;
+  line-height:1;
+}
+@keyframes dotColorCycle{
+  0%  {color:#C8A96E}
+  16% {color:#7EB8A0}
+  33% {color:#7B9ED9}
+  50% {color:#C87E9A}
+  66% {color:#D4956A}
+  83% {color:#9EC87E}
+  100%{color:#C8A96E}
 }
 
 /* post list */
@@ -666,10 +679,18 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   margin-bottom:3rem;
 }
 
+.tpost-cover-wrap{
+  width:100%;
+  overflow:hidden;
+  margin-bottom:4rem;
+  max-height:70vh;
+}
 .tpost-cover{
   width:100%;display:block;
-  aspect-ratio:16/9;object-fit:cover;
-  margin-bottom:4rem;
+  object-fit:cover;
+  will-change:transform;
+  transform:translateY(0);
+  transition:transform 0s;
 }
 
 /* 본문 — 좌측 레이블 + 우측 텍스트 */
@@ -930,7 +951,7 @@ a,button,[data-hover]{cursor:none}
 <!-- ═══════ THINKING ═══════ -->
 <div id="pg-thinking" class="pg">
   <div class="thinking-header">
-    <h1>Thinking <span>●</span></h1>
+    <h1>Thinking <span class="thinking-dot">●</span></h1>
   </div>
   <div class="thinking-list" id="thinking-grid"></div>
 </div>
@@ -1167,6 +1188,10 @@ function buildThinkingGrid(){
 }
 
 function openThinkingPost(idx, posts){
+  // 기존 패럴랙스 핸들러 제거
+  const prevCover=document.getElementById('tpost-cover-img');
+  if(prevCover?._removeParallax) prevCover._removeParallax();
+
   const p=posts[idx];
   history.replaceState(null,'',`#thinking/${p.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`);
 
@@ -1217,8 +1242,20 @@ function buildThinkingPost(p){
       </div>
       <h1 class="tpost-title">${p.title}</h1>
     </div>
-    ${cover?`<img class="tpost-cover" src="${cover}" alt="${p.title}">`:''}
+    ${cover?`<div class="tpost-cover-wrap"><img class="tpost-cover" id="tpost-cover-img" src="${cover}" alt="${p.title}"></div>`:''}
     <div class="tpost-body">${blocksHTML}</div>`;
+
+  // 패럴랙스 스크롤
+  const coverImg=document.getElementById('tpost-cover-img');
+  if(coverImg){
+    const onScroll=()=>{
+      const sy=window.scrollY;
+      coverImg.style.transform=`translateY(${sy*0.3}px)`;
+    };
+    window.addEventListener('scroll',onScroll,{passive:true});
+    // 페이지 이탈 시 제거
+    coverImg._removeParallax=()=>window.removeEventListener('scroll',onScroll);
+  }
 }
 
 function buildThinkingBlocks(blocks){
