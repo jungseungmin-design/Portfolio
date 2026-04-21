@@ -135,8 +135,8 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .form-submit{align-self:flex-start;margin-top:.5rem;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.25);padding:.9rem 2.5rem;cursor:none;transition:border-color .3s,color .3s}
 .form-submit:hover{border-color:var(--gold);color:var(--gold)}
 
-/* ── WORK PAGE — Koto style ── */
-#pg-work{background:#000;min-height:100vh;display:flex;flex-direction:column}
+/* ── WORK PAGE — cream background ── */
+#pg-work{background:#eeeae3;min-height:100vh;display:flex;flex-direction:column}
 
 .work-layout{display:flex;flex:1;min-height:100vh}
 
@@ -147,9 +147,8 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   position:sticky;top:0;height:100vh;
   display:flex;flex-direction:column;
   justify-content:space-between;
-  border-right:1px solid #111;
+  border-right:1px solid rgba(0,0,0,.1);
 }
-/* About 페이지 스타일과 통일 */
 .work-sidebar-label{
   font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
   color:var(--gold);margin-bottom:2rem;display:block;
@@ -159,19 +158,17 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   font-size:clamp(1.55rem,2.2vw,2.4rem);
   font-weight:300;
   line-height:1.45;
-  color:rgba(255,255,255,.4);
+  color:rgba(0,0,0,.3);
   margin-bottom:0;
 }
 .work-sidebar-title strong{
   font-weight:700;
-  color:#fff;
+  color:var(--black);
 }
-.work-sidebar-sub{
-  display:none;
-}
+.work-sidebar-sub{display:none}
 .work-sidebar-bottom{
   font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(255,255,255,.25);
+  color:rgba(0,0,0,.25);
 }
 
 /* Right masonry grid */
@@ -187,22 +184,12 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   cursor:none;display:block;
   margin-bottom:8px;
   border-radius:12px;
-  background:#000;
-  overflow:hidden;
-}
-
-.work-card{
-  break-inside:avoid;
-  position:relative;
-  cursor:none;display:block;
-  margin-bottom:8px;
-  border-radius:12px;
-  background:#000;
+  background:#eeeae3;
   overflow:hidden;
   padding-bottom:64px;
 }
 
-/* image — clip-path bottom shrinks on hover, revealing text underneath */
+/* image — clip-path bottom shrinks on hover */
 .wc-media-clip{
   width:100%;
   display:block;
@@ -223,19 +210,19 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .wc-video{width:100%;display:block;}
 .wc-placeholder{width:100%;min-height:300px;}
 
-/* text — always exists behind image, revealed when image bottom clips up */
+/* text — revealed on hover */
 .wc-info{
   position:absolute;
   bottom:0;left:0;right:0;
   height:64px;
   padding:0 1.4rem;
   display:flex;align-items:center;
-  background:#000;
+  background:#eeeae3;
   z-index:0;
   pointer-events:none;
 }
 .wc-info-left{display:flex;flex-direction:column;gap:.15rem}
-.card-title{font-family:var(--sans);font-size:.95rem;color:#fff;font-weight:400;line-height:1.2}
+.card-title{font-family:var(--sans);font-size:.95rem;color:var(--black);font-weight:500;line-height:1.2}
 .card-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
 
 /* mobile */
@@ -245,7 +232,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   .work-masonry{columns:1;padding:8px}
 
   /* 모바일: hover 효과 없애고 텍스트 항상 표시 */
-  .work-card{padding-bottom:0}
+  .work-card{padding-bottom:0;background:#eeeae3}
   .wc-media-clip{
     clip-path:none !important;
     margin-bottom:0;
@@ -257,6 +244,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
     opacity:1 !important;
     height:auto;
     padding:.8rem 1.2rem;
+    background:#eeeae3;
   }
 
   /* 커서 숨기기 */
