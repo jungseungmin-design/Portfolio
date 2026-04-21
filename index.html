@@ -6,7 +6,7 @@
 <title>Jung Seungmin — Multi-disciplinary Designer & Art Director</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Inter:wght@700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -603,7 +603,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* 선 사이 컨텐츠 영역 */
 .thinking-item-body{
   display:grid;
-  grid-template-columns:36% 1fr auto;
+  grid-template-columns:36% 1fr;
   gap:3rem;
   align-items:start;
   padding:1.5rem 0;
@@ -627,18 +627,14 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   color:var(--muted);font-weight:500;
 }
 .thinking-item-title{
-  font-family:var(--sans);
+  font-family:'Inter',var(--sans);
   font-size:clamp(1.6rem,2.5vw,2.4rem);
   font-weight:700;color:var(--black);
   line-height:1.1;letter-spacing:-.01em;
   text-transform:uppercase;
 }
-/* 화살표 — 선 사이 우측, 수직 중앙 */
-.thinking-item-arrow{
-  font-size:1.4rem;color:var(--black);
-  align-self:center;
-  transition:transform .3s,color .3s;
-}
+/* 화살표 제거 */
+.thinking-item-arrow{display:none}
 .thinking-item:hover .thinking-item-arrow{
   transform:translateX(5px);color:var(--gold);
 }
