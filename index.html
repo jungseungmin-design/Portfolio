@@ -232,11 +232,12 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   .work-masonry{columns:1;padding:8px}
 
   /* 모바일: hover 효과 없애고 텍스트 항상 표시 */
-  .work-card{padding-bottom:0;background:#eeeae3}
+  .work-card{padding-bottom:0;background:#eeeae3;border-radius:12px}
   .wc-media-clip{
     clip-path:none !important;
     margin-bottom:0;
     border-radius:12px 12px 0 0;
+    overflow:hidden;
   }
   .wc-info{
     position:relative;
@@ -245,6 +246,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
     height:auto;
     padding:.8rem 1.2rem;
     background:#eeeae3;
+    border-radius:0 0 12px 12px;
   }
 
   /* 커서 숨기기 */
@@ -1473,10 +1475,10 @@ function buildProject(idx){
       </div>
     </a>`;
 
-  // back btn color change on scroll
+  // back btn color — 히어로 이미지 있으면 흰색, 없으면 어두운 색으로 시작
   if(projScrollHandler) window.removeEventListener('scroll',projScrollHandler);
   const btn=document.querySelector('.back-btn');
-  if(btn) btn.style.color='rgba(255,255,255,.8)';
+  if(btn) btn.style.color=cover?'rgba(255,255,255,.8)':'rgba(0,0,0,.5)';
   projScrollHandler=function(){
     const sy=window.scrollY;
     const vh=window.innerHeight;
