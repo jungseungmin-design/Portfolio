@@ -580,110 +580,81 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   100%{color:#FFD700}
 }
 
+
 /* post list */
-.thinking-list{
-  padding:0 5vw;
-}
+.thinking-list{padding:0 5vw}
 
-/* 각 아이템 — 5px 선으로 시작, 아래 여백, 이미지+텍스트, 여백 */
 .thinking-item{
-  display:block;
-  text-decoration:none;
-  cursor:none;
-  position:relative;
+  display:block;text-decoration:none;
+  cursor:none;position:relative;
+  margin-bottom:3rem;
 }
-
-/* 상단 5px 구분선 + 우측 화살표 */
-.thinking-item-rule{
-  display:flex;
-  align-items:center;
-  margin-bottom:1.5rem;
-}
-.thinking-item-rule-line{
-  flex:1;
-  height:5px;
-  background:var(--black);
-}
-.thinking-item-rule-arrow{
-  font-size:1.2rem;
-  color:var(--black);
-  margin-left:.8rem;
-  font-weight:400;
-  transition:transform .3s ease, color .3s;
-}
-.thinking-item:hover .thinking-item-rule-arrow{
-  transform:translateX(4px);
-  color:var(--gold);
-}
-.thinking-item:hover .thinking-item-rule-line{
-  background:var(--gold);
+/* 상단 3px 선 */
+.thinking-item-rule-top{
+  height:3px;background:var(--black);
   transition:background .3s;
 }
-
-/* 이미지 + 텍스트 나란히 — 이미지 상단에 텍스트 상단 맞춤 */
+/* 하단 3px 선 — 위여백 3rem */
+.thinking-item-rule-bottom{
+  height:3px;background:var(--black);
+  margin-top:3rem;
+  transition:background .3s;
+}
+.thinking-item:hover .thinking-item-rule-top,
+.thinking-item:hover .thinking-item-rule-bottom{
+  background:var(--gold);
+}
+/* 선 사이 컨텐츠 영역 */
 .thinking-item-body{
   display:grid;
-  grid-template-columns:40% 1fr;
+  grid-template-columns:40% 1fr auto;
   gap:3rem;
   align-items:start;
-  margin-bottom:1.5rem;
+  padding:1.5rem 0;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .6s ease,transform .6s cubic-bezier(.25,.46,.45,.94);
 }
+.thinking-item.visible .thinking-item-body{opacity:1;transform:translateY(0)}
 
-.thinking-item-img{
-  overflow:hidden;
-  aspect-ratio:4/3;
-}
+.thinking-item-img{overflow:hidden;aspect-ratio:4/3}
 .thinking-item-img img{
-  width:100%;height:100%;
-  object-fit:cover;display:block;
+  width:100%;height:100%;object-fit:cover;display:block;
   transition:transform .6s cubic-bezier(.25,.46,.45,.94);
 }
-.thinking-item:hover .thinking-item-img img{
-  transform:scale(1.03);
-}
+.thinking-item:hover .thinking-item-img img{transform:scale(1.03)}
 .thinking-item-img-placeholder{
-  width:100%;height:100%;
-  background:var(--surface);display:block;
-  aspect-ratio:4/3;
+  width:100%;aspect-ratio:4/3;background:var(--surface);display:block;
 }
-
-/* 텍스트 — 이미지 상단에 맞춤 */
-.thinking-item-info{
-  display:flex;
-  flex-direction:column;
-  gap:.8rem;
-  padding-top:0;
-}
+.thinking-item-info{display:flex;flex-direction:column;gap:.8rem}
 .thinking-item-cat{
   font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);font-weight:500;font-family:var(--sans);
+  color:var(--muted);font-weight:500;
 }
 .thinking-item-title{
   font-family:var(--sans);
   font-size:clamp(1.6rem,2.5vw,2.4rem);
   font-weight:700;color:var(--black);
-  line-height:1.1;letter-spacing:-.02em;
+  line-height:1.1;letter-spacing:-.01em;
+  text-transform:uppercase;
+}
+/* 화살표 — 선 사이 우측, 수직 중앙 */
+.thinking-item-arrow{
+  font-size:1.4rem;color:var(--black);
+  align-self:center;
+  transition:transform .3s,color .3s;
+}
+.thinking-item:hover .thinking-item-arrow{
+  transform:translateX(5px);color:var(--gold);
 }
 
-/* scroll reveal */
-.thinking-item-body{
-  opacity:0;transform:translateY(12px);
-  transition:opacity .6s ease, transform .6s cubic-bezier(.25,.46,.45,.94);
-}
-.thinking-item.visible .thinking-item-body{
-  opacity:1;transform:translateY(0);
-}
-
-/* mobile */
 @media(max-width:768px){
   .thinking-list{padding:0 1.5rem}
   .thinking-item-body{
-    grid-template-columns:1fr;
-    gap:1rem;
-    opacity:1;transform:none;
+    grid-template-columns:1fr auto;
+    gap:1rem;opacity:1;transform:none;
   }
-  .thinking-item-img{aspect-ratio:4/3;max-height:none}
-  .thinking-item-title{font-size:clamp(1.4rem,5vw,1.8rem)}
+  .thinking-item-img{grid-column:1/-1;aspect-ratio:4/3}
+  .thinking-item-title{font-size:clamp(1.2rem,5vw,1.6rem)}
 }
 
 /* ── THINKING POST ── */
@@ -1208,10 +1179,7 @@ function buildThinkingGrid(){
     item.className='thinking-item';
     const cover=p.thumbnail||p.cover||null;
     item.innerHTML=`
-      <div class="thinking-item-rule">
-        <div class="thinking-item-rule-line"></div>
-        <span class="thinking-item-rule-arrow">→</span>
-      </div>
+      <div class="thinking-item-rule-top"></div>
       <div class="thinking-item-body">
         <div class="thinking-item-img">
           ${cover
@@ -1222,7 +1190,9 @@ function buildThinkingGrid(){
           <div class="thinking-item-cat">${p.category||'Essay'}</div>
           <div class="thinking-item-title">${p.title}</div>
         </div>
-      </div>`;
+        <span class="thinking-item-arrow">→</span>
+      </div>
+      <div class="thinking-item-rule-bottom"></div>`;
     item.addEventListener('click',()=>openThinkingPost(i,posts));
     grid.appendChild(item);
   });
