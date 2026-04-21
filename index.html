@@ -174,18 +174,20 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* Right masonry grid */
 .work-masonry{
   flex:1;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:auto;
-  column-gap:8px;
+  display:flex;
+  gap:8px;
   padding:8px;
-  align-items:start;
+  align-items:flex-start;
+}
+.work-masonry-col{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
 .work-card{
-  break-inside:avoid;
   position:relative;
   cursor:none;display:block;
-  margin-bottom:8px;
   border-radius:12px;
   background:#eeeae3;
   overflow:hidden;
@@ -193,7 +195,6 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 }
 .wc-img{width:100%;display:block;}
 .wc-video{width:100%;display:block;}
-/* ratio 필드로 카드 비율 지정한 경우 */
 .work-card[style*="aspect-ratio"] .wc-img,
 .work-card[style*="aspect-ratio"] .wc-video{height:100%;object-fit:cover;}
 
@@ -806,8 +807,8 @@ a,button,[data-hover]{cursor:none}
 
   /* WORK mobile */
   .work-page-header{padding:5.5rem 0 1.5rem 1.5rem}
-  .work-masonry{grid-template-columns:1fr}
-  .work-card{grid-column:1 !important;aspect-ratio:unset}
+  .work-masonry{flex-direction:column}
+  .work-masonry-col{width:100%}
   .wc-img,.wc-video{width:100%;display:block}
   .wc-overlay{padding:1.5rem}
 
@@ -1224,16 +1225,23 @@ function buildWorkGrid(){
   const grid=document.getElementById('work-grid');
   grid.innerHTML='';
   const list=projects.length?projects:FALLBACK_PROJECTS;
+
+  // 두 컬럼 div 생성
+  const col1=document.createElement('div');
+  const col2=document.createElement('div');
+  col1.className='work-masonry-col';
+  col2.className='work-masonry-col';
+  grid.appendChild(col1);
+  grid.appendChild(col2);
+
   list.forEach((p,i)=>{
     const card=document.createElement('div');
     card.className='work-card';
     card.onclick=()=>openProject(i);
 
-    // apply aspect ratio from Notion if set
     const ratio=p.ratio||null;
     if(ratio){
       card.style.aspectRatio=ratio;
-      // 이미지도 같은 비율로
       setTimeout(()=>{
         const img=card.querySelector('.wc-img,.wc-video');
         if(img) img.style.aspectRatio=ratio;
@@ -1274,11 +1282,12 @@ function buildWorkGrid(){
         </div>
       </div>`;
 
-    // 좌→우 순서: 홀수번째는 1열, 짝수번째는 2열
-    card.style.gridColumn = (i % 2 === 0) ? '1' : '2';
-
-    grid.appendChild(card);
+    // 홀수 인덱스 → 1열, 짝수 인덱스 → 2열
+    if(i%2===0) col1.appendChild(card);
+    else col2.appendChild(card);
   });
+
+  bindHover();
 }
 
 /* ══ PROJECT DETAIL ══ */
