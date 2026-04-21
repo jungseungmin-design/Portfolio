@@ -589,21 +589,17 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   cursor:none;position:relative;
   margin-bottom:3rem;
 }
-/* 상단 3px 선 */
+/* 상단 1px 선 */
 .thinking-item-rule-top{
-  height:3px;background:var(--black);
-  transition:background .3s;
+  height:1px;background:var(--black);
 }
-/* 하단 3px 선 — 위여백 3rem */
+/* 하단 1px 선 — 위여백 3rem */
 .thinking-item-rule-bottom{
-  height:3px;background:var(--black);
+  height:1px;background:var(--black);
   margin-top:3rem;
-  transition:background .3s;
 }
-.thinking-item:hover .thinking-item-rule-top,
-.thinking-item:hover .thinking-item-rule-bottom{
-  background:var(--gold);
-}
+/* hover: 이미지 줌인만 */
+.thinking-item:hover .thinking-item-img img{transform:scale(1.03)}
 /* 선 사이 컨텐츠 영역 */
 .thinking-item-body{
   display:grid;
