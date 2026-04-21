@@ -174,10 +174,12 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* Right masonry grid */
 .work-masonry{
   flex:1;
-  columns:2;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto;
   column-gap:8px;
   padding:8px;
-  column-fill:balance;
+  align-items:start;
 }
 .work-card{
   break-inside:avoid;
@@ -189,12 +191,11 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   overflow:hidden;
   padding-bottom:64px;
 }
-/* 이미지 기본 비율 — 로드 전에도 높이 확보 */
-.wc-img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
-.wc-video{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
+.wc-img{width:100%;display:block;}
+.wc-video{width:100%;display:block;}
 /* ratio 필드로 카드 비율 지정한 경우 */
 .work-card[style*="aspect-ratio"] .wc-img,
-.work-card[style*="aspect-ratio"] .wc-video{aspect-ratio:unset;height:100%;}
+.work-card[style*="aspect-ratio"] .wc-video{height:100%;object-fit:cover;}
 
 /* image — clip-path bottom shrinks on hover */
 .wc-media-clip{
@@ -805,7 +806,8 @@ a,button,[data-hover]{cursor:none}
 
   /* WORK mobile */
   .work-page-header{padding:5.5rem 0 1.5rem 1.5rem}
-  .work-card{aspect-ratio:unset}
+  .work-masonry{grid-template-columns:1fr}
+  .work-card{grid-column:1 !important;aspect-ratio:unset}
   .wc-img,.wc-video{width:100%;display:block}
   .wc-overlay{padding:1.5rem}
 
@@ -1271,6 +1273,10 @@ function buildWorkGrid(){
           <div class="card-cat">${p.category||p.cat||''}</div>
         </div>
       </div>`;
+
+    // 좌→우 순서: 홀수번째는 1열, 짝수번째는 2열
+    card.style.gridColumn = (i % 2 === 0) ? '1' : '2';
+
     grid.appendChild(card);
   });
 }
