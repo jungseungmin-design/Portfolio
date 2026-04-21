@@ -34,6 +34,11 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .nav-links a:hover{color:var(--gold)}
 .nav-home-white .nav-logo,.nav-home-white .nav-links a{color:#fff}
 .nav-home-white .nav-links a:hover{color:var(--gold)}
+/* thinking dark nav */
+.nav-thinking-dark{background:rgba(26,24,21,.92)!important;backdrop-filter:blur(12px)}
+.nav-thinking-dark .nav-logo,.nav-thinking-dark .nav-links a{color:rgba(240,235,227,.75)!important}
+.nav-thinking-dark .nav-links a:hover{color:#f0ebe3!important}
+.nav-thinking-dark .nav-hamburger span{background:rgba(240,235,227,.75)}
 
 /* ── PAGE SYSTEM ── */
 .pg{display:none;min-height:100vh}
@@ -549,137 +554,139 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 }
 
 /* ══════════════════════════════════════════
-   THINKING PAGE — Basic Agency style
+   THINKING PAGE — Basic Agency /thinking style
 ═══════════════════════════════════════════ */
-#pg-thinking{background:var(--cream);min-height:100vh}
-
-.thinking-header{
-  padding:8rem 5vw 3rem;
-}
-.thinking-header h1{
-  font-family:var(--sans);
-  font-size:clamp(3rem,6vw,5rem);
-  font-weight:700;color:var(--black);
-  letter-spacing:-.03em;
-  display:flex;align-items:center;gap:.4rem;
-}
-/* 살아있는 dot — 색상이 자연스럽게 순환 */
-.thinking-dot{
-  display:inline-block;
-  animation:dotColorCycle 4s ease-in-out infinite;
-  font-size:.75em;
-  line-height:1;
-}
-@keyframes dotColorCycle{
-  0%  {color:#C8A96E}
-  16% {color:#7EB8A0}
-  33% {color:#7B9ED9}
-  50% {color:#C87E9A}
-  66% {color:#D4956A}
-  83% {color:#9EC87E}
-  100%{color:#C8A96E}
+#pg-thinking{
+  background:var(--cream);
+  min-height:100vh;
+  color:var(--black);
 }
 
-/* post list */
+/* ── filter tabs ── */
+.thinking-filters{
+  display:flex;align-items:center;gap:2.5rem;
+  padding:1.8rem 3vw;
+  position:sticky;top:0;z-index:10;
+  background:rgba(245,242,237,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.thinking-filter-btn{
+  display:flex;align-items:center;gap:.7rem;
+  background:none;border:none;cursor:none;
+  font-family:var(--sans);font-size:.72rem;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(14,14,13,.3);
+  transition:color .2s;padding:0;
+}
+.thinking-filter-btn:hover{color:rgba(14,14,13,.65)}
+.thinking-filter-btn.active{color:var(--black)}
+.thinking-filter-radio{
+  width:14px;height:14px;border-radius:50%;
+  border:1.5px solid rgba(14,14,13,.25);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:border-color .2s;
+}
+.thinking-filter-btn.active .thinking-filter-radio{
+  border-color:var(--black);
+  background:var(--black);
+}
+.thinking-filter-btn.active .thinking-filter-radio::after{
+  content:'';width:5px;height:5px;border-radius:50%;background:var(--cream);
+}
+
+/* ── post list ── */
 .thinking-list{
-  border-top:1px solid rgba(0,0,0,.1);
+  border-top:1px solid rgba(0,0,0,.08);
 }
 .thinking-item{
   display:grid;
-  grid-template-columns:5vw 38% 1fr;
-  border-bottom:1px solid rgba(0,0,0,.1);
+  grid-template-columns:35% 1fr auto;
+  align-items:stretch;
+  border-bottom:1px solid rgba(0,0,0,.08);
   cursor:none;
   text-decoration:none;
   overflow:hidden;
   position:relative;
+  min-height:220px;
+  transition:background .25s;
 }
-/* 좌측 여백 컬럼 — 번호 표시 */
-.thinking-item-index{
-  padding:2.5rem 0 2.5rem 5vw;
-  font-size:.62rem;letter-spacing:.1em;
-  color:rgba(0,0,0,.2);font-weight:500;
-  font-family:var(--sans);
-  display:flex;align-items:flex-start;
-  padding-top:2.8rem;
-}
+.thinking-item:hover{background:rgba(0,0,0,.025)}
 
+/* thumbnail */
 .thinking-item-img{
   overflow:hidden;
-  aspect-ratio:4/3;
-  max-height:280px;
-  /* 진입 애니메이션 */
-  transform:translateX(-12px);
-  opacity:0;
-  transition:transform .7s cubic-bezier(.25,.46,.45,.94), opacity .7s ease;
-}
-.thinking-item.visible .thinking-item-img{
-  transform:translateX(0);
-  opacity:1;
+  position:relative;
 }
 .thinking-item-img img{
   width:100%;height:100%;
   object-fit:cover;display:block;
   transition:transform .7s cubic-bezier(.25,.46,.45,.94);
 }
-.thinking-item:hover .thinking-item-img img{
-  transform:scale(1.04);
-}
+.thinking-item:hover .thinking-item-img img{transform:scale(1.04)}
 .thinking-item-img-placeholder{
   width:100%;height:100%;
   background:var(--surface);display:block;
 }
 
+/* info */
 .thinking-item-info{
-  padding:2.5rem 5vw 2.5rem 3rem;
+  padding:2.2rem 2.5rem;
   display:flex;flex-direction:column;
-  justify-content:center;
+  justify-content:space-between;
   gap:1rem;
-  /* 진입 애니메이션 */
-  transform:translateY(8px);
-  opacity:0;
-  transition:transform .7s cubic-bezier(.25,.46,.45,.94) .1s, opacity .7s ease .1s;
-}
-.thinking-item.visible .thinking-item-info{
-  transform:translateY(0);
-  opacity:1;
 }
 .thinking-item-meta{
-  display:flex;align-items:center;gap:1rem;
+  display:flex;align-items:center;gap:.8rem;
+  flex-wrap:wrap;
 }
 .thinking-item-cat{
   font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);font-weight:500;font-family:var(--sans);
+  color:var(--muted);font-weight:700;font-family:var(--sans);
+}
+.thinking-item-date{
+  font-size:.62rem;letter-spacing:.06em;
+  color:var(--muted);font-family:var(--sans);
+}
+.thinking-item-cat+.thinking-item-date::before{
+  content:'·';margin-right:.8rem;color:rgba(0,0,0,.2);
 }
 .thinking-item-title{
   font-family:var(--sans);
-  font-size:clamp(2.2rem,3.2vw,2.9rem);
+  font-size:clamp(1.8rem,3.2vw,3.2rem);
   font-weight:700;color:var(--black);
-  line-height:1.15;letter-spacing:-.02em;
+  line-height:1.05;letter-spacing:-.02em;
+  text-transform:uppercase;
+  flex:1;
+  display:flex;align-items:center;
 }
-.thinking-item-arrow{
-  font-size:1rem;color:var(--gold);
-  font-weight:500;
-  opacity:0;transform:translateX(-6px);
-  transition:opacity .3s,transform .3s;
+
+/* arrow col */
+.thinking-item-arrow-col{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 2rem;
+  font-size:1.4rem;
+  color:rgba(0,0,0,.2);
+  transition:color .25s,transform .25s;
+  flex-shrink:0;
 }
-.thinking-item:hover .thinking-item-arrow{
-  opacity:1;transform:translateX(0);
+.thinking-item:hover .thinking-item-arrow-col{
+  color:var(--black);
+  transform:translateX(4px);
 }
+
+/* hidden items (filter) */
+.thinking-item[data-hidden]{display:none}
 
 /* mobile */
 @media(max-width:768px){
+  .thinking-filters{padding:1rem 1.5rem;gap:1.5rem;top:0}
+  .thinking-filter-btn{font-size:.62rem;gap:.5rem}
   .thinking-item{grid-template-columns:1fr;min-height:auto}
-  .thinking-item-index{display:none}
-  .thinking-item-img{
-    aspect-ratio:4/3;max-height:none;width:100%;
-    transform:none;opacity:1;
-  }
-  .thinking-item-info{
-    padding:1.5rem;
-    transform:none;opacity:1;
-  }
-  .thinking-item-title{font-size:clamp(1.4rem,5vw,2rem)}
-  .thinking-header{padding:6rem 1.5rem 2rem}
+  .thinking-item-img{aspect-ratio:16/9;height:auto}
+  .thinking-item-info{padding:1.4rem 1.5rem}
+  .thinking-item-arrow-col{display:none}
+  .thinking-item-title{font-size:clamp(1.3rem,5vw,1.8rem)}
 }
 
 /* ── THINKING POST ── */
@@ -988,8 +995,10 @@ a,button,[data-hover]{cursor:none}
 
 <!-- ═══════ THINKING ═══════ -->
 <div id="pg-thinking" class="pg">
-  <div class="thinking-header">
-    <h1>Thinking <span class="thinking-dot">●</span></h1>
+  <div class="thinking-filters" id="thinking-filters">
+    <button class="thinking-filter-btn active" data-filter="all" onclick="filterThinking('all',this)">
+      <span class="thinking-filter-radio"></span>VIEW ALL
+    </button>
   </div>
   <div class="thinking-list" id="thinking-grid"></div>
 </div>
@@ -1129,8 +1138,9 @@ function go(id){
     document.body.scrollTop=0;
     document.body.style.overflow = id==='pg-home' ? 'hidden' : '';
     const nav=document.getElementById('nav');
-    if(id==='pg-home'){nav.classList.add('nav-home-white');nav.classList.remove('scrolled')}
-    else{nav.classList.remove('nav-home-white');nav.classList.add('scrolled')}
+    if(id==='pg-home'){nav.classList.add('nav-home-white');nav.classList.remove('scrolled');nav.classList.remove('nav-thinking-dark')}
+    else if(id==='pg-thinking'){nav.classList.remove('nav-home-white');nav.classList.add('scrolled');nav.classList.remove('nav-thinking-dark')}
+    else{nav.classList.remove('nav-home-white');nav.classList.add('scrolled');nav.classList.remove('nav-thinking-dark')}
     if(id==='pg-work') buildWorkGrid();
     else if(id==='pg-thinking') buildThinkingGrid();
     else {
@@ -1189,44 +1199,77 @@ function openProject(idx){
 }
 
 /* ══ THINKING GRID ══ */
+let _thinkingPosts=[];
+
+function filterThinking(cat,btn){
+  // toggle active btn
+  document.querySelectorAll('.thinking-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // show/hide items
+  document.querySelectorAll('.thinking-item').forEach(el=>{
+    if(cat==='all'||el.dataset.cat===cat){
+      el.removeAttribute('data-hidden');
+      el.style.display='';
+    } else {
+      el.setAttribute('data-hidden','1');
+      el.style.display='none';
+    }
+  });
+}
+
 function buildThinkingGrid(){
   const grid=document.getElementById('thinking-grid');
   if(!grid) return;
   grid.innerHTML='';
   const allProjects=projects.length?projects:FALLBACK_PROJECTS;
   const posts=allProjects.filter(p=>p.type==='thinking');
+  _thinkingPosts=posts;
   if(!posts.length){
-    grid.innerHTML='<div style="padding:4rem 5vw;color:var(--muted);font-size:.9rem">Notion에 Type: thinking 포스트를 추가해주세요.</div>';
+    grid.innerHTML='<div style="padding:4rem 5vw;color:rgba(240,235,227,.4);font-size:.9rem">Notion에 Type: thinking 포스트를 추가해주세요.</div>';
     return;
   }
+
+  // collect unique categories → build filter tabs
+  const cats=[...new Set(posts.map(p=>p.category||'').filter(Boolean))];
+  const filtersEl=document.getElementById('thinking-filters');
+  if(filtersEl){
+    // remove previously injected cat buttons
+    filtersEl.querySelectorAll('[data-filter]:not([data-filter="all"])').forEach(b=>b.remove());
+    cats.forEach(cat=>{
+      const btn=document.createElement('button');
+      btn.className='thinking-filter-btn';
+      btn.dataset.filter=cat;
+      btn.onclick=function(){filterThinking(cat,this)};
+      btn.innerHTML=`<span class="thinking-filter-radio"></span>${cat.toUpperCase()}`;
+      filtersEl.appendChild(btn);
+    });
+  }
+
   posts.forEach((p,i)=>{
     const item=document.createElement('a');
     item.className='thinking-item';
+    item.dataset.cat=p.category||'';
     item.href='#';
     item.onclick=(e)=>{e.preventDefault();openThinkingPost(i,posts);};
     const cover=p.thumbnail||p.cover||null;
+    const cat=p.category||'Essay';
+    const date=p.date||'';
     item.innerHTML=`
-      <span class="thinking-item-index">${String(i+1).padStart(2,'0')}</span>
       <div class="thinking-item-img">
         ${cover
           ?`<img src="${cover}" alt="${p.title}" loading="lazy">`
           :`<div class="thinking-item-img-placeholder"></div>`}
       </div>
       <div class="thinking-item-info">
-        <div class="thinking-item-cat">${p.category||'Essay'}</div>
+        <div class="thinking-item-meta">
+          <span class="thinking-item-cat">${cat}</span>
+          ${date?`<span class="thinking-item-date">${date}</span>`:''}
+        </div>
         <div class="thinking-item-title">${p.title}</div>
-        <span class="thinking-item-arrow">→</span>
-      </div>`;
+      </div>
+      <div class="thinking-item-arrow-col">→</div>`;
     grid.appendChild(item);
   });
-
-  // scroll reveal
-  const observer=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting) e.target.classList.add('visible');
-    });
-  },{threshold:0.15});
-  grid.querySelectorAll('.thinking-item').forEach(el=>observer.observe(el));
 
   bindHover();
 }
