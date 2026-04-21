@@ -1224,7 +1224,8 @@ function buildThinkingBlocks(blocks){
 function buildWorkGrid(){
   const grid=document.getElementById('work-grid');
   grid.innerHTML='';
-  const list=projects.length?projects:FALLBACK_PROJECTS;
+  const allProjects=projects.length?projects:FALLBACK_PROJECTS;
+  const list=allProjects.filter(p=>!p.type||p.type==='work');
   const isMobile=window.innerWidth<=900;
 
   if(isMobile){
@@ -1234,7 +1235,8 @@ function buildWorkGrid(){
     col.style.width='100%';
     grid.appendChild(col);
     list.forEach((p,i)=>{
-      const card=makeWorkCard(p,i);
+      const realIdx=(projects.length?projects:FALLBACK_PROJECTS).indexOf(p);
+      const card=makeWorkCard(p,realIdx);
       col.appendChild(card);
     });
   } else {
@@ -1246,7 +1248,8 @@ function buildWorkGrid(){
     grid.appendChild(col1);
     grid.appendChild(col2);
     list.forEach((p,i)=>{
-      const card=makeWorkCard(p,i);
+      const realIdx=(projects.length?projects:FALLBACK_PROJECTS).indexOf(p);
+      const card=makeWorkCard(p,realIdx);
       if(i%2===0) col1.appendChild(card);
       else col2.appendChild(card);
     });
