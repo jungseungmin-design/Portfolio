@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jung Seungmin — Multi-disciplinary Designer & Art Director</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Inter:wght@700&display=swap" rel="stylesheet">
@@ -1514,9 +1517,8 @@ function buildProject(idx){
     }).filter(Boolean).join('');
   }
 
-  // overview: 텍스트와 이미지 분리
-  const overviewTextHTML=renderTextOnly(overviewBlocks)||'<p class="pst-para">Notion 본문에 프로젝트 설명을 입력해주세요.</p>';
-  const overviewMediaHTML=renderMediaOnly(overviewBlocks);
+  // overview: 순서 그대로 렌더링 (텍스트/이미지 혼합 가능)
+  const overviewAllHTML=renderAll(overviewBlocks)||'<p class="pst-para">Notion 본문에 프로젝트 설명을 입력해주세요.</p>';
 
   // sections: 텍스트는 좁은 컬럼, 이미지는 풀와이드
   const sectionsHTML=sections.map((sec,si)=>{
@@ -1553,9 +1555,8 @@ function buildProject(idx){
         </aside>
         <div class="proj-ov-right">
           <div class="proj-ov-inner">
-            ${overviewTextHTML}
+            ${overviewAllHTML}
           </div>
-          ${overviewMediaHTML?`<div class="proj-ov-media">${overviewMediaHTML}</div>`:''}
         </div>
       </div>
     </div>
