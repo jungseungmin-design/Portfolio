@@ -122,5 +122,18 @@ function parseBlocks(raw) {
 
 function richText(arr) {
   if (!arr || !arr.length) return '';
-  return arr.map(t => t.plain_text || '').join('');
+  return arr.map(t => {
+    let text = t.plain_text || '';
+    // XSS 방지
+    text = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if (t.annotations) {
+      if (t.annotations.bold && t.annotations.italic) text = `<em><strong>${text}</strong></em>`;
+      else if (t.annotations.bold) text = `<strong>${text}</strong>`;
+      else if (t.annotations.italic) text = `<em>${text}</em>`;
+      if (t.annotations.underline) text = `<u>${text}</u>`;
+      if (t.annotations.strikethrough) text = `<s>${text}</s>`;
+      if (t.annotations.code) text = `<code>${text}</code>`;
+    }
+    return text;
+  }).join('');
 }
