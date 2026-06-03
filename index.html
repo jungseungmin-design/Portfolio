@@ -126,14 +126,18 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .contact-link-meta{display:flex;flex-direction:column;gap:.2rem}
 .contact-link-label{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .contact-link-val{font-size:.82rem;color:#fff;font-weight:300;transition:color .2s}
-.contact-form{display:flex;flex-direction:column;gap:1.2rem}
-.form-field{display:flex;flex-direction:column;gap:.4rem}
-.form-field label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.form-field input,.form-field textarea{background:transparent;border:none;border-bottom:1px solid #333;color:#fff;font-family:var(--sans);font-size:.88rem;padding:.7rem 0;outline:none;transition:border-color .2s;font-weight:300}
-.form-field input:focus,.form-field textarea:focus{border-color:var(--gold)}
-.form-field textarea{resize:none;min-height:100px}
-.form-submit{align-self:flex-start;margin-top:.5rem;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.25);padding:.9rem 2.5rem;cursor:none;transition:border-color .3s,color .3s}
-.form-submit:hover{border-color:var(--gold);color:var(--gold)}
+/* 새 CTA 영역 */
+.contact-cta-wrap{display:flex;flex-direction:column;justify-content:flex-end;gap:1.5rem;padding-bottom:.5rem}
+.contact-cta-btn{
+  display:inline-block;align-self:flex-start;
+  font-family:var(--sans);font-size:.82rem;font-weight:500;letter-spacing:.06em;
+  color:var(--black);background:var(--gold);
+  padding:1.1rem 2.8rem;text-decoration:none;
+  border-radius:0;
+  transition:background .25s,color .25s,letter-spacing .25s;
+}
+.contact-cta-btn:hover{background:#fff;color:var(--black);letter-spacing:.1em}
+.contact-cta-note{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);line-height:1.6}
 
 /* ── WORK PAGE — cream background ── */
 #pg-work{background:#eeeae3;min-height:100vh;display:flex;flex-direction:column}
@@ -263,8 +267,6 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   *{cursor:auto !important}
   .work-card,.next-project,.thinking-card{cursor:pointer !important}
 }
-  .work-card{border-radius:10px}
-}
 
 /* ── PROJECT DETAIL — WHOOP/Basic Agency style ── */
 #pg-project{background:#eeeae3;min-height:100vh}
@@ -362,6 +364,8 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* text */
 .pst-para{font-family:var(--sans);font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.75;color:#222;font-weight:400;margin-bottom:1.8rem;letter-spacing:-.01em}
 .pst-para strong{font-weight:700}
+.pst-para em{font-style:italic}
+.pst-para code{font-family:monospace;font-size:.9em;background:rgba(0,0,0,.06);padding:.1em .35em;border-radius:3px}
 .pst-h2{font-family:var(--sans);font-size:.72rem;color:#000;font-weight:700;margin:3rem 0 1rem;letter-spacing:.08em;text-transform:uppercase;display:block}
 .pst-h3{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:2rem 0 .8rem;font-weight:500;display:block}
 
@@ -425,30 +429,10 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   .proj-img-landscape{padding:0 1.5rem;margin-bottom:1.2rem}
   .proj-img-portrait-row{padding:0 1.5rem;margin-bottom:1.2rem}
 }
-/* 이미지: 기본 proj-img-landscape 패딩(12vw) 그대로 사용 */
-.proj-section-content .proj-video-wrap,
-.proj-section-content .proj-video-native{
-  padding-left:5vw;
-  padding-right:5vw;
-}
 /* 이미지 캡션 */
 .proj-img-subcap{
   font-size:.78rem;color:#888;margin-top:.5rem;
   line-height:1.5;font-weight:400;
-}
-/* mobile */
-@media(max-width:768px){
-  .proj-section-content .pst-para,
-  .proj-section-content .pst-h2,
-  .proj-section-content .pst-h3,
-  .proj-section-content .proj-divider{
-    width:100%;margin-left:0;padding:0 1.5rem;
-  }
-  .proj-section-content .proj-img-landscape,
-  .proj-section-content .proj-img-portrait-row,
-  .proj-section-content .proj-video-wrap{
-    padding:0 1.5rem;
-  }
 }
 
 /* ── PENTAGRAM-STYLE IMAGE LAYOUT ── */
@@ -720,6 +704,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 }
 .tpost-block-content p:last-child{margin-bottom:0}
 .tpost-block-content strong{font-weight:700}
+.tpost-block-content em{font-style:italic}
 .tpost-block-content h3{
   font-family:var(--sans);font-size:clamp(1rem,1.3vw,1.1rem);
   font-weight:700;color:var(--black);margin:2rem 0 .8rem;
@@ -891,6 +876,7 @@ a,button,[data-hover]{cursor:none}
   .about-contact{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
   .contact-section{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
   .contact-title{font-size:clamp(1.6rem,6vw,2.2rem)}
+  .contact-cta-wrap{padding-top:1rem}
   .footer{padding:1.5rem;flex-wrap:wrap;gap:.8rem}
 }
 </style>
@@ -1002,13 +988,10 @@ a,button,[data-hover]{cursor:none}
         <div class="contact-link-meta"><span class="contact-link-label">Instagram</span><span class="contact-link-val">@jungseungmin</span></div>
       </a>
     </div>
-    <form class="contact-form" id="contact-form" onsubmit="handleContactSubmit(event)">
-      <div class="form-field"><label>Name</label><input type="text" name="name" placeholder="Your name" required></div>
-      <div class="form-field"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required></div>
-      <div class="form-field"><label>Message</label><textarea name="message" placeholder="Tell me about your project…" required></textarea></div>
-      <button class="form-submit" type="submit" id="contact-submit">Send Message</button>
-      <p id="contact-status" style="font-size:.75rem;letter-spacing:.06em;margin-top:.5rem;display:none"></p>
-    </form>
+    <div class="contact-cta-wrap">
+      <a class="contact-cta-btn" href="mailto:hi@jungseungmin.com">Start a project →</a>
+      <p class="contact-cta-note">Available for selected projects worldwide.</p>
+    </div>
   </section>
 
   <footer class="footer footer-dark" style="background:var(--black)"><span>© 2025 Jung Seungmin &nbsp;·&nbsp; Seoul · London · Available Worldwide</span><a class="footer-contact-btn" href="mailto:hi@jungseungmin.com">Get in touch →</a></footer>
@@ -1085,37 +1068,9 @@ window.addEventListener('scroll',()=>{
 });
 
 /* ══ PAGE TRANSITION ══ */
-async function handleContactSubmit(e){
-  e.preventDefault();
-  const form=e.target;
-  const btn=document.getElementById('contact-submit');
-  const status=document.getElementById('contact-status');
-  btn.textContent='Sending…';
-  btn.disabled=true;
-  try{
-    const res=await fetch('https://formspree.io/f/xnjrjrak',{
-      method:'POST',
-      headers:{'Accept':'application/json'},
-      body:new FormData(form)
-    });
-    if(res.ok){
-      status.style.display='block';
-      status.style.color='var(--gold)';
-      status.textContent='Message sent. I\'ll be in touch soon.';
-      form.reset();
-    } else {
-      throw new Error();
-    }
-  } catch{
-    status.style.display='block';
-    status.style.color='#e07070';
-    status.textContent='Something went wrong. Please email me directly at hi@jungseungmin.com';
-  }
-  btn.textContent='Send Message';
-  btn.disabled=false;
-}
-
 function go(id){
+  // 이전 프로젝트 스크롤 핸들러 정리
+  if(projScrollHandler){window.removeEventListener('scroll',projScrollHandler);projScrollHandler=null;}
   // URL 해시 업데이트
   const hashMap={'pg-home':'','pg-work':'#work','pg-about':'#about','pg-thinking':'#thinking'};
   history.replaceState(null,'',hashMap[id]||'');
@@ -1264,20 +1219,6 @@ function buildThinkingPost(p){
 
   // 블록 → 섹션 라벨 + 본문 텍스트
   const blocks=p.blocks||[];
-  let currentLabel='';
-  const bodyHTML=blocks.map(bl=>{
-    if(bl.type==='heading'&&bl.level===2){
-      currentLabel=bl.text;
-      return `<div class="tpost-block"><span class="tpost-block-label">${bl.text}</span><div class="tpost-block-content"></div></div>`;
-    }
-    if(bl.type==='text') return `<p class="tpost-p">${bl.text}</p>`;
-    if(bl.type==='heading'&&bl.level===3) return `<h3 class="tpost-h3">${bl.text}</h3>`;
-    if(bl.type==='images'){
-      return bl.images.map(im=>`<img class="tpost-img" src="${im.url}" alt="${im.caption||''}" loading="lazy">`).join('');
-    }
-    if(bl.type==='divider') return `<hr style="border:none;border-top:1px solid #eee;margin:2.5rem 0">`;
-    return '';
-  }).join('');
 
   // 텍스트를 tpost-block 구조로 재조합
   const blocksHTML=buildThinkingBlocks(blocks);
@@ -1341,8 +1282,7 @@ function buildThinkingBlocks(blocks){
 function buildWorkGrid(){
   const grid=document.getElementById('work-grid');
   grid.innerHTML='';
-  const allProjects=projects.length?projects:FALLBACK_PROJECTS;
-  const list=allProjects.filter(p=>!p.type||p.type==='work');
+  const allProjects=projects.length?projects:FALLBACK_PROJECTS;  const list=allProjects.filter(p=>!p.type||p.type==='work');
   const isMobile=window.innerWidth<=900;
 
   if(isMobile){
@@ -1636,48 +1576,6 @@ function buildProject(idx){
   window.addEventListener('scroll',projScrollHandler,{passive:true});
 }
 
-function renderBlocks(blocks){
-  if(!blocks||!blocks.length) return '';
-  return blocks.map(b=>{
-    if(b.type==='text'){
-      return `<div class="pb-text"><p>${b.text}</p></div>`;
-    }
-    if(b.type==='heading'){
-      const tag=b.level===2?'h2':'h3';
-      const cls=b.level===2?'pb-h2':'pb-h3';
-      return `<div class="${cls}"><${tag}>${b.text}</${tag}></div>`;
-    }
-    if(b.type==='images'){
-      const count=b.images.length;
-      const gridCls=count===1?'pb-img-one':count===2?'pb-img-two':'pb-img-three';
-      const imgs=b.images.map(img=>`
-        <figure class="pb-figure">
-          <img src="${img.url}" alt="${img.caption||''}" loading="lazy">
-          ${img.caption?`<figcaption>${img.caption}</figcaption>`:''}
-        </figure>`).join('');
-      return `<div class="${gridCls}">${imgs}</div>`;
-    }
-    if(b.type==='video'){
-      const url=b.url;
-      // YouTube / Vimeo embed
-      const ytMatch=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
-      const vmMatch=url.match(/vimeo\.com\/(\d+)/);
-      if(ytMatch){
-        return `<div class="pb-video"><iframe src="https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0&rel=0" frameborder="0" allowfullscreen></iframe></div>`;
-      }
-      if(vmMatch){
-        return `<div class="pb-video"><iframe src="https://player.vimeo.com/video/${vmMatch[1]}?dnt=1" frameborder="0" allowfullscreen></iframe></div>`;
-      }
-      // direct video file
-      return `<div class="pb-video-native"><video src="${url}" autoplay muted loop playsinline></video></div>`;
-    }
-    if(b.type==='divider'){
-      return `<div class="pb-divider"></div>`;
-    }
-    return '';
-  }).join('');
-}
-
 /* ══ DIAGRAM ANIM ══ */
 function initDiagramAnim(){
   const lines=document.querySelectorAll('.diag-line');
@@ -1748,6 +1646,9 @@ async function handleHash(){
   }
   if(hash==='#thinking'){
     go('pg-thinking'); return;
+  }
+  if(hash==='#work'){
+    go('pg-work'); return;
   }
   if(hash.startsWith('#thinking/')){
     const slug=hash.replace('#thinking/','');
