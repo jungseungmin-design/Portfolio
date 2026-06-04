@@ -36,6 +36,7 @@ export default async function handler(req, res) {
         id: page.id,
         title: p.Name?.title?.[0]?.plain_text || '',
         category: p.Category?.rich_text?.[0]?.plain_text || '',
+        excerpt: p.Excerpt?.rich_text?.[0]?.plain_text || '',
         client: p.Client?.rich_text?.[0]?.plain_text || '',
         thumbnail: p.Thumbnail?.url || null,
         thumbnailMobile: p.Thumbnail_Mobile?.url || null,
