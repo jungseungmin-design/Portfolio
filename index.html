@@ -198,7 +198,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   border-radius:12px;
   background:#eeeae3;
   overflow:hidden;
-  padding-bottom:64px;
+  padding-bottom:80px;
 }
 .wc-img{width:100%;display:block;}
 .wc-video{width:100%;display:block;}
@@ -215,10 +215,10 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   z-index:1;
   clip-path:inset(0 0 0 0 round 12px);
   transition:clip-path 0.28s cubic-bezier(.25,.46,.45,.94);
-  margin-bottom:-64px;
+  margin-bottom:-80px;
 }
 .work-card:hover .wc-media-clip{
-  clip-path:inset(0 0 64px 0 round 12px 12px 0 0);
+  clip-path:inset(0 0 80px 0 round 12px 12px 0 0);
 }
 
 .wc-media{width:100%;display:block;}
@@ -230,9 +230,10 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .wc-info{
   position:absolute;
   bottom:0;left:0;right:0;
-  height:64px;
-  padding:0 1.4rem;
-  display:flex;align-items:center;
+  height:auto;
+  min-height:64px;
+  padding:.75rem 1.4rem 1rem;
+  display:flex;align-items:flex-start;
   background:#eeeae3;
   z-index:0;
   pointer-events:none;
@@ -240,6 +241,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .wc-info-left{display:flex;flex-direction:column;gap:.15rem}
 .card-title{font-family:var(--sans);font-size:.95rem;color:var(--black);font-weight:500;line-height:1.2}
 .card-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.card-excerpt{font-size:.72rem;color:var(--muted);font-weight:400;line-height:1.45;margin-top:.25rem;max-width:220px}
 
 /* mobile */
 @media(max-width:900px){
@@ -260,7 +262,8 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
     transform:none !important;
     opacity:1 !important;
     height:auto;
-    padding:.8rem 1.2rem;
+    min-height:auto;
+    padding:.8rem 1.2rem 1rem;
     background:#eeeae3;
     border-radius:0 0 12px 12px;
   }
@@ -1312,6 +1315,7 @@ function makeWorkCard(p,i){
       <div class="wc-info-left">
         <div class="card-title">${p.title}</div>
         <div class="card-cat">${p.category||p.cat||''}</div>
+        ${p.excerpt?`<div class="card-excerpt">${p.excerpt}</div>`:''}
       </div>
     </div>`;
   return card;
