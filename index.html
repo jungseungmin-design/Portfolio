@@ -142,136 +142,74 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .contact-cta-btn:hover{background:#fff;color:var(--black);letter-spacing:.1em}
 .contact-cta-note{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);line-height:1.6}
 
-/* ── WORK PAGE — cream background ── */
-#pg-work{background:#eeeae3;min-height:100vh;display:flex;flex-direction:column}
+/* ── WORK PAGE — Rapha 3-col grid ── */
+#pg-work{background:#eeeae3;min-height:100vh}
 
-.work-layout{display:flex;flex:1;min-height:100vh}
-
-/* Left sidebar */
-.work-sidebar{
-  width:280px;flex-shrink:0;
-  padding:8rem 2.5rem 3rem;
-  position:sticky;top:0;height:100vh;
-  display:flex;flex-direction:column;
-  justify-content:space-between;
-  border-right:1px solid rgba(0,0,0,.1);
-}
-.work-sidebar-label{
-  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--gold);margin-bottom:2rem;display:block;
-}
-.work-sidebar-title{
+.work-hdr{text-align:center;padding:72px 48px 56px}
+.work-h1{
   font-family:var(--sans);
-  font-size:clamp(1.55rem,2.2vw,2.4rem);
-  font-weight:300;
-  line-height:1.45;
-  color:rgba(0,0,0,.3);
-  margin-bottom:0;
-}
-.work-sidebar-title strong{
-  font-weight:700;
+  font-size:clamp(36px,5.6vw,67px);
+  font-weight:700;letter-spacing:-.01em;
+  text-transform:uppercase;line-height:.95;
   color:var(--black);
 }
-.work-sidebar-sub{display:none}
-.work-sidebar-bottom{
-  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(0,0,0,.25);
-}
 
-/* Right masonry grid */
-.work-masonry{
-  flex:1;
-  display:flex;
-  gap:8px;
-  padding:8px;
-  align-items:flex-start;
-}
-.work-masonry-col{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+.work-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  border-top:1px solid #cccccc;
 }
 .work-card{
-  position:relative;
-  cursor:none;display:block;
-  border-radius:12px;
-  background:#eeeae3;
-  overflow:hidden;
-  padding-bottom:80px;
+  display:flex;flex-direction:column;
+  text-decoration:none;color:inherit;
+  background:#eeeae3;cursor:none;
+  border-left:1px solid #cccccc;
+  border-bottom:1px solid #cccccc;
+  transition:background .16s ease;
 }
-.wc-img{width:100%;display:block;}
-.wc-video{width:100%;display:block;}
-.work-card[style*="aspect-ratio"] .wc-img,
-.work-card[style*="aspect-ratio"] .wc-video{height:100%;object-fit:cover;}
+.work-card:hover{background:#e5e1da}
 
-/* image — clip-path bottom shrinks on hover */
-.wc-media-clip{
-  width:100%;
-  display:block;
-  border-radius:12px;
-  overflow:hidden;
-  position:relative;
-  z-index:1;
-  clip-path:inset(0 0 0 0 round 12px);
-  transition:clip-path 0.28s cubic-bezier(.25,.46,.45,.94);
-  margin-bottom:-80px;
+.wc-img-wrap{
+  width:100%;aspect-ratio:3/2;
+  overflow:hidden;background:var(--surface);flex-shrink:0;
 }
-.work-card:hover .wc-media-clip{
-  clip-path:inset(0 0 80px 0 round 12px 12px 0 0);
+.wc-img,.wc-video{
+  width:100%;height:100%;
+  object-fit:cover;display:block;
+  transition:transform .65s cubic-bezier(.25,.46,.45,.94);
+}
+.wc-placeholder{width:100%;height:100%}
+.work-card:hover .wc-img,
+.work-card:hover .wc-video{transform:scale(1.07)}
+
+.wc-body{
+  padding:20px 24px 28px 16px;
+  flex:1;display:flex;flex-direction:column;
+}
+.wc-title{
+  font-family:var(--sans);font-size:20px;font-weight:700;
+  line-height:1.15;letter-spacing:-.01em;text-transform:uppercase;
+  color:var(--black);margin:0 0 8px;
+}
+.wc-cat{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin:0 0 10px;font-weight:500;
+}
+.wc-excerpt{
+  font-family:var(--sans);font-size:14px;font-weight:400;
+  line-height:1.65;color:var(--muted);margin:0;
 }
 
-.wc-media{width:100%;display:block;}
-.wc-img{width:100%;display:block;}
-.wc-video{width:100%;display:block;}
-.wc-placeholder{width:100%;min-height:300px;}
-
-/* text — revealed on hover */
-.wc-info{
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:auto;
-  min-height:64px;
-  padding:.75rem 1.4rem 1rem;
-  display:flex;align-items:flex-start;
-  background:#eeeae3;
-  z-index:0;
-  pointer-events:none;
-}
-.wc-info-left{display:flex;flex-direction:column;gap:.15rem}
-.card-title{font-family:var(--sans);font-size:.95rem;color:var(--black);font-weight:500;line-height:1.2}
-.card-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
-.card-excerpt{font-size:.72rem;color:var(--muted);font-weight:400;line-height:1.45;margin-top:.25rem;max-width:220px}
-
-/* mobile */
 @media(max-width:900px){
-  .work-layout{flex-direction:column}
-  .work-sidebar{width:100%;height:auto;position:relative;padding:6rem 1.5rem 2rem;border-right:none;border-bottom:1px solid #1a1a18}
-  .work-masonry{columns:1;padding:8px}
-
-  /* 모바일: hover 효과 없애고 텍스트 항상 표시 */
-  .work-card{padding-bottom:0;background:#eeeae3;border-radius:12px}
-  .wc-media-clip{
-    clip-path:none !important;
-    margin-bottom:0;
-    border-radius:12px 12px 0 0;
-    overflow:hidden;
-  }
-  .wc-info{
-    position:relative;
-    transform:none !important;
-    opacity:1 !important;
-    height:auto;
-    min-height:auto;
-    padding:.8rem 1.2rem 1rem;
-    background:#eeeae3;
-    border-radius:0 0 12px 12px;
-  }
-
-  /* 커서 숨기기 */
+  .work-hdr{padding:48px 24px 40px}
+  .work-grid{grid-template-columns:repeat(2,1fr)}
+  .wc-title{font-size:17px}
   #cur-dot,#cur-ring{display:none !important}
   *{cursor:auto !important}
-  .work-card,.next-project,.thinking-card{cursor:pointer !important}
+  .work-card,.next-project,.think-card{cursor:pointer !important}
+}
+@media(max-width:540px){
+  .work-grid{grid-template-columns:1fr}
 }
 
 /* ── PROJECT DETAIL — WHOOP/Basic Agency style ── */
@@ -819,12 +757,7 @@ a,button,[data-hover]{cursor:none}
   .hero-right{text-align:left;max-width:100%}
   .hero-title{font-size:clamp(2.8rem,10vw,4.5rem)}
 
-  /* WORK mobile */
-  .work-page-header{padding:5.5rem 0 1.5rem 1.5rem}
-  .work-masonry{flex-direction:column}
-  .work-masonry-col{width:100%}
-  .wc-img,.wc-video{width:100%;display:block}
-  .wc-overlay{padding:1.5rem}
+  /* WORK mobile — handled in work-grid media queries above */
 
   /* PROJECT DETAIL mobile */
   .project-body{grid-template-columns:1fr;gap:2.5rem;padding:3rem 1.5rem}
@@ -901,16 +834,10 @@ a,button,[data-hover]{cursor:none}
 
 <!-- ═══════ WORK ═══════ -->
 <div id="pg-work" class="pg">
-  <div class="work-layout">
-    <aside class="work-sidebar">
-      <div>
-        <span class="work-sidebar-label">Work</span>
-        <p class="work-sidebar-title">Selected<br><strong>Work.</strong></p>
-      </div>
-      <div class="work-sidebar-bottom">© 2025 Jung Seungmin</div>
-    </aside>
-    <div class="work-masonry" id="work-grid"></div>
+  <div class="work-hdr">
+    <h1 class="work-h1">Work.</h1>
   </div>
+  <div class="work-grid" id="work-grid"></div>
 </div>
 
 <!-- ═══════ THINKING ═══════ -->
@@ -1235,38 +1162,19 @@ function buildThinkingBlocks(blocks){
   flushSection();
   return out.join('');
 }
+/* ══ WORK GRID — Rapha style ══ */
 function buildWorkGrid(){
   const grid=document.getElementById('work-grid');
+  if(!grid) return;
   grid.innerHTML='';
-  const allProjects=projects.length?projects:FALLBACK_PROJECTS;  const list=allProjects.filter(p=>!p.type||p.type==='work');
-  const isMobile=window.innerWidth<=900;
+  const allProjects=projects.length?projects:FALLBACK_PROJECTS;
+  const list=allProjects.filter(p=>!p.type||p.type==='work');
 
-  if(isMobile){
-    // 모바일: 단일 컬럼, 순서 그대로
-    const col=document.createElement('div');
-    col.className='work-masonry-col';
-    col.style.width='100%';
-    grid.appendChild(col);
-    list.forEach((p,i)=>{
-      const realIdx=(projects.length?projects:FALLBACK_PROJECTS).indexOf(p);
-      const card=makeWorkCard(p,realIdx);
-      col.appendChild(card);
-    });
-  } else {
-    // 데스크탑: 두 컬럼에 교대 배치
-    const col1=document.createElement('div');
-    const col2=document.createElement('div');
-    col1.className='work-masonry-col';
-    col2.className='work-masonry-col';
-    grid.appendChild(col1);
-    grid.appendChild(col2);
-    list.forEach((p,i)=>{
-      const realIdx=(projects.length?projects:FALLBACK_PROJECTS).indexOf(p);
-      const card=makeWorkCard(p,realIdx);
-      if(i%2===0) col1.appendChild(card);
-      else col2.appendChild(card);
-    });
-  }
+  list.forEach((p,i)=>{
+    const realIdx=(projects.length?projects:FALLBACK_PROJECTS).indexOf(p);
+    const card=makeWorkCard(p,realIdx);
+    grid.appendChild(card);
+  });
   bindHover();
 }
 
@@ -1275,48 +1183,28 @@ function makeWorkCard(p,i){
   card.className='work-card';
   card.onclick=()=>openProject(i);
 
-  const ratio=p.ratio||null;
-  if(ratio){
-    card.style.aspectRatio=ratio;
-    setTimeout(()=>{
-      const img=card.querySelector('.wc-img,.wc-video');
-      if(img) img.style.aspectRatio=ratio;
-    },0);
-  }
-
   const thumb=p.thumbnail||p.thumb||null;
-  const thumbMobile=p.thumbnailMobile||null;
   const videoThumb=p.videoThumb||null;
   const bg=p.bgClass||'tb1';
 
   let mediaHTML='';
   if(videoThumb){
     const isVideo=/\.(mp4|webm|mov)(\?|$)/i.test(videoThumb);
-    if(isVideo){
-      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video></div></div>`;
-    } else {
-      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-video" src="${videoThumb}" alt="${p.title}"></div></div>`;
-    }
+    mediaHTML=isVideo
+      ?`<video class="wc-video" autoplay muted loop playsinline src="${videoThumb}"></video>`
+      :`<img class="wc-img" src="${videoThumb}" alt="${p.title}">`;
   } else if(thumb){
-    if(thumbMobile){
-      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><picture style="width:100%;display:block">
-        <source media="(max-width:768px)" srcset="${thumbMobile}">
-        <img class="wc-img" src="${thumb}" alt="${p.title}">
-      </picture></div></div>`;
-    } else {
-      mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none'"></div></div>`;
-    }
+    mediaHTML=`<img class="wc-img" src="${thumb}" alt="${p.title}" onerror="this.style.display='none'">`;
   } else {
-    mediaHTML=`<div class="wc-media-clip"><div class="wc-media"><div class="wc-placeholder ${bg}"></div></div></div>`;
+    mediaHTML=`<div class="wc-placeholder ${bg}"></div>`;
   }
 
-  card.innerHTML=mediaHTML+`
-    <div class="wc-info">
-      <div class="wc-info-left">
-        <div class="card-title">${p.title}</div>
-        <div class="card-cat">${p.category||p.cat||''}</div>
-        ${p.excerpt?`<div class="card-excerpt">${p.excerpt}</div>`:''}
-      </div>
+  card.innerHTML=`
+    <div class="wc-img-wrap">${mediaHTML}</div>
+    <div class="wc-body">
+      <p class="wc-cat">${p.category||p.cat||''}</p>
+      <h3 class="wc-title">${p.title}</h3>
+      ${p.excerpt?`<p class="wc-excerpt">${p.excerpt}</p>`:''}
     </div>`;
   return card;
 }
@@ -1645,11 +1533,6 @@ async function handleHash(){
 }
 
 bindHover();
-window.addEventListener('resize',()=>{
-  if(document.getElementById('pg-work').classList.contains('active')){
-    buildWorkGrid();
-  }
-});
 loadProjects().then(()=>handleHash());
 // lock scroll on initial home page (only if on home)
 if(!location.hash||location.hash==='#'){
