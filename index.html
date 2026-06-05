@@ -448,6 +448,26 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 /* divider */
 .proj-divider{height:4rem}
 
+/* ── CMF TABLE ── */
+.cmf-wrap{padding:0 12vw 3rem}
+.cmf-label{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;display:block}
+.cmf-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(0,0,0,.12);overflow:hidden}
+.cmf-col{display:flex;flex-direction:column;border-right:1px solid rgba(0,0,0,.1)}
+.cmf-col:last-child{border-right:none}
+.cmf-col-head{padding:1.1rem 1.25rem .9rem;border-bottom:1px solid rgba(0,0,0,.08)}
+.cmf-num{display:block;font-family:'Cormorant Garamond',serif;font-size:.72rem;font-weight:300;letter-spacing:.12em;color:var(--muted);margin-bottom:3px}
+.cmf-col-title{font-family:var(--sans);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--black)}
+.cmf-col-body{padding:1.25rem;display:flex;flex-direction:column;gap:1rem;flex:1}
+.cmf-slabel{font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.cmf-val{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;font-style:italic;line-height:1.7;color:#222}
+.cmf-rule{height:1px;background:rgba(0,0,0,.08)}
+@media(max-width:768px){
+  .cmf-wrap{padding:0 1.5rem 2.5rem}
+  .cmf-grid{grid-template-columns:1fr}
+  .cmf-col{border-right:none;border-bottom:1px solid rgba(0,0,0,.1)}
+  .cmf-col:last-child{border-bottom:none}
+}
+
 /* mobile */
 @media(max-width:768px){
   .proj-img-landscape,.proj-img-portrait-row,.proj-img-portrait-text{padding:2rem 1.5rem}
@@ -1250,6 +1270,38 @@ function buildProject(idx){
     let i=0;
     while(i<bls.length){
       const bl=bls[i];
+      if(bl.type==='cmf'){
+        const lines=bl.raw.replace('[cmf]','').trim().split('\n').filter(Boolean);
+        const cols=lines.map(line=>{
+          const parts=line.split('|');
+          return{title:parts[0]||'',spec:(parts[1]||'').split(';'),why:parts[2]||''};
+        });
+        out.push(`
+          <div class="cmf-wrap">
+            <span class="cmf-label">CMF — Quiet identity revealed by light</span>
+            <div class="cmf-grid">
+              ${cols.map((c,ci)=>`
+                <div class="cmf-col">
+                  <div class="cmf-col-head">
+                    <span class="cmf-num">0${ci+1}</span>
+                    <span class="cmf-col-title">${c.title}</span>
+                  </div>
+                  <div class="cmf-col-body">
+                    <div>
+                      <p class="cmf-slabel">Specification</p>
+                      <p class="cmf-val">${c.spec.join('<br>')}</p>
+                    </div>
+                    <div class="cmf-rule"></div>
+                    <div>
+                      <p class="cmf-slabel">Why</p>
+                      <p class="cmf-val">${c.why}</p>
+                    </div>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>`);
+        i++; continue;
+      }
       if(bl.type==='text'){
         out.push(`<p class="pst-para">${bl.text}</p>`);
         i++; continue;
