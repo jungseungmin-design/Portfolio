@@ -111,6 +111,15 @@ function parseBlocks(raw) {
       out.push({ type: 'video', url });
       i++; continue;
     }
+    if (type === 'callout') {
+      const text = richText(b.callout.rich_text);
+      if (text.trim().startsWith('[cmf]')) {
+        out.push({ type: 'cmf', raw: text });
+      } else {
+        if (text) out.push({ type: 'text', text });
+      }
+      i++; continue;
+    }
     if (type === 'divider') {
       out.push({ type: 'divider' });
       i++; continue;
