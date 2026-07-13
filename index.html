@@ -402,6 +402,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   width:100%;display:block;
   aspect-ratio:3/4;object-fit:cover;
 }
+.proj-img-portrait-row.three{grid-template-columns:1fr 1fr 1fr}
 
 /* 세로 이미지 1장 + 우측 텍스트 */
 .proj-img-portrait-text{
@@ -472,6 +473,7 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 @media(max-width:768px){
   .proj-img-landscape,.proj-img-portrait-row,.proj-img-portrait-text{padding:2rem 1.5rem}
   .proj-img-portrait-row,.proj-img-portrait-text{grid-template-columns:1fr}
+  .proj-img-portrait-row.three{grid-template-columns:1fr}
   .proj-img-grid{margin:2rem 1.5rem}
   .proj-img-caption{padding:.8rem 1.5rem 0}
 }
@@ -1318,16 +1320,19 @@ function buildProject(idx){
         const imgs=bl.images;
         const n=imgs.length;
 
-        // [pair] 캡션이 있으면 2장 나란히
-        const hasPair=imgs.some(im=>im.caption&&im.caption.trim().toLowerCase()==='[pair]');
+        // [pair] 캡션이면 2장, [pair3] 캡션이면 3장 나란히
+        const capOf=im=>im.caption?im.caption.trim().toLowerCase():'';
+        const isKey=c=>c==='[pair]'||c==='[pair3]';
+        const hasPair3=imgs.some(im=>capOf(im)==='[pair3]');
+        const hasPair=imgs.some(im=>isKey(capOf(im)));
 
         if(hasPair&&n>=2){
-          const cap1=imgs[0].caption&&imgs[0].caption.toLowerCase()!=='[pair]'?`<p class="proj-img-subcap">${imgs[0].caption}</p>`:'';
-          const cap2=imgs[1].caption&&imgs[1].caption.toLowerCase()!=='[pair]'?`<p class="proj-img-subcap">${imgs[1].caption}</p>`:'';
-          out.push(`<div class="proj-img-portrait-row">
-            <div><img src="${imgs[0].url}" alt="" loading="lazy">${cap1}</div>
-            <div><img src="${imgs[1].url}" alt="" loading="lazy">${cap2}</div>
-          </div>`);
+          const count=(hasPair3&&n>=3)?3:2;
+          const cells=imgs.slice(0,count).map(im=>{
+            const c=(!isKey(capOf(im))&&im.caption)?`<p class="proj-img-subcap">${im.caption}</p>`:'';
+            return `<div><img src="${im.url}" alt="" loading="lazy">${c}</div>`;
+          }).join('');
+          out.push(`<div class="proj-img-portrait-row${count===3?' three':''}">${cells}</div>`);
           i++; continue;
         }
 
