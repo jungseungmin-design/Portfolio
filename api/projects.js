@@ -84,15 +84,17 @@ function parseBlocks(raw) {
     if (type === 'image') {
       const url = b.image.type === 'external' ? b.image.external.url : b.image.file?.url || '';
       const caption = richText(b.image.caption || []);
-      // [pair] 캡션이면 다음 이미지와 묶음
-      if (caption.trim().toLowerCase() === '[pair]') {
+      const capKey = caption.trim().toLowerCase();
+      // [pair] 캡션이면 다음 이미지와 2장 묶음, [pair3]이면 3장 묶음
+      if (capKey === '[pair]' || capKey === '[pair3]') {
+        const limit = capKey === '[pair3]' ? 3 : 2;
         const group = [{ url, caption }];
         while (i + group.length < raw.length && raw[i + group.length].type === 'image') {
           const nb = raw[i + group.length];
           const nurl = nb.image.type === 'external' ? nb.image.external.url : nb.image.file?.url || '';
           const ncap = richText(nb.image.caption || []);
           group.push({ url: nurl, caption: ncap });
-          if (group.length === 2) break;
+          if (group.length === limit) break;
         }
         out.push({ type: 'images', images: group });
         i += group.length; continue;
