@@ -167,13 +167,11 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
   background:radial-gradient(58% 58% at var(--hx,24%) var(--hy,72%),var(--g2,rgba(74,124,111,.5)) 0%,transparent 72%);
   opacity:var(--ho,.75);
 }
-/* 엘리먼트는 뷰포트에 고정. 확대는 viewBox(카메라)가 한다 */
-.hz-mark{
+/* 망점 한 장. 화면에 고정되고 캔버스가 직접 그린다 */
+.hz-halftone{
   position:absolute;inset:0;z-index:2;pointer-events:none;
-  width:100%;height:100%;opacity:.92;
-  color:var(--mk,#C8A96E);        /* 빛무리 그라데이션이 이 색을 따른다 */
+  width:100%;height:100%;opacity:.9;
 }
-.hz-mark line{stroke:var(--mk,#C8A96E);vector-effect:non-scaling-stroke}
 
 /* 장면 */
 .hz-scenes{position:absolute;inset:0;z-index:4}
@@ -227,10 +225,24 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .hz-links a{color:inherit;text-decoration:none;opacity:.45;transition:opacity .2s,color .2s}
 .hz-links a:hover{opacity:1;color:var(--ac,#C8A96E)}
 
+/* 아래로 내려가라는 단서 */
+/* 오늘 — 쌓인 날들이 도착한 자리 */
+.hz-dateline{margin-top:2.2rem;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;opacity:.4}
+
 /* 장면 인디케이터 */
-.hz-dots{position:fixed;z-index:6;right:2.2rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.7rem}
-.hz-dot{width:1px;height:14px;background:currentColor;opacity:.3;border:none;padding:0;cursor:none;transition:opacity .35s,height .45s cubic-bezier(.25,.46,.45,.94),background .35s}
-.hz-dot.on{opacity:1;height:34px;background:var(--ac,#C8A96E)}
+/* 진행 표시도 망점이다. 지나온 칸은 점이 커지고, 남은 칸은 작게 남는다 */
+.hz-dots{position:fixed;z-index:6;right:2.2rem;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:21px;align-items:center}
+.hz-dots::before{content:'';position:absolute;left:50%;top:0;width:7px;height:100%;margin-left:-3.5px;
+  background-image:radial-gradient(circle at center,currentColor 1.05px,transparent 1.45px);
+  background-size:7px 7px;opacity:.3;pointer-events:none}
+.hz-prog{position:absolute;left:50%;top:0;width:7px;margin-left:-3.5px;height:calc(var(--p,0)*1%);
+  background-image:radial-gradient(circle at center,var(--ac,#C8A96E) 1.95px,transparent 2.35px);
+  background-size:7px 7px;overflow:hidden;pointer-events:none}
+.hz-dot{width:7px;height:7px;background:none;border:none;padding:0;cursor:none;position:relative}
+.hz-dot::after{content:'';position:absolute;inset:1.6px;border-radius:50%;background:currentColor;opacity:.45;
+  transition:inset .4s cubic-bezier(.25,.46,.45,.94),background .35s,opacity .35s}
+.hz-dot.on::after{inset:0;background:var(--ac,#C8A96E);opacity:1}
 
 /* 스크롤 트랙 (스냅) */
 .hz-track{position:relative;z-index:1;pointer-events:none}
@@ -248,9 +260,9 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
   .hz-s1 .hz-block,.hz-s2 .hz-block,.hz-s3 .hz-block,.hz-s4 .hz-block{align-self:center}
   .hz-s5 .hz-block{align-self:end}
   .hz-stmt{font-size:clamp(1.65rem,7.2vw,2.7rem);line-height:1.18}
-  .hz-dots{right:auto;left:50%;bottom:1.6rem;top:auto;transform:translateX(-50%);flex-direction:row;gap:.6rem}
-  .hz-dot{width:14px;height:1px}
-  .hz-dot.on{width:34px;height:1px}
+  .hz-dots{right:auto;left:50%;bottom:1.8rem;top:auto;transform:translateX(-50%);flex-direction:row;gap:21px}
+  .hz-dots::before{left:0;top:50%;width:100%;height:7px;margin:-3.5px 0 0}
+  .hz-prog{left:0;top:50%;height:7px;width:calc(var(--p,0)*1%);margin:-3.5px 0 0}
 }
 @media(prefers-reduced-motion:reduce){
   html.hz-snap-on{scroll-snap-type:none}
@@ -985,7 +997,7 @@ a,button,[data-hover]{cursor:none}
   <div class="hz-stage" id="hz-stage">
     <div class="hz-glow" id="hz-glow"></div>
     <div class="hz-glow2" id="hz-glow2"></div>
-    <svg class="hz-mark" id="hz-mark" viewBox="0 0 400 400" aria-hidden="true"></svg>
+    <canvas class="hz-halftone" id="hz-halftone" aria-hidden="true"></canvas>
     <div class="grain"></div>
 
     <div class="hz-scenes" id="hz-scenes">
@@ -1036,12 +1048,13 @@ a,button,[data-hover]{cursor:none}
             <a href="#about" onclick="go('pg-about');return false">About</a>
             <a href="mailto:hi@jungseungmin.com">hi@jungseungmin.com</a>
           </div>
+          <p class="hz-dateline" id="hz-dateline"></p>
         </div>
       </section>
 
     </div>
 
-    <div class="hz-dots" id="hz-dots"></div>
+    <div class="hz-dots" id="hz-dots"><div class="hz-prog" id="hz-prog"></div></div>
   </div>
 
   <div class="hz-track" id="hz-track">
@@ -1683,7 +1696,7 @@ const HZ_MX = [50,50,50,50,50,50];
 const HZ_MY = [50,50,50,50,50,50];
 const HZ_MW = [13,26,45,70,104,80];
 const HZ_MR = [0,0,0,0,0,0];
-const HZ_MO = [1,.95,.6,.55,.4,.9];    // 밀도가 높아질수록 글 뒤로 물러난다
+const HZ_MO = [1,.92,.7,.6,.5,.8];     // 밀도가 높아질수록 글 뒤로 물러난다
 const HZ_N  = 6;
 const HZ_LINES = 22;
 
@@ -1717,138 +1730,255 @@ const hzRgb=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
 const hzRgba=(a,al)=>`rgba(${a[0]},${a[1]},${a[2]},${al})`;
 
 /* ══════════════════════════════════════════
-   MARK — Punkt und Linie zu Fläche
+   HALFTONE — 망점 한 장
 
-   모든 요소는 하나의 <line>이다.
-   길이 0인 선이 점이고, 점이 움직인 자취가 선이며,
-   선이 충분히 조밀해지면 면이 된다.
+   화면 전체를 덮는 규칙적인 점 격자가 바탕면이고,
+   숫자는 그 격자를 통과해서만 나타난다.
+   점이 커지면 글자가 되고, 다 커지면 면이 된다.
 
-   수(數): 365개. 한 해의 날수다.
-   01에서는 그중 하루만 보인다.
-   02에서 나머지가 한꺼번에 드러난다 — 하나를 들여다보니 한 해였다.
-   365에서 멈춘 이유: 더 조밀해지면 낱개의 획이 보이지 않는다.
+   숫자는 1에서 365로 올라간다. 한 해의 날수다.
+   01에서는 하루뿐이라 점 하나로 보이고,
+   05에서 365가 되어 화면을 넘친다.
 ═══════════════════════════════════════════ */
-const K_N=365, SVGNS='http://www.w3.org/2000/svg';
-let hzMarkLines=[], hzStates=[], hzGlowEls=[], hzGlowStates=[];
+const HZ_NUM = [0, .62, .86, .95, 1, 0];         // 숫자의 농도
+const HZ_FS  = [.10, .34, .52, .70, .78, .78];   // 화면 높이 대비 숫자 크기
+/* 글의 반대편에 놓아 대각선 긴장을 만든다 */
+const HZ_NX  = [.60, .66, .61, .64, .58, .58];
+const HZ_NY  = [.45, .34, .62, .58, .44, .44];
+const HZ_SR  = [.22, .24, .3, .3, .3, .30];      // 빛무리 반경 (화면 짧은 변 대비)
+const HZ_SUN = [1, .16, 0, 0, 0, 0];             // 점을 키우는 태양 — 첫 장면만
+const HZ_HALO= [1, .34, 0, 0, 0, .5];            // 뒤에 깔리는 빛무리
+const HZ_DAY = [0, 0, 0, 0, 0, 1];               // 마지막 장면의 오늘 날짜
 
-function hzBuildMark(){
-  const svg=document.getElementById('hz-mark');
-  if(!svg) return;
-  svg.innerHTML=
-    '<defs><radialGradient id="hzg">'+
-    '<stop offset="0" stop-color="currentColor" stop-opacity=".62"/>'+
-    '<stop offset=".22" stop-color="currentColor" stop-opacity=".2"/>'+
-    '<stop offset=".55" stop-color="currentColor" stop-opacity=".05"/>'+
-    '<stop offset="1" stop-color="currentColor" stop-opacity="0"/>'+
-    '</radialGradient></defs>';
-  const gGlow=document.createElementNS(SVGNS,'g');   // 빛무리가 뒤
-  const gLine=document.createElementNS(SVGNS,'g');   // 획이 앞
-  svg.appendChild(gGlow);svg.appendChild(gLine);
-  hzMarkLines=[];hzStates=[];hzGlowEls=[];hzGlowStates=[];
+let hzCv=null, hzCtx=null, hzMk=null, hzMkCtx=null;
+let hzBg=null, hzBgCtx=null, hzBgKey='', hzDrawKey='';
+let hzSp=12, hzCols=0, hzRows=0, hzVals=null, hzMkKey='';
 
-  let seed=13;
-  const r=()=>{seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff};
-
-  /* 별은 고르게 뿌려지지 않는다. 성긴 무리와 빈 곳이 섞여야 자연스럽다 */
-  const clus=[];
-  for(let c=0;c<7;c++) clus.push({x:(r()*2-1)*620,y:(r()*2-1)*400,s:80+r()*170});
-
-  for(let k=0;k<K_N;k++){
-    const ln=document.createElementNS(SVGNS,'line');
-    ln.setAttribute('stroke-linecap','round');
-    ln.setAttribute('x1',-.5);ln.setAttribute('y1',0);
-    ln.setAttribute('x2',.5);ln.setAttribute('y2',0);
-    gLine.appendChild(ln);hzMarkLines.push(ln);ln._o=-1;ln._t='';ln._w=-1;
-
-    /* ── 02 · 별자리 위치와 밝기 ── */
-    let sx,sy;
-    if(r()<.28){const c=clus[(r()*clus.length)|0];
-      sx=c.x+(r()+r()+r()-1.5)*c.s; sy=c.y+(r()+r()+r()-1.5)*c.s;}
-    else {sx=(r()*2-1)*880; sy=(r()*2-1)*530;}
-    const mag=Math.pow(r(),3.1);                    // 대부분 아주 작고 몇 개만 크다
-    const starW=1+mag*9, starO=.32+mag*.62;
-
-    /* ── 03 · 정리되지 않은 선 ── */
-    const ang3=r()*360, len3=(r()<.32?12+r()*30:38+Math.pow(r(),1.7)*150);
-    const lx=sx*.58+(r()*2-1)*40, ly=sy*.58+(r()*2-1)*40;
-
-    /* ── 04 · 세 온도로 정리된다 ── */
-    const fam=k%3;
-    const tx=(((k*.6180339887)%1)-.5)*600, ty=(((k*.7548776662)%1)-.5)*360;
-
-    const S0={x:200,y:200,a:0,l:.4,w:k?3:22,o:k?0:1};
-    const S1={x:200+sx,y:200+sy,a:0,l:.4,w:starW,o:starO};
-    const S2={x:200+lx,y:200+ly,a:ang3,l:len3,w:.7+mag*1.1,o:.2+mag*.34};
-    const S3={
-      x:200+tx,y:200+ty,
-      a:fam===0?0:(fam===1?90:((k%6<3)?42:-42)),
-      l:fam===0?(44+r()*54):(fam===1?(34+r()*42):(26+r()*36)),
-      w:fam===0?.5:(fam===1?.72:.42),
-      o:fam===1?.5:.3+r()*.14
-    };
-    const S4={x:200+(r()*2-1)*14,y:200+((k/(K_N-1))-.5)*290,
-              a:(r()*2-1)*.9,l:250+r()*76,w:.5,o:.34+r()*.3};
-    const S5=k?{x:200,y:200+((k/(K_N-1))-.5)*260,a:0,l:260,w:.75,o:.15}
-              :{x:200,y:200,a:0,l:.4,w:7,o:1};
-    hzStates.push([S0,S1,S2,S3,S4,S5]);
-
-    /* ── 빛무리: 가장 밝은 별들과 처음·마지막의 점 ── */
-    if(k===0||(mag>.53&&hzGlowEls.length<52)){
-      const c=document.createElementNS(SVGNS,'circle');
-      c.setAttribute('fill','url(#hzg)');c.setAttribute('cx',0);c.setAttribute('cy',0);
-      gGlow.appendChild(c);c._o=-1;c._t='';c._r=-1;
-      hzGlowEls.push(c);
-      const gr=k===0?300:(20+mag*104);
-      hzGlowStates.push([
-        {x:200,y:200,r:k?0:300,o:k?0:1},                       // 01 · 먼 우주의 태양
-        {x:200+sx,y:200+sy,r:k===0?86:gr,o:k===0?.95:.34+mag*.5}, // 02 · 별들
-        {x:200+lx,y:200+ly,r:gr*.42,o:.16},                    // 03 · 선이 되며 잦아든다
-        {x:200+tx,y:200+ty,r:0,o:0},
-        {x:200,y:200,r:0,o:0},
-        {x:200,y:200,r:k?0:34,o:k?0:.85}                       // 06 · 면 위의 새 점
-      ]);
-    }
+function hzSetupDots(){
+  hzCv=document.getElementById('hz-halftone');
+  if(!hzCv) return;
+  hzCtx=hzCv.getContext('2d');
+  if(!hzMk){hzMk=document.createElement('canvas');hzMkCtx=hzMk.getContext('2d',{willReadFrequently:true})}
+  hzResizeDots();
+  hzDrawKey='';
+  if(!hzSetupDots._bound){
+    hzSetupDots._bound=true;
+    let rt=null;
+    window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{hzResizeDots();hzUpdate()},150)});
   }
 }
 
-const R1=v=>Math.round(v*10)/10, R2=v=>Math.round(v*100)/100, R3=v=>Math.round(v*200)/200;
+function hzResizeDots(){
+  if(!hzCv) return;
+  const w=window.innerWidth, h=window.innerHeight;
+  const dpr=Math.min(window.devicePixelRatio||1, 2);
+  hzCv.width=Math.round(w*dpr); hzCv.height=Math.round(h*dpr);
+  hzCtx.setTransform(dpr,0,0,dpr,0,0);
+  hzSp=Math.max(7, Math.min(19, Math.min(w,h)/58));   // 망점 간격
+  hzCols=Math.ceil(w/hzSp)+1;
+  hzRows=Math.ceil(h/hzSp)+1;
+  hzMk.width=hzCols; hzMk.height=hzRows;
+  if(!hzBg){hzBg=document.createElement('canvas');hzBgCtx=hzBg.getContext('2d')}
+  hzBg.width=hzCv.width; hzBg.height=hzCv.height;
+  hzBgCtx.setTransform(dpr,0,0,dpr,0,0);
+  hzMkKey=''; hzBgKey=''; hzDrawKey='';
+}
 
-function hzDrawMark(f,i0,i1,t,swell,pxs){
-  for(let k=0;k<K_N;k++){
-    const st=hzStates[k], A=st[i0], B=st[i1], ln=hzMarkLines[k];
-    /* 요소마다 시차를 두어 한꺼번에 변형되지 않게 한다 */
-    const tk=hzSmooth(hzClamp((t-(k/K_N)*.34)/.66,0,1));
-    const o=A.o+(B.o-A.o)*tk;
-    if(o<.004){
-      if(ln._o!==0){ln._o=0;ln.setAttribute('opacity',0)}
-      continue;
-    }
-    /* 상시 호흡은 여기서 계산하지 않는다. viewBox 표류가 대신한다 —
-       선마다 계산하면 정지 상태에서도 화면 전체가 매 프레임 다시 그려진다 */
-    const x=R1(A.x+(B.x-A.x)*tk), y=R1(A.y+(B.y-A.y)*tk);
-    const a=R1(A.a+(B.a-A.a)*tk), l=R1(A.l+(B.l-A.l)*tk);
-    const w=R2((A.w+(B.w-A.w)*tk)*pxs);
-    const tr='translate('+x+' '+y+') rotate('+a+') scale('+l+' 1)';
-    if(tr!==ln._t){ln._t=tr;ln.setAttribute('transform',tr)}      /* 변한 것만 쓴다 */
-    if(w!==ln._w){ln._w=w;ln.setAttribute('stroke-width',w)}
-    const op=R3(o);
-    if(op!==ln._o){ln._o=op;ln.setAttribute('opacity',op)}
+/* 숫자(또는 면)를 격자 해상도로 한 번만 굽는다.
+   격자 한 칸이 마스크의 1픽셀이라 읽어올 데이터가 아주 작다 */
+function hzBakeMask(num, fs, cx, cy, numA, S, dayA, mA){
+  const key=num+'|'+(fs|0)+'|'+(cx|0)+'|'+(cy|0)+'|'+Math.round(numA*40)
+           +'|'+S.d+'|'+S.t+'|'+(S.fT|0)+'|'+(S.cx|0)+'|'+(S.cy|0)+'|'+Math.round(dayA*40);
+  if(key===hzMkKey) return;
+  hzMkKey=key;
+  const m=hzMkCtx, w=window.innerWidth, h=window.innerHeight;
+  m.setTransform(1,0,0,1,0,0);
+  m.fillStyle='#000'; m.fillRect(0,0,hzCols,hzRows);
+  if(mA<=.001){hzVals=m.getImageData(0,0,hzCols,hzRows).data; return}
+  m.save();
+  m.scale(1/hzSp, 1/hzSp);                        // 이제 화면 좌표로 그린다
+  m.fillStyle='#fff';
+  if(numA>.01){
+    m.globalAlpha=numA/mA;                        // 농도는 그릴 때 한 번만 반영한다
+    m.font='700 '+fs+'px "DM Sans",system-ui,sans-serif';
+    m.textAlign='center'; m.textBaseline='middle';
+    m.fillText(String(num), cx, cy);
   }
-  for(let k=0;k<hzGlowEls.length;k++){
-    const st=hzGlowStates[k], A=st[i0], B=st[i1], c=hzGlowEls[k];
-    const tk=hzSmooth(hzClamp((t-(k/hzGlowEls.length)*.3)/.7,0,1));
-    const o=R3(A.o+(B.o-A.o)*tk);
-    if(o<.005){
-      if(c._o!==0){c._o=0;c.setAttribute('opacity',0)}
-      continue;
+  if(dayA>.01){
+    m.globalAlpha=dayA/mA;                        // 쌓인 날들이 지금 이 순간이 된다
+    m.textAlign='center'; m.textBaseline='middle';
+    m.font='700 '+S.fT+'px "DM Sans",system-ui,sans-serif';
+    m.fillText(S.t, S.cx, S.cy);
+  }
+  m.restore();
+  hzVals=m.getImageData(0,0,hzCols,hzRows).data;
+}
+
+/* 실제 글자 폭 비율. 문자열이 바뀔 때만 잰다 */
+const hzRatios={};
+function hzTextRatio(str){
+  if(hzRatios[str]!==undefined) return hzRatios[str];
+  const m=hzMkCtx;
+  m.setTransform(1,0,0,1,0,0);
+  m.font='700 100px "DM Sans",system-ui,sans-serif';
+  const r=m.measureText(str).width/100;
+  hzRatios[str]=r;
+  return r;
+}
+const hzDigitRatio=t=>hzTextRatio(t);
+
+/* 오늘과 지금. 브라우저가 쓰는 로컬 시간대를 그대로 따른다 */
+const HZ_MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const hz2=n=>String(n).padStart(2,'0');
+function hzOrd(n){
+  const v=n%100, s=['TH','ST','ND','RD'];
+  return n+((v>=11&&v<=13)?'TH':(s[n%10]||'TH'));
+}
+function hzStamp(){                                // 16TH. OCT. 26
+  const d=new Date();
+  return hzOrd(d.getDate())+'. '+HZ_MON[d.getMonth()]+'. '+String(d.getFullYear()).slice(-2);
+}
+function hzClock(){                                // 21:07:43 — 초까지 흐른다
+  const d=new Date();
+  return hz2(d.getHours())+':'+hz2(d.getMinutes())+':'+hz2(d.getSeconds());
+}
+function hzWeekday(){
+  for(const loc of ['en-GB',undefined]){
+    try{ return new Intl.DateTimeFormat(loc,{weekday:'long'}).format(new Date()); }catch(e){}
+  }
+  return '';
+}
+function hzZone(){                                 // Europe/London → London
+  try{
+    const z=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+    return z.split('/').pop().replace(/_/g,' ');
+  }catch(e){ return ''; }
+}
+function hzDateline(){
+  const a=hzWeekday(), b=hzZone();
+  return a&&b ? a+' \u2014 '+b : (a||b);
+}
+
+/* 자간을 벌려 아래 줄과 같은 폭에 맞춘다 */
+function hzTracked(m, str, cx, cy, fs, targetW){
+  m.font='700 '+fs+'px "DM Sans",system-ui,sans-serif';
+  const nat=m.measureText(str).width;
+  const extra=str.length>1 ? (targetW-nat)/(str.length-1) : 0;
+  const prev=m.textAlign;
+  m.textAlign='left';
+  let x=cx-targetW/2;
+  for(const ch of str){ m.fillText(ch,x,cy); x+=m.measureText(ch).width+extra; }
+  m.textAlign=prev;
+}
+
+function hzDrawDots(f,i0,i1,t,swell,ac){
+  if(!hzCtx) return;
+  const w=window.innerWidth, h=window.innerHeight;
+  const L=arr=>arr[i0]+(arr[i1]-arr[i0])*t;
+  const numA=L(HZ_NUM), sun=L(HZ_SUN), halo=L(HZ_HALO), dayA=L(HZ_DAY);
+  const fs=L(HZ_FS)*h;
+  const mA=Math.max(numA,dayA);
+  const sunR=Math.min(w,h)*L(HZ_SR);
+  const narrow=w<=820;
+
+  /* 1 → 365. 05에서 한 해를 채우고 멈춘다 */
+  const count=Math.max(1, Math.round(1+364*Math.pow(hzClamp(f/4,0,1),1.25)));
+  const nr=hzTextRatio(String(count));
+  const fsFit=Math.min(fs, (w*(narrow?.94:.96))/nr);
+  /* 자리는 장면마다 옮기되, 글자가 화면을 벗어나지 않도록 가둔다 */
+  const halfW=fsFit*nr/2, pad=w*.02;
+  const cx=narrow ? w*.5
+         : Math.min(Math.max(L(HZ_NX)*w, halfW+pad), w-halfW-pad);
+  const cy=narrow ? h*.3 : L(HZ_NY)*h;
+
+  /* 오늘의 도장 — 날짜 라벨 한 줄, 그 아래 초가 흐르는 시계.
+     망점으로 찍히는 건 시계뿐이다. 라벨은 또렷해야 읽힌다 */
+  const S={d:hzStamp(), t:hzClock()};
+  const rT=hzTextRatio(S.t);
+  S.w=Math.min(w*(narrow?.92:.56), h*(narrow?.21:.23)*rT);
+  S.fT=S.w/rT;
+  S.cx=narrow ? w*.5  : w*.34;
+  S.cy=narrow ? h*.27 : h*.31;
+  S.fD=Math.max(11, S.fT*.085);                   // 라벨은 격자와 무관하게 작게
+  S.yL=S.cy-S.fT*.62;
+  /* 빛은 01에선 화면 한가운데, 06에선 시계 뒤에 선다 */
+  const sunX=w*.5+(S.cx-w*.5)*dayA, sunY=h*.5+(S.cy-h*.5)*dayA;
+
+  const base=hzSp*.1, maxR=Math.round(hzSp*.47*(1+swell*.06)*100)/100;
+  const live=dayA>.01 ? S.d+'|'+S.t+'|'+(S.cx|0)+'|'+(sunX|0) : '';  // 시계는 마지막 장면에서만 돈다
+  const key=count+'|'+(fsFit|0)+'|'+(cx|0)+'|'+(cy|0)+'|'+Math.round(numA*60)
+           +'|'+live+'|'+(S.fT|0)+'|'+Math.round(dayA*60)
+           +'|'+Math.round(sun*60)+'|'+Math.round(halo*60)+'|'+Math.round(sunR)+'|'+maxR+'|'+hzRgb(ac);
+  if(key===hzDrawKey) return;                     // 멈춰 있으면 다시 그리지 않는다
+  hzDrawKey=key;
+
+  hzBakeMask(count, fsFit, cx, cy, numA, S, dayA, mA);
+  hzCtx.clearRect(0,0,w,h);
+
+
+  /* 바탕 격자 — 언제나 거기 있다. 색이 바뀔 때만 다시 굽고 평소엔 한 번 붙인다 */
+  const bgKey=hzRgb(ac);
+  if(bgKey!==hzBgKey){
+    hzBgKey=bgKey;
+    hzBgCtx.clearRect(0,0,w,h);
+    hzBgCtx.fillStyle=bgKey;
+    hzBgCtx.globalAlpha=.13;
+    hzBgCtx.beginPath();
+    for(let y=0;y<hzRows;y++){
+      const py=y*hzSp;
+      for(let x=0;x<hzCols;x++){
+        const px=x*hzSp;
+        hzBgCtx.moveTo(px+base,py);
+        hzBgCtx.arc(px,py,base,0,6.2832);
+      }
     }
-    const rr=R1(A.r+(B.r-A.r)*tk);
-    const tr='translate('+R1(A.x+(B.x-A.x)*tk)+' '+R1(A.y+(B.y-A.y)*tk)+')';
-    if(tr!==c._t){c._t=tr;c.setAttribute('transform',tr)}
-    if(rr!==c._r){c._r=rr;c.setAttribute('r',rr)}
-    if(o!==c._o){c._o=o;c.setAttribute('opacity',o)}
+    hzBgCtx.fill();
+  }
+  hzCtx.globalAlpha=1;
+  hzCtx.drawImage(hzBg,0,0,w,h);
+  hzCtx.fillStyle=bgKey;
+
+  /* 숫자와 태양 — 투명도가 아니라 점의 크기로 나타난다 */
+  hzCtx.globalAlpha=.92;
+  hzCtx.beginPath();
+  for(let y=0;y<hzRows;y++){
+    const py=y*hzSp, row=y*hzCols;
+    for(let x=0;x<hzCols;x++){
+      const px=x*hzSp;
+      let v=hzVals?(hzVals[(row+x)<<2]/255)*mA:0;
+      if(sun>.01){
+        const dx=px-sunX, dy=py-sunY;
+        const d=Math.sqrt(dx*dx+dy*dy)/sunR;
+        if(d<1){const k=1-d, vs=sun*k*k*k; if(vs>v) v=vs;}
+      }
+      if(v<.035) continue;
+      const r=base+(maxR-base)*v;
+      hzCtx.moveTo(px+r,py);
+      hzCtx.arc(px,py,r,0,6.2832);
+    }
+  }
+  hzCtx.fill();
+
+  /* 날짜 라벨 — 시계와 같은 폭에 자간을 벌려 맞춘다 */
+  if(dayA>.01){
+    hzCtx.globalAlpha=dayA*.75;
+    hzCtx.fillStyle=hzRgb(ac);
+    hzCtx.textBaseline='middle';
+    hzTracked(hzCtx, S.d, S.cx, S.yL, S.fD, S.w);
+  }
+
+  /* 빛무리 — 먼 우주에서 본 태양 */
+  if(halo>.01){
+    const g=hzCtx.createRadialGradient(sunX,sunY,0,sunX,sunY,Math.min(w,h)*.42);
+    g.addColorStop(0,hzRgba(ac,.34*halo));
+    g.addColorStop(.26,hzRgba(ac,.11*halo));
+    g.addColorStop(1,hzRgba(ac,0));
+    hzCtx.globalAlpha=1; hzCtx.fillStyle=g;
+    hzCtx.fillRect(0,0,w,h);
   }
 }
+
+const R3=v=>Math.round(v*200)/200;
 
 /* 단어 단위 등퇴장 — 나갈 때는 역순으로 걷힌다 */
 function hzWordAlpha(u,k,n){
@@ -1926,27 +2056,19 @@ function hzUpdate(){
   }
 
   const swell=Math.sin(Math.PI*raw);           // 전환 한가운데서 최대
-  const mScale=window.innerWidth<=820?2.6:1;
-  const mwNow=(HZ_MW[i0]+(HZ_MW[i1]-HZ_MW[i0])*t)*mScale;
-  const mark=document.getElementById('hz-mark');
-  let pxs=1;
-  if(mark){
-    /* viewBox가 카메라다. 좁아질수록 대상 안으로 들어간다.
-       엘리먼트는 뷰포트에 고정되어 있으므로 래스터 면적이 늘지 않는다 */
-    const V=40000/(mwNow*(1+swell*.05));
-    const ck=performance.now();
-    const bx=Math.sin(ck*.000037)*V*.006, by=Math.cos(ck*.000029)*V*.008;  // 아주 느린 표류
-    const org=200-V/2;
-    const vb=R1(org+bx)+' '+R1(org+by)+' '+R1(V)+' '+R1(V);
-    if(vb!==mark._vb){mark._vb=vb;mark.setAttribute('viewBox',vb)}
-    pxs=window.innerWidth/V;
-    const mo=R3((HZ_MO[i0]+(HZ_MO[i1]-HZ_MO[i0])*t)*(1+swell*.3));
-    if(mo!==mark._mo){mark._mo=mo;mark.style.opacity=mo}
-    /* 색은 t^.35로 앞당겨 넘긴다 — 중간에서 지반색과 같은 명도로 사라지는 것을 막는다 */
-    const mk=hzRgb(hzMix(HZ_MC[i0],HZ_MC[i1],Math.pow(raw,.35)));
-    if(mk!==mark._mk){mark._mk=mk;mark.style.setProperty('--mk',mk)}
+  const acArr=hzMix(HZ_AC[i0],HZ_AC[i1],t);
+  if(hzCv){
+    const mo=R3((HZ_MO[i0]+(HZ_MO[i1]-HZ_MO[i0])*t)*(1+swell*.2));
+    if(mo!==hzCv._mo){hzCv._mo=mo;hzCv.style.opacity=mo}
   }
-  hzDrawMark(f,i0,i1,t,swell,pxs);
+  hzDrawDots(f,i0,i1,t,swell,acArr);
+
+  const prog=document.getElementById('hz-prog');
+  if(prog){
+    const cells=21;                               // 점 한 칸씩 나아간다
+    const pv=Math.round(p*cells)/cells*100;
+    if(pv!==prog._p){prog._p=pv;prog.style.setProperty('--p',pv)}
+  }
 
   const cur=Math.round(f);
   if(cur!==hzCur){
@@ -1974,12 +2096,12 @@ function initHome(){
   hzScenes.forEach(sc=>{
     sc.querySelectorAll('[data-split]').forEach(splitWords);
     sc._words=[...sc.querySelectorAll('.hz-wi')];
-    sc._aux=[...sc.querySelectorAll('.hz-eyebrow,.hz-sub,.hz-cta,.hz-links')];
+    sc._aux=[...sc.querySelectorAll('.hz-eyebrow,.hz-sub,.hz-cta,.hz-links,.hz-dateline')];
     sc._aux.forEach(el=>el.classList.add('hz-aux'));
   });
 
   const dots=document.getElementById('hz-dots');
-  if(dots&&!dots.children.length){
+  if(dots&&!dots.querySelector('.hz-dot')){
     hzScenes.forEach((_,i)=>{
       const b=document.createElement('button');
       b.className='hz-dot';b.type='button';
@@ -1992,7 +2114,10 @@ function initHome(){
     });
   }
 
-  hzBuildMark();
+  const dl=document.getElementById('hz-dateline');
+  if(dl) dl.textContent=hzDateline();
+
+  hzSetupDots();
   document.documentElement.classList.add('hz-snap-on');
   hzCur=-1;
   hzUpdate();
