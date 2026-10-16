@@ -123,23 +123,36 @@ nav.scrolled{background:rgba(245,242,237,.92);backdrop-filter:blur(12px)}
 .nav-home-white .nav-hamburger span{background:#fff}
 
 .nav-mobile-menu{
-  display:none;
+  display:flex;
   position:fixed;inset:0;z-index:150;
   background:var(--black);
   flex-direction:column;align-items:center;justify-content:center;
   gap:2.5rem;
+  transform:translateY(-100%);visibility:hidden;
+  transition:transform .6s cubic-bezier(.76,0,.24,1), visibility 0s linear .6s;
 }
-.nav-mobile-menu.open{display:flex}
+.nav-mobile-menu.open{
+  transform:translateY(0);visibility:visible;
+  transition:transform .6s cubic-bezier(.76,0,.24,1), visibility 0s;
+}
 .nav-mobile-menu a{
   font-size:2rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
   color:#fff;text-decoration:none;font-family:var(--sans);
-  transition:color .2s;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .4s ease, transform .5s cubic-bezier(.22,.61,.36,1), color .2s;
 }
+/* 배경이 다 내려온 뒤에 하나씩 */
+.nav-mobile-menu.open a{opacity:1;transform:none}
+.nav-mobile-menu.open a:nth-of-type(1){transition-delay:.50s}
+.nav-mobile-menu.open a:nth-of-type(2){transition-delay:.58s}
+.nav-mobile-menu.open a:nth-of-type(3){transition-delay:.66s}
 .nav-mobile-menu a:hover{color:var(--gold)}
 .nav-mobile-close{
   position:absolute;top:1.5rem;right:1.5rem;
   background:none;border:none;color:#fff;font-size:1.5rem;cursor:none;
+  opacity:0;transition:opacity .35s ease;
 }
+.nav-mobile-menu.open .nav-mobile-close{opacity:1;transition-delay:.46s}
 
 @media(max-width:768px){
   .nav-links{display:none}
@@ -309,7 +322,7 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 /* ── WORK PAGE — Rapha 3-col grid ── */
 #pg-work{background:#eeeae3;min-height:100vh}
 
-.work-hdr{text-align:center;padding:72px 48px 56px}
+.work-hdr{text-align:center;padding:calc(104px + env(safe-area-inset-top,0px)) 48px 56px}
 .work-h1{
   font-family:var(--sans);
   font-size:clamp(36px,5.6vw,67px);
@@ -365,7 +378,7 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 }
 
 @media(max-width:900px){
-  .work-hdr{padding:48px 24px 40px}
+  .work-hdr{padding:calc(92px + env(safe-area-inset-top,0px)) 24px 40px}
   .work-grid{grid-template-columns:repeat(2,1fr)}
   .wc-title{font-size:17px}
   #cur-dot,#cur-ring{display:none !important}
@@ -665,7 +678,7 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 #pg-thinking{background:#eeeae3;min-height:100vh}
 
 /* 헤딩 */
-.think-hdr{text-align:center;padding:72px 48px 56px}
+.think-hdr{text-align:center;padding:calc(104px + env(safe-area-inset-top,0px)) 48px 56px}
 
 /* 전체 텍스트 흐르는 그라데이션 (70% 크기) */
 .think-h1{
@@ -718,7 +731,7 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 }
 
 @media(max-width:900px){
-  .think-hdr{padding:48px 24px 40px}
+  .think-hdr{padding:calc(92px + env(safe-area-inset-top,0px)) 24px 40px}
   .think-grid{grid-template-columns:repeat(2,1fr)}
   .think-card-title{font-size:20px}
 }
@@ -1741,10 +1754,10 @@ const hzRgba=(a,al)=>`rgba(${a[0]},${a[1]},${a[2]},${al})`;
    05에서 365가 되어 화면을 넘친다.
 ═══════════════════════════════════════════ */
 const HZ_NUM = [0, .62, .86, .95, 1, 0];         // 숫자의 농도
-const HZ_FS  = [.10, .34, .52, .70, .78, .78];   // 화면 높이 대비 숫자 크기
+const HZ_FS  = [.10, .34, .52, .70, .78, .46];   // 화면 높이 대비 숫자 크기 (마지막엔 물러나며 작아진다)
 /* 글의 반대편에 놓아 대각선 긴장을 만든다 */
-const HZ_NX  = [.60, .66, .61, .64, .58, .58];
-const HZ_NY  = [.45, .34, .62, .58, .44, .44];
+const HZ_NX  = [.60, .66, .61, .64, .58, .34];
+const HZ_NY  = [.45, .34, .62, .58, .44, .31];
 const HZ_SR  = [.22, .24, .3, .3, .3, .30];      // 빛무리 반경 (화면 짧은 변 대비)
 const HZ_SUN = [1, .16, 0, 0, 0, 0];             // 점을 키우는 태양 — 첫 장면만
 const HZ_HALO= [1, .34, 0, 0, 0, .5];            // 뒤에 깔리는 빛무리
@@ -1871,14 +1884,21 @@ function hzTracked(m, str, cx, cy, fs, targetW){
   m.textAlign=prev;
 }
 
-function hzDrawDots(f,i0,i1,t,swell,ac){
+function hzDrawDots(f,i0,i1,t,raw,swell,ac){
   if(!hzCtx) return;
   const w=window.innerWidth, h=window.innerHeight;
   const L=arr=>arr[i0]+(arr[i1]-arr[i0])*t;
-  const numA=L(HZ_NUM), sun=L(HZ_SUN), halo=L(HZ_HALO), dayA=L(HZ_DAY);
-  const fs=L(HZ_FS)*h;
+  /* 365에서 시계로 넘어갈 때는 둘이 겹치지 않게 시차를 둔다.
+     숫자가 먼저 완전히 물러난 뒤, 한 박자 쉬고, 시계가 들어온다 */
+  const last=(i0===4&&i1===5);
+  const tOut=last ? hzSmooth(hzClamp(raw/.46,0,1)) : t;
+  const tIn =last ? hzSmooth(hzClamp((raw-.46)/.54,0,1)) : t;
+  const LO=arr=>arr[i0]+(arr[i1]-arr[i0])*tOut;
+  const LI=arr=>arr[i0]+(arr[i1]-arr[i0])*tIn;
+  const numA=LO(HZ_NUM), sun=L(HZ_SUN), halo=LI(HZ_HALO), dayA=LI(HZ_DAY);
+  const fs=LO(HZ_FS)*h;
   const mA=Math.max(numA,dayA);
-  const sunR=Math.min(w,h)*L(HZ_SR);
+  const sunR=Math.min(w,h)*LI(HZ_SR);
   const narrow=w<=820;
 
   /* 1 → 365. 05에서 한 해를 채우고 멈춘다 */
@@ -1888,15 +1908,15 @@ function hzDrawDots(f,i0,i1,t,swell,ac){
   /* 자리는 장면마다 옮기되, 글자가 화면을 벗어나지 않도록 가둔다 */
   const halfW=fsFit*nr/2, pad=w*.02;
   const cx=narrow ? w*.5
-         : Math.min(Math.max(L(HZ_NX)*w, halfW+pad), w-halfW-pad);
-  const cy=narrow ? h*.3 : L(HZ_NY)*h;
+         : Math.min(Math.max(LO(HZ_NX)*w, halfW+pad), w-halfW-pad);
+  const cy=narrow ? h*.3 : LO(HZ_NY)*h;
 
   /* 오늘의 도장 — 날짜 라벨 한 줄, 그 아래 초가 흐르는 시계.
      망점으로 찍히는 건 시계뿐이다. 라벨은 또렷해야 읽힌다 */
   const S={d:hzStamp(), t:hzClock()};
   const rT=hzTextRatio(S.t);
   S.w=Math.min(w*(narrow?.92:.56), h*(narrow?.21:.23)*rT);
-  S.fT=S.w/rT;
+  S.fT=(S.w/rT)*(.90+.10*(last?tIn:1));          // 들어오며 자란다
   S.cx=narrow ? w*.5  : w*.34;
   S.cy=narrow ? h*.27 : h*.31;
   S.fD=Math.max(11, S.fT*.085);                   // 라벨은 격자와 무관하게 작게
@@ -2061,7 +2081,7 @@ function hzUpdate(){
     const mo=R3((HZ_MO[i0]+(HZ_MO[i1]-HZ_MO[i0])*t)*(1+swell*.2));
     if(mo!==hzCv._mo){hzCv._mo=mo;hzCv.style.opacity=mo}
   }
-  hzDrawDots(f,i0,i1,t,swell,acArr);
+  hzDrawDots(f,i0,i1,t,raw,swell,acArr);
 
   const prog=document.getElementById('hz-prog');
   if(prog){
