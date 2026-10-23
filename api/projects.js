@@ -36,7 +36,6 @@ export default async function handler(req, res) {
         id: page.id,
         title: p.Name?.title?.[0]?.plain_text || '',
         category: p.Category?.rich_text?.[0]?.plain_text || '',
-        excerpt: p.Excerpt?.rich_text?.[0]?.plain_text || '',
         client: p.Client?.rich_text?.[0]?.plain_text || '',
         thumbnail: p.Thumbnail?.url || null,
         thumbnailMobile: p.Thumbnail_Mobile?.url || null,
@@ -46,7 +45,6 @@ export default async function handler(req, res) {
         bgColor: p.BgColor?.rich_text?.[0]?.plain_text || null,
         slogan: p.Slogan?.rich_text?.[0]?.plain_text || null,
         type: p.Type?.rich_text?.[0]?.plain_text || 'work',
-        date: p.Date?.date?.start || null,
         tags: (p.Tags?.rich_text?.[0]?.plain_text || '').split(',').map(t => t.trim()).filter(Boolean),
         scope: (p.Scope?.rich_text?.[0]?.plain_text || '').split(',').map(s => s.trim()).filter(Boolean),
         order: p.Order?.number || 0,
@@ -70,6 +68,10 @@ function parseBlocks(raw) {
 
     if (type === 'paragraph') {
       const text = richText(b.paragraph.rich_text);
+      if (text.trim() === '[diagram:cake]') {
+        out.push({ type: 'diagram', name: 'cake' });
+        i++; continue;
+      }
       if (text) out.push({ type: 'text', text });
       i++; continue;
     }
@@ -84,17 +86,15 @@ function parseBlocks(raw) {
     if (type === 'image') {
       const url = b.image.type === 'external' ? b.image.external.url : b.image.file?.url || '';
       const caption = richText(b.image.caption || []);
-      const capKey = caption.trim().toLowerCase();
-      // [pair] 캡션이면 다음 이미지와 2장 묶음, [pair3]이면 3장 묶음
-      if (capKey === '[pair]' || capKey === '[pair3]') {
-        const limit = capKey === '[pair3]' ? 3 : 2;
+      // [pair] 캡션이면 다음 이미지와 묶음
+      if (caption.trim().toLowerCase() === '[pair]') {
         const group = [{ url, caption }];
         while (i + group.length < raw.length && raw[i + group.length].type === 'image') {
           const nb = raw[i + group.length];
           const nurl = nb.image.type === 'external' ? nb.image.external.url : nb.image.file?.url || '';
           const ncap = richText(nb.image.caption || []);
           group.push({ url: nurl, caption: ncap });
-          if (group.length === limit) break;
+          if (group.length === 2) break;
         }
         out.push({ type: 'images', images: group });
         i += group.length; continue;
@@ -113,15 +113,6 @@ function parseBlocks(raw) {
       out.push({ type: 'video', url });
       i++; continue;
     }
-    if (type === 'callout') {
-      const text = richText(b.callout.rich_text);
-      if (text.trim().startsWith('[cmf]')) {
-        out.push({ type: 'cmf', raw: text });
-      } else {
-        if (text) out.push({ type: 'text', text });
-      }
-      i++; continue;
-    }
     if (type === 'divider') {
       out.push({ type: 'divider' });
       i++; continue;
@@ -134,18 +125,5 @@ function parseBlocks(raw) {
 
 function richText(arr) {
   if (!arr || !arr.length) return '';
-  return arr.map(t => {
-    let text = t.plain_text || '';
-    // XSS 방지
-    text = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    if (t.annotations) {
-      if (t.annotations.bold && t.annotations.italic) text = `<em><strong>${text}</strong></em>`;
-      else if (t.annotations.bold) text = `<strong>${text}</strong>`;
-      else if (t.annotations.italic) text = `<em>${text}</em>`;
-      if (t.annotations.underline) text = `<u>${text}</u>`;
-      if (t.annotations.strikethrough) text = `<s>${text}</s>`;
-      if (t.annotations.code) text = `<code>${text}</code>`;
-    }
-    return text;
-  }).join('');
+  return arr.map(t => t.plain_text || '').join('');
 }
