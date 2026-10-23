@@ -45,6 +45,7 @@ export default async function handler(req, res) {
         bgColor: p.BgColor?.rich_text?.[0]?.plain_text || null,
         slogan: p.Slogan?.rich_text?.[0]?.plain_text || null,
         type: p.Type?.rich_text?.[0]?.plain_text || 'work',
+        excerpt: p.Excerpt?.rich_text?.[0]?.plain_text || '',
         tags: (p.Tags?.rich_text?.[0]?.plain_text || '').split(',').map(t => t.trim()).filter(Boolean),
         scope: (p.Scope?.rich_text?.[0]?.plain_text || '').split(',').map(s => s.trim()).filter(Boolean),
         order: p.Order?.number || 0,
