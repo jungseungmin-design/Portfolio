@@ -387,6 +387,54 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 }
 @media(max-width:540px){
   .work-grid{grid-template-columns:1fr}
+
+  /* ── density bar ── */
+  .density-bar{
+    position:fixed;bottom:0;left:0;right:0;z-index:500;
+    background:var(--black);
+    padding:10px 20px calc(10px + env(safe-area-inset-bottom,0px));
+    display:none;
+    align-items:center;gap:12px;
+  }
+  .density-bar.visible{display:flex}
+  .density-icon{
+    flex-shrink:0;display:flex;flex-direction:column;gap:3px;
+    opacity:.4;transition:opacity .2s;
+  }
+  .density-icon.active{opacity:1}
+  .density-icon span{display:block;background:var(--cream);border-radius:1px}
+  /* 1-col icon: one wide bar */
+  .di-1 span{height:3px;width:18px}
+  /* 2-col icon: two shorter bars side by side */
+  .di-2{flex-direction:row;flex-wrap:wrap;gap:2px;width:18px}
+  .di-2 span{height:7px;width:8px}
+  .density-track{
+    flex:1;height:2px;background:rgba(255,255,255,.15);
+    border-radius:2px;position:relative;cursor:pointer;
+  }
+  .density-fill{
+    position:absolute;left:0;top:0;height:100%;
+    background:var(--gold);border-radius:2px;
+    transition:width .2s;
+  }
+  .density-thumb{
+    position:absolute;top:50%;transform:translate(-50%,-50%);
+    width:16px;height:16px;border-radius:50%;
+    background:var(--cream);box-shadow:0 1px 4px rgba(0,0,0,.4);
+    transition:left .2s;cursor:grab;
+  }
+  .density-thumb:active{cursor:grabbing}
+
+  /* push grid above fixed density bar */
+  .work-grid{padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+
+  /* 2-col compact mode */
+  .work-grid[data-density="2"]{grid-template-columns:repeat(2,1fr)}
+  .work-grid[data-density="2"] .wc-img-wrap{aspect-ratio:1/1}
+  .work-grid[data-density="2"] .wc-body{padding:10px 10px 14px}
+  .work-grid[data-density="2"] .wc-cat{display:none}
+  .work-grid[data-density="2"] .wc-title{font-size:11px;letter-spacing:.04em;margin:0}
+  .work-grid[data-density="2"] .wc-excerpt{display:none}
 }
 
 /* ── PROJECT DETAIL — WHOOP/Basic Agency style ── */
@@ -1135,6 +1183,20 @@ a,button,[data-hover]{cursor:none}
   <div class="work-grid" id="work-grid"></div>
 </div>
 
+<!-- mobile density bar — shown only on work page, mobile -->
+<div class="density-bar" id="density-bar" aria-label="Grid density">
+  <div class="density-icon di-1 active" id="di-1">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="density-track" id="density-track">
+    <div class="density-fill" id="density-fill"></div>
+    <div class="density-thumb" id="density-thumb"></div>
+  </div>
+  <div class="density-icon di-2" id="di-2">
+    <span></span><span></span><span></span><span></span>
+  </div>
+</div>
+
 <!-- ═══════ THINKING ═══════ -->
 <div id="pg-thinking" class="pg">
   <div class="think-hdr">
@@ -1524,6 +1586,99 @@ function initCakeDiagram(){
   });
 }
 
+/* ══ LISA CMF DIAGRAM ══ */
+function buildLisaDiagram(){
+  var COLOR_URL='https://res.cloudinary.com/dhkvesylz/image/upload/v1792782480/Screenshot_2026-10-23_at_8.07.00_PM_gswac5.png';
+  var MATERIAL_URL='https://res.cloudinary.com/dhkvesylz/image/upload/v1792782481/Screenshot_2026-10-23_at_8.07.19_PM_b2xuz2.png';
+  var FINISH_URL='https://res.cloudinary.com/dhkvesylz/image/upload/v1792782480/Screenshot_2026-10-23_at_8.07.37_PM_evyq5g.png';
+  var cols=[
+    {
+      key:'color',
+      label:'Color',
+      img:COLOR_URL,
+      concept:'Warm Oat White',
+      desc:'A deliberate step away from clinical white. The off-white base reads as crafted, not clinical — referencing raw paper stock and natural cotton before processing.',
+      specs:['Base: NCS S 0804-Y20R','Accent: NCS S 2005-Y20R','Contrast: NCS S 7000-N']
+    },
+    {
+      key:'material',
+      label:'Material',
+      img:MATERIAL_URL,
+      concept:'Cotton + Paper Composite',
+      desc:'Sourced from unbleached cotton weave and compressed paper pulp. Both materials carry visible fiber structure, reinforcing the brand\'s commitment to process transparency.',
+      specs:['Cotton canvas — 340 g/m²','Pressed paper pulp — 2 mm sheet','No surface coating applied']
+    },
+    {
+      key:'finish',
+      label:'Finish',
+      img:FINISH_URL,
+      concept:'Matte Tactile Surface',
+      desc:'All surfaces are finished with a matte, low-sheen treatment that rewards touch. The texture retains the material\'s natural irregularity rather than smoothing it away.',
+      specs:['Matte lacquer — 5% gloss','Emboss depth: 0.3 mm','UV-stable, no plastic laminate']
+    }
+  ];
+  var colsHTML=cols.map(function(c){
+    var specsHTML=c.specs.map(function(s){return '<li>'+s+'</li>';}).join('');
+    return '<div class="cmf-col">'
+      +'<div class="cmf-col-bg" style="background-image:url(\''+c.img+'\')"></div>'
+      +'<div class="cmf-label-horiz">'+c.label+'</div>'
+      +'<div class="cmf-content">'
+      +'<div class="cmf-content-inner">'
+      +'<p class="cmf-concept">'+c.concept+'</p>'
+      +'<p class="cmf-desc">'+c.desc+'</p>'
+      +'<ul class="cmf-specs">'+specsHTML+'</ul>'
+      +'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+  return '<div class="lisa-cmf-wrap" data-lisa-diag="1">'
+    +'<style>'
+    +'.lisa-cmf-wrap{margin:0;width:100%}'
+    +'.cmf-grid{display:flex;gap:2px;height:520px;width:100%}'
+    +'.cmf-col{flex:1;position:relative;overflow:hidden;cursor:pointer;transition:flex .55s cubic-bezier(.4,0,.2,1)}'
+    +'.cmf-col-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .55s cubic-bezier(.4,0,.2,1)}'
+    +'.cmf-grid:has(.cmf-col:hover) .cmf-col{flex:.6}'
+    +'.cmf-col:hover{flex:3.2!important}'
+    +'.cmf-col:hover .cmf-col-bg{transform:scale(1.04)}'
+    +'.cmf-label-horiz{position:absolute;bottom:50%;left:0;right:0;transform:translateY(50%);text-align:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#1A1916;font-weight:500;transition:opacity .3s ease;z-index:2}'
+    +'.cmf-col:hover .cmf-label-horiz{opacity:0}'
+    +'.cmf-content{position:absolute;inset:0;padding:2rem 2.2rem;display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .35s ease .1s;z-index:2}'
+    +'.cmf-content::before{content:\'\';position:absolute;inset:0;background:linear-gradient(to top,rgba(26,25,22,.75) 0%,rgba(26,25,22,.4) 45%,rgba(26,25,22,0) 100%)}'
+    +'.cmf-col:hover .cmf-content{opacity:1}'
+    +'.cmf-content-inner{position:relative;z-index:1}'
+    +'.cmf-concept{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);margin:0 0 .5rem;font-weight:500}'
+    +'.cmf-desc{font-size:13px;line-height:1.65;color:rgba(255,255,255,.88);margin:0 0 1.1rem}'
+    +'.cmf-specs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.35rem}'
+    +'.cmf-specs li{font-size:11px;letter-spacing:.06em;color:rgba(255,255,255,.55);padding-left:.9rem;position:relative}'
+    +'.cmf-specs li::before{content:\'\';position:absolute;left:0;top:.42em;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.4)}'
+    +'@media(max-width:640px){'
+    +'.cmf-grid{height:400px}'
+    +'.cmf-grid:has(.cmf-col:hover) .cmf-col{flex:1}'
+    +'.cmf-col.open{flex:3.2!important}'
+    +'.cmf-grid:has(.cmf-col.open) .cmf-col:not(.open){flex:.6}'
+    +'.cmf-col.open .cmf-label-horiz{opacity:0}'
+    +'.cmf-col.open .cmf-content{opacity:1}'
+    +'}'
+    +'</style>'
+    +'<div class="cmf-grid">'+colsHTML+'</div>'
+    +'</div>';
+}
+
+function initLisaDiagram(){
+  var wrap=document.querySelector('[data-lisa-diag="1"]');
+  if(!wrap) return;
+  var isMobile=window.matchMedia('(max-width:640px)');
+  if(!isMobile.matches) return;
+  var cols=wrap.querySelectorAll('.cmf-col');
+  cols.forEach(function(col){
+    col.addEventListener('click',function(){
+      var isOpen=col.classList.contains('open');
+      cols.forEach(function(c){c.classList.remove('open');});
+      if(!isOpen) col.classList.add('open');
+    });
+  });
+}
+
 function buildThinkingPost(p){
   const cover=p.cover||p.thumbnail||null;
   const cat=p.category||'Thinking';
@@ -1753,6 +1908,10 @@ function buildProject(idx){
         out.push(buildCakeDiagram());
         i++; continue;
       }
+      if(bl.type==='diagram'&&bl.name==='lisa'){
+        out.push(buildLisaDiagram());
+        i++; continue;
+      }
       if(bl.type==='video'){
         const url=bl.url;
         const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
@@ -1815,8 +1974,9 @@ function buildProject(idx){
 
     <footer class="footer footer-dark" style="background:var(--black)"><span>© 2026 Seungmin Jung &nbsp;·&nbsp; London · Seoul · Available Worldwide</span><a class="footer-contact-btn" href="mailto:hi@jungseungmin.com">Get in touch →</a></footer>`;
 
-  // CAKE diagram init — innerHTML does not execute inline scripts, so call separately
+  // diagram init — innerHTML does not execute inline scripts, so call separately
   setTimeout(initCakeDiagram, 0);
+  setTimeout(initLisaDiagram, 0);
 
   // back btn color — 히어로 이미지 있으면 흰색, 없으면 어두운 색으로 시작
   if(projScrollHandler) window.removeEventListener('scroll',projScrollHandler);
@@ -1829,6 +1989,69 @@ function buildProject(idx){
   };
   window.addEventListener('scroll',projScrollHandler,{passive:true});
 }
+
+/* ══ MOBILE DENSITY BAR ══ */
+(function(){
+  var bar=document.getElementById('density-bar');
+  var grid=document.getElementById('work-grid');
+  var track=document.getElementById('density-track');
+  var fill=document.getElementById('density-fill');
+  var thumb=document.getElementById('density-thumb');
+  var icon1=document.getElementById('di-1');
+  var icon2=document.getElementById('di-2');
+  if(!bar||!grid||!track)return;
+
+  // restore saved density
+  var saved;try{saved=localStorage.getItem('grid-density');}catch(e){}
+  var density=saved==='2'?2:1;
+
+  function applyDensity(d){
+    density=d;
+    grid.setAttribute('data-density',String(d));
+    var pct=d===2?100:0;
+    fill.style.width=pct+'%';
+    thumb.style.left=pct+'%';
+    icon1.classList.toggle('active',d===1);
+    icon2.classList.toggle('active',d===2);
+    try{localStorage.setItem('grid-density',String(d));}catch(e){}
+  }
+  applyDensity(density);
+
+  // drag / click on track
+  function fromEvent(e){
+    var rect=track.getBoundingClientRect();
+    var clientX=e.touches?e.touches[0].clientX:e.clientX;
+    var pct=Math.max(0,Math.min(1,(clientX-rect.left)/rect.width));
+    applyDensity(pct>=0.5?2:1);
+  }
+  track.addEventListener('click',fromEvent);
+  var dragging=false;
+  thumb.addEventListener('mousedown',function(){dragging=true;});
+  thumb.addEventListener('touchstart',function(){dragging=true;},{passive:true});
+  document.addEventListener('mousemove',function(e){if(dragging)fromEvent(e);});
+  document.addEventListener('touchmove',function(e){if(dragging)fromEvent(e);},{passive:true});
+  document.addEventListener('mouseup',function(){dragging=false;});
+  document.addEventListener('touchend',function(){dragging=false;});
+
+  // icon clicks
+  icon1.addEventListener('click',function(){applyDensity(1);});
+  icon2.addEventListener('click',function(){applyDensity(2);});
+
+  // show/hide bar based on active page
+  function syncBar(){
+    var isMobile=window.innerWidth<=540;
+    var workVisible=document.getElementById('pg-work').classList.contains('active');
+    if(isMobile&&workVisible){bar.classList.add('visible');}
+    else{bar.classList.remove('visible');}
+  }
+  // hook into nav — observe pg-work class changes
+  var pgWork=document.getElementById('pg-work');
+  if(pgWork&&window.MutationObserver){
+    new MutationObserver(syncBar).observe(pgWork,{attributes:true,attributeFilter:['class']});
+  }
+  window.addEventListener('resize',syncBar);
+  syncBar();
+})();
 
 /* ══ ABOUT TEXT REVEAL ══ */
 const ABOUT_WORDS=[
