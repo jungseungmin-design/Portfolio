@@ -1633,7 +1633,7 @@ function buildLisaDiagram(){
   }).join('');
   return '<div class="lisa-cmf-wrap" data-lisa-diag="1">'
     +'<style>'
-    +'.lisa-cmf-wrap{margin:0;width:100%}'
+    +'.lisa-cmf-wrap{margin:0;padding:0 5vw;box-sizing:border-box;width:100%}'
     +'.cmf-grid{display:flex;gap:2px;height:520px;width:100%}'
     +'.cmf-col{flex:1;position:relative;overflow:hidden;cursor:pointer;transition:flex .55s cubic-bezier(.4,0,.2,1)}'
     +'.cmf-col-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .55s cubic-bezier(.4,0,.2,1)}'
@@ -1652,6 +1652,7 @@ function buildLisaDiagram(){
     +'.cmf-specs li{font-size:11px;letter-spacing:.06em;color:rgba(255,255,255,.55);padding-left:.9rem;position:relative}'
     +'.cmf-specs li::before{content:\'\';position:absolute;left:0;top:.42em;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.4)}'
     +'@media(max-width:640px){'
+    +'.lisa-cmf-wrap{padding:0 1.5rem}'
     +'.cmf-grid{height:400px}'
     +'.cmf-grid:has(.cmf-col:hover) .cmf-col{flex:1}'
     +'.cmf-col.open{flex:3.2!important}'
