@@ -73,6 +73,10 @@ function parseBlocks(raw) {
         out.push({ type: 'diagram', name: 'cake' });
         i++; continue;
       }
+      if (text.trim() === '[diagram:lisa]') {
+        out.push({ type: 'diagram', name: 'lisa' });
+        i++; continue;
+      }
       if (text) out.push({ type: 'text', text });
       i++; continue;
     }
