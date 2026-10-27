@@ -77,6 +77,10 @@ function parseBlocks(raw) {
         out.push({ type: 'diagram', name: 'lisa' });
         i++; continue;
       }
+      if (text.trim() === '[diagram:iceberg]') {
+        out.push({ type: 'diagram', name: 'iceberg' });
+        i++; continue;
+      }
       if (text) out.push({ type: 'text', text });
       i++; continue;
     }
