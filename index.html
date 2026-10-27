@@ -1684,7 +1684,7 @@ function initLisaDiagram(){
 function buildIcebergDiagram(){
   return '<div class="ib-wrap" data-ib-diag="1">'
     +'<style>'
-    +'.ib-wrap{max-width:660px;margin:0 auto 3.5rem;padding:0 12vw;box-sizing:border-box;width:100%}'
+    +'.ib-wrap{width:100%;margin:0 0 3.5rem;box-sizing:border-box}'
     +'.ib-eyebrow{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.5rem}'
     +'.ib-title{font-family:var(--serif);font-size:clamp(1.2rem,2.5vw,1.6rem);font-weight:400;margin-bottom:.4rem}'
     +'.ib-sub{font-size:.78rem;color:var(--muted);line-height:1.65;max-width:48ch;margin-bottom:1.5rem}'
@@ -1707,7 +1707,7 @@ function buildIcebergDiagram(){
     +'.ib-wl-lbl{font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(100,160,190,.65);white-space:nowrap}'
     +'.ib-wl-line{flex:1;height:1px;background:rgba(100,160,190,.3)}'
     +'@media(max-width:640px){'
-    +'.ib-wrap{padding:0}'
+    +'.ib-wrap{}'
     +'.ib-drawer-inner{grid-template-columns:1fr}'
     +'.ib-drawer.open{max-height:460px}'
     +'}'
