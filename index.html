@@ -1681,6 +1681,155 @@ function initLisaDiagram(){
   });
 }
 
+function buildIcebergDiagram(){
+  return '<div class="ib-wrap" data-ib-diag="1">'
+    +'<style>'
+    +'.ib-wrap{max-width:660px;margin:0 auto 3.5rem;padding:0 12vw;box-sizing:border-box;width:100%}'
+    +'.ib-eyebrow{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.5rem}'
+    +'.ib-title{font-family:var(--serif);font-size:clamp(1.2rem,2.5vw,1.6rem);font-weight:400;margin-bottom:.4rem}'
+    +'.ib-sub{font-size:.78rem;color:var(--muted);line-height:1.65;max-width:48ch;margin-bottom:1.5rem}'
+    +'.ib-annot{display:flex;align-items:center;gap:.6rem;font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);opacity:.45;margin-bottom:.3rem}'
+    +'.ib-annot-line{flex:1;height:1px;background:currentColor;opacity:.3}'
+    +'.ib-annot.right{flex-direction:row-reverse;margin-top:.3rem}'
+    +'.ib-diagram{position:relative;width:100%}'
+    +'.ib-layer{position:relative;width:100%;overflow:hidden;cursor:pointer}'
+    +'.ib-layer svg{display:block;width:100%;height:auto}'
+    +'.ib-layer polygon{transition:filter .18s}'
+    +'.ib-layer:hover polygon,.ib-layer.ib-active polygon{filter:brightness(1.07)}'
+    +'.ib-drawer{max-height:0;overflow:hidden;transition:max-height .55s cubic-bezier(.4,0,.2,1)}'
+    +'.ib-drawer.open{max-height:280px}'
+    +'.ib-drawer-inner{padding:1.1rem 0 1.3rem;display:grid;grid-template-columns:1fr 1fr;gap:.8rem 2.5rem;opacity:0;transform:translateY(5px);transition:opacity .28s ease .1s,transform .28s ease .1s;border-top:1px solid rgba(160,148,130,.15)}'
+    +'.ib-drawer.open .ib-drawer-inner{opacity:1;transform:none}'
+    +'.ib-drawer-tag{font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.45rem;grid-column:1/-1}'
+    +'.ib-drawer-col strong{display:block;font-family:var(--serif);font-size:.86rem;font-weight:400;margin-bottom:.28rem;color:var(--black)}'
+    +'.ib-drawer-col p{font-size:.77rem;line-height:1.72;color:var(--muted)}'
+    +'.ib-waterline{display:flex;align-items:center;gap:.5rem;padding:.25rem 0}'
+    +'.ib-wl-lbl{font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(100,160,190,.65);white-space:nowrap}'
+    +'.ib-wl-line{flex:1;height:1px;background:rgba(100,160,190,.3)}'
+    +'@media(max-width:640px){'
+    +'.ib-wrap{padding:0}'
+    +'.ib-drawer-inner{grid-template-columns:1fr}'
+    +'.ib-drawer.open{max-height:460px}'
+    +'}'
+    +'</style>'
+    +'<div class="ib-header">'
+    +'<span class="ib-eyebrow">Systems Thinking</span>'
+    +'<h2 class="ib-title">Iceberg Model</h2>'
+    +'<p class="ib-sub">The visible tip of poor packaging hides a deeper structure of perception, distribution, and cultural assumption.</p>'
+    +'</div>'
+    +'<div class="ib-diagram">'
+    +'<div class="ib-annot"><span>Visible</span><div class="ib-annot-line"></div></div>'
+    // Layer 0: Events
+    +'<div class="ib-layer" id="ib-layer-0" data-ib="0">'
+    +'<svg viewBox="0 0 500 92" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:-1px">'
+    +'<defs><linearGradient id="ibg0" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#EDD9B0"/><stop offset="100%" stop-color="#DEC990"/></linearGradient></defs>'
+    +'<polygon points="250,2 350,90 150,90" fill="url(#ibg0)"/>'
+    +'<text x="250" y="60" text-anchor="middle" font-family="\'Playfair Display\',Georgia,serif" font-size="13" font-style="italic" fill="rgba(40,28,10,.78)">Events</text>'
+    +'<text x="358" y="58" font-family="\'DM Sans\',sans-serif" font-size="7" letter-spacing="1.8" fill="rgba(120,105,80,.4)">VISIBLE</text>'
+    +'</svg>'
+    +'<div class="ib-drawer" id="ib-drawer-0"><div class="ib-drawer-inner">'
+    +'<span class="ib-drawer-tag">Layer 01 &middot; Visible</span>'
+    +'<div class="ib-drawer-col"><strong>Events</strong><p>High-quality tea overshadowed by outdated packaging. Limited visibility among younger and urban consumers.</p></div>'
+    +'<div class="ib-drawer-col"><strong>What we observe</strong><p>The product exists and the craft is real, but nothing in the packaging communicates that. It disappears on the shelf.</p></div>'
+    +'</div></div>'
+    +'</div>'
+    // Waterline
+    +'<div class="ib-waterline"><div class="ib-wl-line"></div><span class="ib-wl-lbl">waterline</span><div class="ib-wl-line"></div></div>'
+    // Layer 1: Patterns
+    +'<div class="ib-layer" id="ib-layer-1" data-ib="1">'
+    +'<svg viewBox="0 0 500 97" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:-1px">'
+    +'<defs><linearGradient id="ibg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C8B870"/><stop offset="100%" stop-color="#B4A458"/></linearGradient></defs>'
+    +'<polygon points="150,0 350,0 440,95 60,95" fill="url(#ibg1)"/>'
+    +'<text x="250" y="40" text-anchor="middle" font-family="\'Playfair Display\',Georgia,serif" font-size="13" font-style="italic" fill="rgba(28,20,5,.82)">Patterns</text>'
+    +'<text x="250" y="57" text-anchor="middle" font-family="\'DM Sans\',sans-serif" font-size="8.5" fill="rgba(28,20,5,.38)" letter-spacing="0.3">recurring cycle of neglect</text>'
+    +'</svg>'
+    +'<div class="ib-drawer" id="ib-drawer-1"><div class="ib-drawer-inner">'
+    +'<span class="ib-drawer-tag">Layer 02 &middot; Patterns</span>'
+    +'<div class="ib-drawer-col"><strong>Recurring cycle</strong><p>Good tea, outdated packaging, low sales, no design investment. A cycle that repeats. Traditional tea perceived as old-fashioned and limited to gift culture.</p></div>'
+    +'<div class="ib-drawer-col"><strong>Consequence</strong><p>Branding rarely updated, leading to weak differentiation across producers. The category itself stagnates, not just individual brands.</p></div>'
+    +'</div></div>'
+    +'</div>'
+    // Layer 2: System Structures
+    +'<div class="ib-layer" id="ib-layer-2" data-ib="2">'
+    +'<svg viewBox="0 0 500 117" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:-1px">'
+    +'<defs><linearGradient id="ibg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8AAA96"/><stop offset="100%" stop-color="#6A9080"/></linearGradient></defs>'
+    +'<polygon points="60,0 440,0 470,115 30,115" fill="url(#ibg2)"/>'
+    +'<text x="250" y="50" text-anchor="middle" font-family="\'Playfair Display\',Georgia,serif" font-size="13" font-style="italic" fill="rgba(255,255,255,.9)">System Structures</text>'
+    +'<text x="250" y="67" text-anchor="middle" font-family="\'DM Sans\',sans-serif" font-size="8.5" fill="rgba(255,255,255,.4)" letter-spacing="0.3">wholesale distribution + no design resources</text>'
+    +'</svg>'
+    +'<div class="ib-drawer" id="ib-drawer-2"><div class="ib-drawer-inner">'
+    +'<span class="ib-drawer-tag">Layer 03 &middot; System Structures</span>'
+    +'<div class="ib-drawer-col"><strong>Infrastructure</strong><p>Wholesale-driven distribution and lack of design resources. The supply chain prioritises volume over identity.</p></div>'
+    +'<div class="ib-drawer-col"><strong>Intervention</strong><p>Cultural Translation Framework and CMF system introduced to rebuild identity from the material up, not the logo down.</p></div>'
+    +'</div></div>'
+    +'</div>'
+    // Layer 3: Mental Models
+    +'<div class="ib-layer" id="ib-layer-3" data-ib="3">'
+    +'<svg viewBox="0 0 500 114" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><linearGradient id="ibg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#527068"/><stop offset="100%" stop-color="#344E48"/></linearGradient></defs>'
+    +'<polygon points="30,0 470,0 250,112" fill="url(#ibg3)"/>'
+    +'<text x="250" y="48" text-anchor="middle" font-family="\'Playfair Display\',Georgia,serif" font-size="13" font-style="italic" fill="rgba(255,255,255,.84)">Mental Models</text>'
+    +'<text x="250" y="65" text-anchor="middle" font-family="\'DM Sans\',sans-serif" font-size="8.5" fill="rgba(255,255,255,.36)" letter-spacing="0.3">heritage equals formality</text>'
+    +'<text x="368" y="65" font-family="\'DM Sans\',sans-serif" font-size="7" letter-spacing="1.8" fill="rgba(180,200,195,.32)">INVISIBLE</text>'
+    +'</svg>'
+    +'<div class="ib-drawer" id="ib-drawer-3"><div class="ib-drawer-inner">'
+    +'<span class="ib-drawer-tag">Layer 04 &middot; Mental Models</span>'
+    +'<div class="ib-drawer-col"><strong>Root assumption</strong><p>"Heritage equals formality" and "quality alone is enough." These beliefs make design feel unnecessary and even suspicious.</p></div>'
+    +'<div class="ib-drawer-col"><strong>Reframe</strong><p>Reframed as a contemporary, everyday companion. Heritage as quiet confidence, not a costume.</p></div>'
+    +'</div></div>'
+    +'</div>'
+    +'<div class="ib-annot right"><span>Invisible</span><div class="ib-annot-line"></div></div>'
+    +'</div>'
+    +'</div>';
+}
+
+function initIcebergDiagram(){
+  var wrap=document.querySelector('[data-ib-diag="1"]');
+  if(!wrap) return;
+  var layers=wrap.querySelectorAll('.ib-layer');
+  var drawers=wrap.querySelectorAll('.ib-drawer');
+  var current=null;
+  var isTouch=window.matchMedia('(hover:none)').matches;
+
+  function openIb(idx){
+    if(current===idx) return;
+    if(current!==null){
+      drawers[current].classList.remove('open');
+      wrap.querySelector('#ib-layer-'+current).classList.remove('ib-active');
+    }
+    current=idx;
+    drawers[idx].classList.add('open');
+    wrap.querySelector('#ib-layer-'+idx).classList.add('ib-active');
+  }
+  function closeIb(idx){
+    drawers[idx].classList.remove('open');
+    wrap.querySelector('#ib-layer-'+idx).classList.remove('ib-active');
+    if(current===idx) current=null;
+  }
+
+  if(!isTouch){
+    layers.forEach(function(l){
+      var idx=+l.dataset.ib;
+      l.addEventListener('mouseenter',function(){openIb(idx);});
+      l.addEventListener('mouseleave',function(){setTimeout(function(){if(current===idx)closeIb(idx);},160);});
+      l.addEventListener('click',function(){current===idx?closeIb(idx):openIb(idx);});
+    });
+  } else {
+    layers.forEach(function(l){
+      l.addEventListener('click',function(){
+        var idx=+l.dataset.ib;
+        current===idx?closeIb(idx):openIb(idx);
+      });
+    });
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){if(e.intersectionRatio>=.5)openIb(+e.target.dataset.ib);});
+      },{threshold:[0,.5,1]});
+      layers.forEach(function(l){io.observe(l);});
+    }
+  }
+}
+
 function buildThinkingPost(p){
   const cover=p.cover||p.thumbnail||null;
   const cat=p.category||'Thinking';
@@ -1914,6 +2063,10 @@ function buildProject(idx){
         out.push(buildLisaDiagram());
         i++; continue;
       }
+      if(bl.type==='diagram'&&bl.name==='iceberg'){
+        out.push(buildIcebergDiagram());
+        i++; continue;
+      }
       if(bl.type==='video'){
         const url=bl.url;
         const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/);
@@ -1979,6 +2132,7 @@ function buildProject(idx){
   // diagram init — innerHTML does not execute inline scripts, so call separately
   setTimeout(initCakeDiagram, 0);
   setTimeout(initLisaDiagram, 0);
+  setTimeout(initIcebergDiagram, 0);
 
   // back btn color — 히어로 이미지 있으면 흰색, 없으면 어두운 색으로 시작
   if(projScrollHandler) window.removeEventListener('scroll',projScrollHandler);
