@@ -81,6 +81,10 @@ function parseBlocks(raw) {
         out.push({ type: 'diagram', name: 'iceberg' });
         i++; continue;
       }
+      if (text.trim() === '[diagram:palette]') {
+        out.push({ type: 'diagram', name: 'palette' });
+        i++; continue;
+      }
       if (text) out.push({ type: 'text', text });
       i++; continue;
     }
