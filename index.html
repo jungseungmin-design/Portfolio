@@ -1681,6 +1681,35 @@ function initLisaDiagram(){
   });
 }
 
+function buildPaletteDiagram(){
+  return '<div class="pal-wrap" data-pal-diag="1">'
+    +'<style>'
+    +'.pal-wrap{width:100%;max-width:560px;margin:0 auto 3.5rem;box-sizing:border-box}'
+    +'.pal-eyebrow{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.6rem}'
+    +'.pal-title{font-family:var(--serif);font-size:clamp(1.1rem,2vw,1.4rem);font-weight:400;margin-bottom:.35rem}'
+    +'.pal-sub{font-size:.75rem;color:var(--muted);line-height:1.65;max-width:46ch;margin-bottom:1.8rem}'
+    +'.pal-swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.08);margin-bottom:2rem}'
+    +'.pal-swatch{display:flex;flex-direction:column;padding:.9rem .85rem .75rem;gap:.35rem;background:var(--cream)}'
+    +'.pal-dot{width:2rem;height:2rem;border-radius:50%;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.12)}'
+    +'.pal-name{font-size:.65rem;font-weight:500;letter-spacing:.02em;color:var(--black);line-height:1.3;margin-top:.1rem}'
+    +'.pal-hex{font-size:.58rem;letter-spacing:.06em;color:var(--muted)}'
+    +'.pal-origin{font-size:.58rem;color:var(--muted);opacity:.7;line-height:1.4;font-style:italic;border-top:1px solid rgba(0,0,0,.07);padding-top:.4rem;margin-top:.1rem}'
+    +'@media(max-width:480px){.pal-swatches{grid-template-columns:repeat(2,1fr)}}'
+    +'</style>'
+    +'<span class="pal-eyebrow">Color &amp; Material</span>'
+    +'<h2 class="pal-title">Key Color Palette</h2>'
+    +'<p class="pal-sub">Six colors drawn from the landscape of Hadong — soil, leaf, sky, mist, paper, and light on water.</p>'
+    +'<div class="pal-swatches">'
+    +'<div class="pal-swatch"><div class="pal-dot" style="background:#4C3A29"></div><span class="pal-name">Soil Brown</span><span class="pal-hex">#4C3A29</span><span class="pal-origin">Dark earth of the tea field, pre-dawn</span></div>'
+    +'<div class="pal-swatch"><div class="pal-dot" style="background:#99B9DF"></div><span class="pal-name">Soft Sky</span><span class="pal-hex">#99B9DF</span><span class="pal-origin">Sky above the misty ridge, mid-morning</span></div>'
+    +'<div class="pal-swatch"><div class="pal-dot" style="background:#D8CBB6"></div><span class="pal-name">Warm Beige</span><span class="pal-hex">#D8CBB6</span><span class="pal-origin">Hanji paper texture, aged mulberry</span></div>'
+    +'<div class="pal-swatch"><div class="pal-dot" style="background:#A3C46B"></div><span class="pal-name">Young Leaf Green</span><span class="pal-hex">#A3C46B</span><span class="pal-origin">First-flush tea leaf at harvest</span></div>'
+    +'<div class="pal-swatch"><div class="pal-dot" style="background:#C9C3BB"></div><span class="pal-name">Misty Grey</span><span class="pal-hex">#C9C3BB</span><span class="pal-origin">Low cloud over Jirisan in early spring</span></div>'
+    +'<div class="pal-swatch"><div class="pal-dot" style="background:#D6A15C"></div><span class="pal-name">Dawn Gold</span><span class="pal-hex">#D6A15C</span><span class="pal-origin">Sunlight on the South Sea, foil finish</span></div>'
+    +'</div>'
+    +'</div>';
+}
+
 function buildIcebergDiagram(){
   return '<div class="ib-wrap" data-ib-diag="1">'
     +'<style>'
@@ -2065,6 +2094,10 @@ function buildProject(idx){
       }
       if(bl.type==='diagram'&&bl.name==='iceberg'){
         out.push(buildIcebergDiagram());
+        i++; continue;
+      }
+      if(bl.type==='diagram'&&bl.name==='palette'){
+        out.push(buildPaletteDiagram());
         i++; continue;
       }
       if(bl.type==='video'){
