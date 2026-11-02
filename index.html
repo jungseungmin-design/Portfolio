@@ -2809,9 +2809,78 @@ async function handleHash(fromHistory){
   }
 }
 
+/* ══ LOADING SPINNER ══ */
+(function(){
+  const overlay = document.createElement('div');
+  overlay.id = 'load-overlay';
+  overlay.innerHTML = '<div id="load-spinner"></div>';
+  overlay.style.cssText = [
+    'position:fixed','inset:0','z-index:9999',
+    'background:var(--cream)','display:flex',
+    'align-items:center','justify-content:center',
+    'transition:opacity .5s ease'
+  ].join(';');
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #load-spinner {
+      position: relative;
+      width: 44px;
+      height: 44px;
+    }
+    #load-spinner::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: var(--black);
+      border-right-color: var(--black);
+      animation: none;
+    }
+    .ls-dot {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--black);
+      top: 50%;
+      left: 50%;
+      transform-origin: 0 0;
+    }
+    @keyframes ls-fade {
+      0%,100% { opacity: 0.12; }
+      50%      { opacity: 1; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Build 12 dots in a circle
+  const n = 12, r = 20;
+  for(let i = 0; i < n; i++){
+    const dot = document.createElement('div');
+    dot.className = 'ls-dot';
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const x = Math.cos(angle) * r;
+    const y = Math.sin(angle) * r;
+    dot.style.cssText = `
+      transform: translate(calc(${x}px - 50%), calc(${y}px - 50%));
+      animation: ls-fade ${n * 80}ms linear ${i * 80}ms infinite;
+    `;
+    overlay.querySelector('#load-spinner').appendChild(dot);
+  }
+
+  document.body.appendChild(overlay);
+  window.__hideLoader = function(){
+    overlay.style.opacity = '0';
+    setTimeout(()=>overlay.remove(), 500);
+  };
+})();
+
 bindHover();
 initHome();
-loadProjects().then(()=>handleHash());
+loadProjects().then(()=>{ handleHash(); window.__hideLoader && window.__hideLoader(); });
 
 /* 브라우저 뒤로/앞으로 가기 */
 window.addEventListener('popstate',()=>handleHash(true));
