@@ -530,6 +530,7 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 
 /* text */
 .pst-para{font-family:var(--sans);font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.75;color:#222;font-weight:400;margin-bottom:1.8rem;letter-spacing:-.01em}
+.proj-section-content .pst-para:last-of-type{margin-bottom:5rem}
 .pst-para strong{font-weight:700}
 .pst-para em{font-style:italic}
 .pst-para code{font-family:monospace;font-size:.9em;background:rgba(0,0,0,.06);padding:.1em .35em;border-radius:3px}
@@ -555,7 +556,7 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
   margin:0;max-width:560px;
 }
 /* section body — 텍스트만 좁은 컬럼 */
-.proj-section-body{padding:0 5vw 3rem;max-width:660px;margin:0 0 0 38%}
+.proj-section-body{padding:0 5vw 20rem;max-width:660px;margin:0 0 0 38%}
 /* 이미지는 section 내에서 풀와이드 (body 밖에 배치) */
 .proj-section-media{padding:0 0 2rem}
 .proj-section-media .proj-img-landscape{padding:2rem 5vw}
@@ -1713,7 +1714,7 @@ function buildPaletteDiagram(){
 function buildIcebergDiagram(){
   return '<div class="ib-wrap" data-ib-diag="1">'
     +'<style>'
-    +'.ib-wrap{width:100%;max-width:560px;margin:2rem auto 3.5rem;box-sizing:border-box}'
+    +'.ib-wrap{width:100%;max-width:560px;margin:5rem auto 3.5rem;box-sizing:border-box}'
     +'.ib-eyebrow{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.5rem;text-align:center}'
     +'.ib-title{font-family:var(--serif);font-size:clamp(1.2rem,2.5vw,1.6rem);font-weight:400;margin-bottom:.4rem;text-align:center}'
     +'.ib-sub{font-size:.78rem;color:var(--muted);line-height:1.65;max-width:44ch;margin:0 auto 1.5rem;text-align:center}'
