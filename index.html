@@ -50,7 +50,8 @@
         "Campaign strategy"
       ],
       "sameAs": [
-        "https://www.instagram.com/jungseungmin/"
+        "https://www.instagram.com/jungseungmin/",
+        "https://www.wikidata.org/wiki/Q142186447"
       ]
     },
     {
@@ -1010,6 +1011,22 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 .pb-cline.cl-lit{stroke:var(--gold);stroke-width:2}
 .pb-cline.cl-dimmed{opacity:.1}
 .pb-diag-hint{font-family:var(--sans);font-size:.65rem;letter-spacing:.08em;color:var(--muted);text-align:center;margin-top:1.5rem;opacity:.6}
+/* network graph */
+.cake-net-wrap{position:relative;width:100%;margin:0 0 1rem}
+.cake-canvas{display:block;width:100%;border-radius:4px}
+.cake-hint{margin-top:.75rem}
+.cake-panel{position:absolute;top:50%;left:1.5rem;transform:translateY(-50%);width:220px;background:var(--bg,#fff);border:1px solid var(--surface);border-radius:6px;padding:1.25rem 1rem 1rem;box-shadow:0 4px 24px rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:10;transform:translateY(-50%) translateX(-12px)}
+.cake-panel.open{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+.cake-panel-close{position:absolute;top:.6rem;right:.7rem;background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);line-height:1;padding:2px 4px}
+.cake-panel-close:hover{color:var(--black)}
+.cake-panel-layer{font-family:var(--sans);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.35rem}
+.cake-panel-title{font-family:var(--sans);font-size:.9rem;font-weight:600;color:var(--black);line-height:1.3;margin-bottom:.75rem;padding-right:1.2rem}
+.cake-panel-items{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.85rem}
+.cake-panel-item{font-family:var(--sans);font-size:.72rem;color:var(--muted);line-height:1.4;padding-left:.6rem;border-left:2px solid var(--surface)}
+.cake-panel-nav{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--surface);padding-top:.7rem}
+.cake-nav-btn{background:none;border:1px solid var(--surface);border-radius:3px;cursor:pointer;font-size:1rem;color:var(--muted);width:28px;height:28px;display:flex;align-items:center;justify-content:center;transition:border-color .15s,color .15s}
+.cake-nav-btn:hover{border-color:var(--black);color:var(--black)}
+.cake-nav-count{font-family:var(--sans);font-size:.65rem;color:var(--muted)}
 /* mobile accordion */
 .pb-diag-mobile{display:none}
 .pb-dm-item{border-bottom:1px solid var(--surface)}
@@ -1028,10 +1045,13 @@ html.hz-snap-on{scroll-snap-type:y mandatory}
 .pb-dm-conn{display:flex;align-items:center;justify-content:center;color:var(--muted);padding-top:.6rem}
 .pb-dm-spatial-list{display:flex;flex-direction:column;gap:.2rem}
 .pb-dm-spatial-item{font-family:var(--sans);font-size:.72rem;color:var(--black);line-height:1.3}
-@media(max-width:768px){
-  .pb-diag-grid{display:none}
+@media(max-width:600px){
+  .cake-net-wrap{display:none}
   .pb-diag-mobile{display:block}
   .pb-diagram{padding:3rem 1.5rem}
+}
+@media(min-width:601px){
+  .pb-diag-mobile{display:none}
 }
 
 /* mobile */
@@ -1473,50 +1493,34 @@ function openThinkingPost(idx, posts){
 
 /* ══ CAKE DIAGRAM ══ */
 function buildCakeDiagram(){
-  const chevron='<svg class="pb-dm-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6l5 5 5-5"/></svg>';
-  const arr='<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7.5 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  function row(p,spatials){return'<div class="pb-dm-row"><div class="pb-dm-left"><span class="pb-dm-tag">Principle</span><div class="pb-dm-name">'+p+'</div></div><div class="pb-dm-conn">'+arr+'</div><div class="pb-dm-right"><span class="pb-dm-tag">Spatial</span><div class="pb-dm-spatial-list">'+spatials.map(function(s){return'<div class="pb-dm-spatial-item">'+s+'</div>';}).join('')+'</div></div></div>';}
+  var chevron='<svg class="pb-dm-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6l5 5 5-5"/></svg>';
+  var arr='<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7.5 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function mrow(p,spatials){return'<div class="pb-dm-row"><div class="pb-dm-left"><span class="pb-dm-tag">Principle</span><div class="pb-dm-name">'+p+'</div></div><div class="pb-dm-conn">'+arr+'</div><div class="pb-dm-right"><span class="pb-dm-tag">Spatial</span><div class="pb-dm-spatial-list">'+spatials.map(function(s){return'<div class="pb-dm-spatial-item">'+s+'</div>';}).join('')+'</div></div></div>';}
   var mobileItems=[
-    {name:'Functional Minimalism',sub:'less noise',rows:[{p:'Material Clarity',s:['Facade / Structure','Material &amp; Detail']},{p:'Structural Transparency',s:['Facade / Structure','Interior System']},{p:'Spatial Lightness',s:['Facade / Structure','Interior System','Material &amp; Detail']}]},
-    {name:'Electric Engineering',sub:'expose structure',rows:[{p:'Structural Transparency',s:['Facade / Structure','Interior System']},{p:'Spatial Lightness',s:['Interior System','Material &amp; Detail']},{p:'Engineered Precision',s:['Interior System','Material &amp; Detail']}]},
-    {name:'Lightweight Structure',sub:'thin profiles',rows:[{p:'Material Clarity',s:['Facade / Structure','Material &amp; Detail']},{p:'Spatial Lightness',s:['Facade / Structure','Interior System','Material &amp; Detail']},{p:'Functional Honesty',s:['Material &amp; Detail','Spatial Atmosphere']}]},
-    {name:'Silent Performance',sub:'calm experience',rows:[{p:'Calm + Urban Tension',s:['Interior System','Material &amp; Detail','Experience Components']},{p:'Nordic Quietness',s:['Experience Components','Spatial Atmosphere']},{p:'Engineered Precision',s:['Interior System','Material &amp; Detail']}]},
-    {name:'Scandinavian Design Theme',sub:'soft neutrality',rows:[{p:'Calm + Urban Tension',s:['Interior System','Experience Components']},{p:'Nordic Quietness',s:['Experience Components','Spatial Atmosphere']},{p:'Functional Honesty',s:['Material &amp; Detail','Spatial Atmosphere']},{p:'User-Centered Flow',s:['Experience Components','Spatial Atmosphere']}]},
+    {name:'Functional Minimalism',sub:'less noise',rows:[{p:'Material Clarity',s:['Facade / Structure','Material & Detail']},{p:'Structural Transparency',s:['Facade / Structure','Interior System']},{p:'Spatial Lightness',s:['Facade / Structure','Interior System','Material & Detail']}]},
+    {name:'Electric Engineering',sub:'expose structure',rows:[{p:'Structural Transparency',s:['Facade / Structure','Interior System']},{p:'Spatial Lightness',s:['Interior System','Material & Detail']},{p:'Engineered Precision',s:['Interior System','Material & Detail']}]},
+    {name:'Lightweight Structure',sub:'thin profiles',rows:[{p:'Material Clarity',s:['Facade / Structure','Material & Detail']},{p:'Spatial Lightness',s:['Facade / Structure','Interior System','Material & Detail']},{p:'Functional Honesty',s:['Material & Detail','Spatial Atmosphere']}]},
+    {name:'Silent Performance',sub:'calm experience',rows:[{p:'Calm + Urban Tension',s:['Interior System','Material & Detail','Experience Components']},{p:'Nordic Quietness',s:['Experience Components','Spatial Atmosphere']},{p:'Engineered Precision',s:['Interior System','Material & Detail']}]},
+    {name:'Scandinavian Design Theme',sub:'soft neutrality',rows:[{p:'Calm + Urban Tension',s:['Interior System','Experience Components']},{p:'Nordic Quietness',s:['Experience Components','Spatial Atmosphere']},{p:'Functional Honesty',s:['Material & Detail','Spatial Atmosphere']},{p:'User-Centered Flow',s:['Experience Components','Spatial Atmosphere']}]},
   ];
   var mobileHTML=mobileItems.map(function(item){
-    return '<div class="pb-dm-item"><button class="pb-dm-trigger" aria-expanded="false"><div><div class="pb-dm-trigger-name">'+item.name+'</div><div class="pb-dm-trigger-sub">'+item.sub+'</div></div>'+chevron+'</button><div class="pb-dm-body"><div class="pb-dm-chain">'+item.rows.map(function(r){return row(r.p,r.s);}).join('')+'</div></div></div>';
+    return '<div class="pb-dm-item"><button class="pb-dm-trigger" aria-expanded="false"><div><div class="pb-dm-trigger-name">'+item.name+'</div><div class="pb-dm-trigger-sub">'+item.sub+'</div></div>'+chevron+'</button><div class="pb-dm-body"><div class="pb-dm-chain">'+item.rows.map(function(r){return mrow(r.p,r.s);}).join('')+'</div></div></div>';
   }).join('');
   return '<div class="pb-diagram" data-cake-diag="1">'
     +'<span class="diag-eyebrow">Design Framework</span>'
     +'<h3 class="diag-title">Brand to Space Translation</h3>'
     +'<p class="diag-sub">How CAKE\'s Swedish brand principles became spatial decisions in Seoul.</p>'
-    +'<div class="pb-diag-grid"><div class="pb-diag-cols">'
-    +'<svg class="pb-diag-canvas" aria-hidden="true"></svg>'
-    +'<div class="pb-diag-col"><div class="pb-diag-col-head">Brand Core</div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="b1"><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Functional Minimalism</div><div class="pb-dn-sub">less noise</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="b2"><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Electric Engineering</div><div class="pb-dn-sub">expose structure</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="b3"><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Lightweight Structure</div><div class="pb-dn-sub">thin profiles</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="b4"><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Silent Performance</div><div class="pb-dn-sub">calm experience</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="b5"><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Scandinavian Design Theme</div><div class="pb-dn-sub">soft neutrality</div></div>'
-    +'</div><div class="pb-diag-gap"></div>'
-    +'<div class="pb-diag-col"><div class="pb-diag-col-head">Translation Principles</div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p1"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Material Clarity</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p2"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Structural Transparency</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p3"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Spatial Lightness</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p4"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Calm + Urban Tension</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p5"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Nordic Quietness &amp; Functional Clarity</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p6"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Engineered Precision</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p7"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">Functional Honesty</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="p8"><span class="pb-diag-dot dot-l"></span><span class="pb-diag-dot dot-r"></span><div class="pb-dn-name">User-Centered Flow</div></div>'
-    +'</div><div class="pb-diag-gap"></div>'
-    +'<div class="pb-diag-col"><div class="pb-diag-col-head">Spatial Decisions</div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="s1"><span class="pb-diag-dot dot-l"></span><div class="pb-dn-name">Facade / Structure</div><div class="pb-dn-detail">Full-height glazing · 1F-2F vertical void · Low-noise threshold</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="s2"><span class="pb-diag-dot dot-l"></span><div class="pb-dn-name">Interior System</div><div class="pb-dn-detail">Gallery-style floor layout · Modular product stands · Thin metal sections</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="s3"><span class="pb-diag-dot dot-l"></span><div class="pb-dn-name">Material &amp; Detail</div><div class="pb-dn-detail">White + Stainless surfaces · Glossy tile · Indirect lighting</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="s4"><span class="pb-diag-dot dot-l"></span><div class="pb-dn-name">Experience Components</div><div class="pb-dn-detail">Product-first circulation · Test-ride zone · Community point</div></div>'
-    +'<div class="pb-diag-node" tabindex="0" data-nid="s5"><span class="pb-diag-dot dot-l"></span><div class="pb-dn-name">Spatial Atmosphere</div><div class="pb-dn-detail">Neutral palette · Lightweight geometric forms · Negative space</div></div>'
-    +'</div></div>'
-    +'<p class="pb-diag-hint">Hover any node to trace its connections</p></div>'
+    +'<div class="cake-net-wrap">'
+    +'<div class="cake-panel" id="cakePanel">'
+    +'<button class="cake-panel-close" id="cakePanelClose" aria-label="Close">&#10005;</button>'
+    +'<div class="cake-panel-layer" id="cakePanelLayer"></div>'
+    +'<div class="cake-panel-title" id="cakePanelTitle"></div>'
+    +'<div class="cake-panel-items" id="cakePanelItems"></div>'
+    +'<div class="cake-panel-nav"><button class="cake-nav-btn" id="cakeNavPrev">&#8249;</button><span class="cake-nav-count" id="cakeNavCount"></span><button class="cake-nav-btn" id="cakeNavNext">&#8250;</button></div>'
+    +'</div>'
+    +'<canvas class="cake-canvas" id="cakeCanvas"></canvas>'
+    +'<p class="pb-diag-hint cake-hint">Click any node to explore connections</p>'
+    +'</div>'
     +'<div class="pb-diag-mobile">'+mobileHTML+'</div>'
     +'</div>';
 }
@@ -1524,64 +1528,7 @@ function buildCakeDiagram(){
 function initCakeDiagram(){
   var wrap=document.querySelector('[data-cake-diag="1"]');
   if(!wrap)return;
-  var cols=wrap.querySelector('.pb-diag-cols');
-  var svg=wrap.querySelector('.pb-diag-canvas');
-  if(!cols||!svg)return;
-  var BP={b1:['p1','p2','p3'],b2:['p2','p3','p6'],b3:['p1','p3','p7'],b4:['p4','p5','p6'],b5:['p4','p5','p7','p8']};
-  var PS={p1:['s1','s3'],p2:['s1','s2'],p3:['s1','s2','s3'],p4:['s2','s3','s4'],p5:['s4','s5'],p6:['s2','s3'],p7:['s3','s5'],p8:['s4','s5']};
-  var edges=[];
-  Object.keys(BP).forEach(function(b){BP[b].forEach(function(p){edges.push([b,p]);});});
-  Object.keys(PS).forEach(function(p){PS[p].forEach(function(s){edges.push([p,s]);});});
-  var nodeEls={};
-  cols.querySelectorAll('.pb-diag-node').forEach(function(el){nodeEls[el.dataset.nid]=el;});
-  var lineMap={};
-  function anchor(el,side){
-    var gr=cols.getBoundingClientRect(),nr=el.getBoundingClientRect();
-    var y=nr.top-gr.top+nr.height/2;
-    var col=el.closest('.pb-diag-col'),cr=col.getBoundingClientRect();
-    return{x:side==='r'?cr.right-gr.left:cr.left-gr.left,y:y};
-  }
-  function drawAll(){
-    svg.innerHTML='';
-    Object.keys(lineMap).forEach(function(k){delete lineMap[k];});
-    edges.forEach(function(e){
-      var fe=nodeEls[e[0]],te=nodeEls[e[1]];if(!fe||!te)return;
-      var p1=anchor(fe,'r'),p2=anchor(te,'l'),span=p2.x-p1.x;
-      var cx1=p1.x+span*0.4,cx2=p2.x-span*0.4;
-      var path=document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('d','M'+p1.x+','+p1.y+' C'+cx1+','+p1.y+' '+cx2+','+p2.y+' '+p2.x+','+p2.y);
-      path.setAttribute('class','pb-cline');
-      svg.appendChild(path);
-      lineMap[e[0]+':'+e[1]]=path;
-    });
-  }
-  function colOf(id){return id[0]==='b'?'b':id[0]==='p'?'p':'s';}
-  function related(id){
-    var nodes=new Set([id]),lines=new Set(),col=colOf(id);
-    if(col==='b'){(BP[id]||[]).forEach(function(p){nodes.add(p);lines.add(id+':'+p);(PS[p]||[]).forEach(function(s){nodes.add(s);lines.add(p+':'+s);});});}
-    else if(col==='p'){Object.keys(BP).forEach(function(b){if(BP[b].indexOf(id)>-1){nodes.add(b);lines.add(b+':'+id);}});(PS[id]||[]).forEach(function(s){nodes.add(s);lines.add(id+':'+s);});}
-    else{Object.keys(PS).forEach(function(p){if(PS[p].indexOf(id)>-1){nodes.add(p);lines.add(p+':'+id);Object.keys(BP).forEach(function(b){if(BP[b].indexOf(p)>-1){nodes.add(b);lines.add(b+':'+p);}});}});}
-    return{nodes:nodes,lines:lines};
-  }
-  function activate(id){
-    var r=related(id);
-    Object.keys(nodeEls).forEach(function(nid){nodeEls[nid].classList.toggle('dn-lit',r.nodes.has(nid));nodeEls[nid].classList.toggle('dn-dimmed',!r.nodes.has(nid));});
-    Object.keys(lineMap).forEach(function(k){lineMap[k].classList.toggle('cl-lit',r.lines.has(k));lineMap[k].classList.toggle('cl-dimmed',!r.lines.has(k));});
-  }
-  function deactivate(){
-    Object.values(nodeEls).forEach(function(el){el.classList.remove('dn-lit','dn-dimmed');});
-    Object.values(lineMap).forEach(function(l){l.classList.remove('cl-lit','cl-dimmed');});
-  }
-  Object.keys(nodeEls).forEach(function(id){
-    var el=nodeEls[id];
-    el.addEventListener('mouseenter',function(){activate(id);});
-    el.addEventListener('mouseleave',deactivate);
-    el.addEventListener('focus',function(){activate(id);});
-    el.addEventListener('blur',deactivate);
-  });
-  drawAll();
-  var raf;
-  new ResizeObserver(function(){cancelAnimationFrame(raf);raf=requestAnimationFrame(drawAll);}).observe(cols);
+
   // mobile accordion
   wrap.querySelectorAll('.pb-dm-trigger').forEach(function(btn){
     btn.addEventListener('click',function(){
@@ -1590,6 +1537,355 @@ function initCakeDiagram(){
       if(!isOpen){item.classList.add('open');btn.setAttribute('aria-expanded','true');}
     });
   });
+
+  var canvas=document.getElementById('cakeCanvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+
+  // ── DATA ──────────────────────────────────────────────────────────────────
+  var BP={b1:['p1','p2','p3'],b2:['p2','p3','p6'],b3:['p1','p3','p7'],b4:['p4','p5','p6'],b5:['p4','p5','p7','p8']};
+  var PS={p1:['s1','s3'],p2:['s1','s2'],p3:['s1','s2','s3'],p4:['s2','s3','s4'],p5:['s4','s5'],p6:['s2','s3'],p7:['s3','s5'],p8:['s4','s5']};
+  var NODES=[
+    {id:'b1',layer:'b',label:'Functional Minimalism',sub:'less noise'},
+    {id:'b2',layer:'b',label:'Electric Engineering',sub:'expose structure'},
+    {id:'b3',layer:'b',label:'Lightweight Structure',sub:'thin profiles'},
+    {id:'b4',layer:'b',label:'Silent Performance',sub:'calm experience'},
+    {id:'b5',layer:'b',label:'Scandinavian Design Theme',sub:'soft neutrality'},
+    {id:'p1',layer:'p',label:'Material Clarity'},
+    {id:'p2',layer:'p',label:'Structural Transparency'},
+    {id:'p3',layer:'p',label:'Spatial Lightness'},
+    {id:'p4',layer:'p',label:'Calm + Urban Tension'},
+    {id:'p5',layer:'p',label:'Nordic Quietness & Functional Clarity'},
+    {id:'p6',layer:'p',label:'Engineered Precision'},
+    {id:'p7',layer:'p',label:'Functional Honesty'},
+    {id:'p8',layer:'p',label:'User-Centered Flow'},
+    {id:'s1',layer:'s',label:'Facade / Structure',detail:'Full-height glazing · 1F-2F vertical void · Low-noise threshold'},
+    {id:'s2',layer:'s',label:'Interior System',detail:'Gallery-style floor layout · Modular product stands · Thin metal sections'},
+    {id:'s3',layer:'s',label:'Material & Detail',detail:'White + Stainless surfaces · Glossy tile · Indirect lighting'},
+    {id:'s4',layer:'s',label:'Experience Components',detail:'Product-first circulation · Test-ride zone · Community point'},
+    {id:'s5',layer:'s',label:'Spatial Atmosphere',detail:'Neutral palette · Lightweight geometric forms · Negative space'},
+  ];
+  var LAYER_LABELS={b:'Brand Core',p:'Translation Principles',s:'Spatial Decisions'};
+  var nodeMap={};
+  NODES.forEach(function(n){nodeMap[n.id]=n;});
+  var EDGES=[];
+  Object.keys(BP).forEach(function(b){BP[b].forEach(function(p){EDGES.push([b,p]);});});
+  Object.keys(PS).forEach(function(p){PS[p].forEach(function(s){EDGES.push([p,s]);});});
+
+  // ── THEME COLOURS ─────────────────────────────────────────────────────────
+  function isDark(){return document.documentElement.getAttribute('data-theme')==='dark'||(document.documentElement.getAttribute('data-theme')!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);}
+  function colors(){
+    var d=isDark();
+    return{
+      bg:d?'#0f0f0f':'#f8f7f5',
+      edge:d?'rgba(255,255,255,0.09)':'rgba(0,0,0,0.09)',
+      edgeHi:d?'rgba(255,255,255,0.55)':'rgba(0,0,0,0.42)',
+      edgeDim:d?'rgba(255,255,255,0.03)':'rgba(0,0,0,0.03)',
+      bFill:d?'#2a2a2a':'#1a1a1a',
+      bStroke:d?'#555':'#333',
+      bText:d?'#f0f0f0':'#fff',
+      pFill:d?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.06)',
+      pStroke:d?'rgba(255,255,255,0.3)':'rgba(0,0,0,0.25)',
+      pText:d?'#e0e0e0':'#1a1a1a',
+      sFill:d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)',
+      sStroke:d?'rgba(255,255,255,0.18)':'rgba(0,0,0,0.15)',
+      sText:d?'#b0b0b0':'#444',
+      hitFill:d?'#3a3a3a':'#333',
+      hitStroke:d?'#aaa':'#111',
+      dimAlpha:0.18,
+    };
+  }
+
+  // ── RADII ─────────────────────────────────────────────────────────────────
+  var R={b:52,p:36,s:26};
+
+  // ── PHYSICS ───────────────────────────────────────────────────────────────
+  var W=0,H=0,cx=0,cy=0;
+  NODES.forEach(function(n){n.vx=0;n.vy=0;n.x=0;n.y=0;});
+
+  function resize(){
+    var rect=canvas.parentElement.getBoundingClientRect();
+    var dpr=window.devicePixelRatio||1;
+    W=rect.width; H=Math.max(rect.width*0.65,440);
+    canvas.style.width=W+'px'; canvas.style.height=H+'px';
+    canvas.width=W*dpr; canvas.height=H*dpr;
+    ctx.scale(dpr,dpr);
+    cx=W/2; cy=H/2;
+    // initial positions by layer column
+    NODES.forEach(function(n){
+      var xi=n.layer==='b'?W*0.18:n.layer==='p'?W*0.5:W*0.82;
+      var count=NODES.filter(function(x){return x.layer===n.layer;}).length;
+      var idx=NODES.filter(function(x){return x.layer===n.layer;}).indexOf(n);
+      n.x=xi+(Math.random()-0.5)*40;
+      n.y=H*0.12+idx*(H*0.78/(count-1||1))+(Math.random()-0.5)*20;
+    });
+  }
+
+  var adjacency={};
+  NODES.forEach(function(n){adjacency[n.id]=[];});
+  EDGES.forEach(function(e){adjacency[e[0]].push(e[1]);adjacency[e[1]].push(e[0]);});
+
+  function getR(id){return R[nodeMap[id].layer];}
+
+  function tick(){
+    var alpha=0.028;
+    // repulsion
+    for(var i=0;i<NODES.length;i++){
+      for(var j=i+1;j<NODES.length;j++){
+        var a=NODES[i],b=NODES[j];
+        var dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+        var minD=(getR(a.id)+getR(b.id))*1.6;
+        if(d<minD){var f=(minD-d)/d*0.5;a.vx+=dx*f;a.vy+=dy*f;b.vx-=dx*f;b.vy-=dy*f;}
+      }
+    }
+    // attraction along edges
+    EDGES.forEach(function(e){
+      var a=nodeMap[e[0]],b=nodeMap[e[1]];
+      var dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+      var ideal=120;
+      var f=(d-ideal)/d*0.04;
+      a.vx+=dx*f;a.vy+=dy*f;b.vx-=dx*f;b.vy-=dy*f;
+    });
+    // column gravity: pull each layer toward its x band
+    NODES.forEach(function(n){
+      var xi=n.layer==='b'?W*0.18:n.layer==='p'?W*0.5:W*0.82;
+      n.vx+=(xi-n.x)*0.04;
+      // vertical centre gravity
+      n.vy+=(cy-n.y)*0.005;
+    });
+    // integrate + dampen + clamp
+    NODES.forEach(function(n){
+      n.vx*=0.72; n.vy*=0.72;
+      n.x+=n.vx*alpha*60; n.y+=n.vy*alpha*60;
+      var r=getR(n.id)+4;
+      n.x=Math.max(r,Math.min(W-r,n.x));
+      n.y=Math.max(r,Math.min(H-r,n.y));
+    });
+  }
+
+  // ── STATE ─────────────────────────────────────────────────────────────────
+  var selectedId=null;
+  var hoverNode=null;
+  var panelOpen=false;
+
+  // panel siblings for navigation
+  var panelSiblings=[];
+  var panelSibIdx=0;
+
+  function getRelated(id){
+    var nodes=new Set([id]),edges=new Set();
+    var n=nodeMap[id];
+    if(n.layer==='b'){
+      (BP[id]||[]).forEach(function(p){nodes.add(p);edges.add(id+':'+p);(PS[p]||[]).forEach(function(s){nodes.add(s);edges.add(p+':'+s);});});
+    } else if(n.layer==='p'){
+      Object.keys(BP).forEach(function(b){if(BP[b].indexOf(id)>-1){nodes.add(b);edges.add(b+':'+id);}});
+      (PS[id]||[]).forEach(function(s){nodes.add(s);edges.add(id+':'+s);});
+    } else {
+      Object.keys(PS).forEach(function(p){if(PS[p].indexOf(id)>-1){nodes.add(p);edges.add(p+':'+id);Object.keys(BP).forEach(function(b){if(BP[b].indexOf(p)>-1){nodes.add(b);edges.add(b+':'+p);}});}});
+    }
+    return{nodes:nodes,edges:edges};
+  }
+
+  function openPanel(id){
+    var n=nodeMap[id];
+    var rel=getRelated(id);
+    var panel=document.getElementById('cakePanel');
+    document.getElementById('cakePanelLayer').textContent=LAYER_LABELS[n.layer];
+    document.getElementById('cakePanelTitle').textContent=n.label;
+    var items=[];
+    if(n.layer==='b'){
+      var ps=(BP[id]||[]).map(function(pid){return nodeMap[pid].label;});
+      items=ps;
+    } else if(n.layer==='p'){
+      var ss=(PS[id]||[]).map(function(sid){return nodeMap[sid].label;});
+      items=ss;
+    } else {
+      items=n.detail?n.detail.split(' · '):[];
+    }
+    var itemsEl=document.getElementById('cakePanelItems');
+    itemsEl.innerHTML=items.map(function(t){return'<div class="cake-panel-item">'+t+'</div>';}).join('');
+    // siblings = same layer
+    panelSiblings=NODES.filter(function(x){return x.layer===n.layer;}).map(function(x){return x.id;});
+    panelSibIdx=panelSiblings.indexOf(id);
+    updateNavCount();
+    panel.classList.add('open');
+    panelOpen=true;
+  }
+
+  function updateNavCount(){
+    document.getElementById('cakeNavCount').textContent=(panelSibIdx+1)+' / '+panelSiblings.length;
+  }
+
+  function closePanel(){
+    document.getElementById('cakePanel').classList.remove('open');
+    panelOpen=false;
+    selectedId=null;
+  }
+
+  document.getElementById('cakePanelClose').addEventListener('click',closePanel);
+  document.getElementById('cakeNavPrev').addEventListener('click',function(){
+    panelSibIdx=(panelSibIdx-1+panelSiblings.length)%panelSiblings.length;
+    var newId=panelSiblings[panelSibIdx];
+    selectedId=newId;
+    openPanel(newId);
+    updateNavCount();
+  });
+  document.getElementById('cakeNavNext').addEventListener('click',function(){
+    panelSibIdx=(panelSibIdx+1)%panelSiblings.length;
+    var newId=panelSiblings[panelSibIdx];
+    selectedId=newId;
+    openPanel(newId);
+    updateNavCount();
+  });
+
+  // ── DRAW ──────────────────────────────────────────────────────────────────
+  function wrapText(ctx,text,x,y,maxW,lineH){
+    var words=text.split(' '),line='',lines=[];
+    for(var i=0;i<words.length;i++){
+      var test=line?line+' '+words[i]:words[i];
+      if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=words[i];}
+      else line=test;
+    }
+    if(line)lines.push(line);
+    var startY=y-(lines.length-1)*lineH/2;
+    lines.forEach(function(l,i){ctx.fillText(l,x,startY+i*lineH);});
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var C=colors();
+    var rel=selectedId?getRelated(selectedId):null;
+
+    // edges
+    EDGES.forEach(function(e){
+      var a=nodeMap[e[0]],b=nodeMap[e[1]];
+      var key1=e[0]+':'+e[1],key2=e[1]+':'+e[0];
+      var isHi=rel&&(rel.edges.has(key1)||rel.edges.has(key2));
+      var isDim=rel&&!isHi;
+      ctx.beginPath();
+      ctx.moveTo(a.x,a.y);
+      ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle=isDim?C.edgeDim:isHi?C.edgeHi:C.edge;
+      ctx.lineWidth=isHi?1.8:1;
+      ctx.stroke();
+    });
+
+    // nodes
+    NODES.forEach(function(n){
+      var r=getR(n.id);
+      var isSelected=n.id===selectedId;
+      var isRelated=rel&&rel.nodes.has(n.id)&&!isSelected;
+      var isDimmed=rel&&!rel.nodes.has(n.id);
+      var isHover=n.id===hoverNode;
+
+      ctx.save();
+      if(isDimmed)ctx.globalAlpha=0.15;
+      else if(isRelated)ctx.globalAlpha=0.75;
+
+      // fill
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,r,0,Math.PI*2);
+      if(isSelected){ctx.fillStyle=C.hitFill;}
+      else if(isHover){ctx.fillStyle=n.layer==='b'?C.bFill:n.layer==='p'?C.pFill:C.sFill;}
+      else{ctx.fillStyle=n.layer==='b'?C.bFill:n.layer==='p'?C.pFill:C.sFill;}
+      ctx.fill();
+
+      // stroke
+      ctx.lineWidth=isSelected?2:isHover?1.5:1;
+      ctx.strokeStyle=isSelected?C.hitStroke:n.layer==='b'?C.bStroke:n.layer==='p'?C.pStroke:C.sStroke;
+      ctx.stroke();
+
+      // label
+      var fontSize=n.layer==='b'?11:n.layer==='p'?10:9;
+      ctx.font='500 '+fontSize+'px system-ui,sans-serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillStyle=n.layer==='b'?C.bText:n.layer==='p'?C.pText:C.sText;
+      wrapText(ctx,n.label,n.x,n.y,r*1.65,fontSize*1.25);
+      ctx.restore();
+    });
+
+    // layer legend at top
+    var legendItems=[{label:'Brand Core',layer:'b'},{label:'Translation Principles',layer:'p'},{label:'Spatial Decisions',layer:'s'}];
+    var C2=colors();
+    legendItems.forEach(function(li,i){
+      var lx=W*0.18+i*(W*0.32),ly=16;
+      ctx.font='10px system-ui,sans-serif';
+      ctx.textAlign='center';
+      ctx.fillStyle=isDark()?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.35)';
+      ctx.fillText(li.label,lx,ly);
+    });
+  }
+
+  // ── ANIMATION LOOP ────────────────────────────────────────────────────────
+  var frame=0,rafId=null;
+  function loop(){
+    rafId=requestAnimationFrame(loop);
+    if(frame<300)tick(); // settle physics for ~5s then rest
+    frame++;
+    draw();
+  }
+
+  // ── HIT TEST ─────────────────────────────────────────────────────────────
+  function hitTest(mx,my){
+    for(var i=NODES.length-1;i>=0;i--){
+      var n=NODES[i],r=getR(n.id);
+      var dx=mx-n.x,dy=my-n.y;
+      if(dx*dx+dy*dy<=r*r)return n.id;
+    }
+    return null;
+  }
+
+  function getXY(e,rect){
+    var src=e.touches?e.touches[0]:e;
+    return{x:src.clientX-rect.left,y:src.clientY-rect.top};
+  }
+
+  canvas.addEventListener('mousemove',function(e){
+    var rect=canvas.getBoundingClientRect();
+    var p=getXY(e,rect);
+    var hit=hitTest(p.x,p.y);
+    hoverNode=hit;
+    canvas.style.cursor=hit?'pointer':'default';
+  });
+
+  canvas.addEventListener('mouseleave',function(){hoverNode=null;});
+
+  canvas.addEventListener('click',function(e){
+    var rect=canvas.getBoundingClientRect();
+    var p=getXY(e,rect);
+    var hit=hitTest(p.x,p.y);
+    if(hit){
+      if(hit===selectedId){closePanel();}
+      else{selectedId=hit;openPanel(hit);}
+    } else {
+      closePanel();
+    }
+    frame=0; // re-run physics briefly after interaction
+  });
+
+  canvas.addEventListener('touchstart',function(e){e.preventDefault();},{ passive:false });
+  canvas.addEventListener('touchend',function(e){
+    e.preventDefault();
+    var rect=canvas.getBoundingClientRect();
+    var t=e.changedTouches[0];
+    var p={x:t.clientX-rect.left,y:t.clientY-rect.top};
+    var hit=hitTest(p.x,p.y);
+    if(hit){if(hit===selectedId){closePanel();}else{selectedId=hit;openPanel(hit);}}
+    else{closePanel();}
+    frame=0;
+  },{passive:false});
+
+  // ── START ─────────────────────────────────────────────────────────────────
+  resize();
+  loop();
+  window.addEventListener('resize',function(){
+    if(rafId)cancelAnimationFrame(rafId);
+    frame=0;
+    resize();
+    loop();
+  });
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',function(){draw();});
 }
 
 /* ══ LISA CMF DIAGRAM ══ */
